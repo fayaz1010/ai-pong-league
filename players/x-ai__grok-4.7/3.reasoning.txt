@@ -1,0 +1,721 @@
+I need to write a deterministic Pong AI in plain JavaScript that plays head-to-head matches against other AIs.
+
+I've mapped the exact physics. Paddles move 5 pixels per frame. The ball serves from center at 6 px/frame with a ±30° angle. It bounces off walls perfectly. The return offset is (ballY - paddleCentreY) / 40, clamped to [-1, 1], then rotated 55° from horizontal. Speed increases by 5% each hit, capped at 24. Hit detection checks if the ball center reaches the paddle face while within the 80-pixel span plus radius.
+
+I'm working out the ball's exact velocity after a return. The offset maps to a 55-degree angle from horizontal, and with positive y pointing down, a positive offset sends the ball downward.
+
+I'm now calculating the ball's exact trajectory frame by frame. The opponent's return direction is negative, and speed is the square root of dx² plus dy². I'm also working out the wall collision logic for the 6-pixel radius.
+
+I'm weighing two possible wall-bounce formulas: clamping the ball center to the edge and flipping velocity, or reflecting continuously. I'll simulate the ball forward frame by frame for predictions, but I need to be robust because the exact physics may differ from my assumptions. I'm also sketching the paddle collision condition.
+
+I'm refining the paddle collision trigger. I need to decide whether the ball's center must cross the face at x=30, or if the ball's outer edge should reach that boundary instead.
+
+I've settled on the paddle collision trigger. The ball's center reaches the left paddle face at x=36, so contact occurs when ball.x - r <= 30.
+
+I'm reconsidering the paddle collision trigger. The radius might only apply to the vertical span, not the horizontal face check. I'll look at common tournament code for guidance.
+
+I'm designing a robust AI strategy. It will simulate the ball's trajectory to predict where it meets my paddle, then move there to intercept. The key insight is that the return angle depends only on where the ball hits relative to the paddle center, not on the incoming angle. I'll aim shots that exploit the opponent's movement limitations.
+
+The paddle offset is divided by 40 and clamped to ±1, so the maximum return angle is 55 degrees. That yields a horizontal speed component of roughly 57% of the ball's total speed. I'm also weighing whether the hit window should be 46 pixels or just 40.
+
+I'm calculating the court-crossing time. At maximum speed and a 55-degree return, the ball takes roughly 54 frames to travel from face to face. At horizontal speed it takes about 31 frames. A paddle moving at 5 pixels per frame can cover 155 pixels in that time, so the vertical component of the return is critical for winning.
+
+Early in the match, the ball moves so slowly that both paddles can cover the entire court. The real challenge is prediction accuracy and forcing the opponent into bad angles as speed increases. At maximum speed with a steep return, the opponent has only about 270 pixels of movement to reach the ball, which is less than half the court height. I will track the opponent's position to exploit this.
+
+I'm designing the prediction function to simulate the ball's full trajectory until it crosses the target x-coordinate. The aiming logic will place the ball at a y-position that maximizes distance from where the opponent can reach it, factoring in their maximum travel during the ball's flight.
+
+I've pinned down the exact hit formula: paddleY = ballY - offset * 40. The paddle center must stay between y=40 and y=460 to keep the 80-pixel span inside the court. I also need to verify the paddle can reach that target position before the ball arrives.
+
+I'm now structuring the AI's decision loop. It predicts the ball's intercept time and Y position at my face, then either waits or moves to hit. When returning, it selects a paddle position that hits the ball and sends it to the most awkward spot for the opponent. I'm also factoring in the opponent's reach: if the ball lands within their movement range from their current position, they can return it.
+
+Shallow returns are better than steep ones because they arrive faster and have fewer wall bounces. I will place the ball just outside the opponent's reach when possible, or at the extreme edges to push them out of position. The opponent can cover their current position plus a 40- or 46-pixel hit window in the time it takes the ball to cross.
+
+I'm now considering the opponent's return. A smart opponent will choose their contact point to aim back at me, while a simpler bot may center on the ball and return horizontally. I need to play well against both types, so extreme angles are safest.
+
+I'm now calculating the exact unreturnable shot window. The opponent can reach a ball arriving at y if that y falls within their reachable range plus the hit window. I'll place the ball just outside that safe zone so they cannot return it.
+
+I'm now planning the concrete implementation. I will discretize possible paddle offsets, simulate each candidate trajectory to the opponent, and select the one that places the ball just outside the opponent's reach. I also need to match the arena physics exactly and decide whether paddles or the ball move first in the frame loop.
+
+I'm now writing the exact frame loop. Paddles move first, then the ball advances by its velocity. Wall collisions clamp the ball to the court edges and reverse vertical velocity. The left paddle collision check uses a precise boundary condition: the ball must cross the face from outside while its center stays within 40 pixels plus radius of the paddle center.
+
+Frame-order uncertainty is dangerous at maximum speed, so I will stay conservative and center the paddle on the ball for safe hits unless a clear unreturnable angle exists. I will also use observations to calibrate the physics model, comparing predicted and actual wall bounces and collision positions.
+
+I will keep match history in createPlayer() to learn the exact physics from observed collisions. The ball's previous state will be stored and used to update the model after each wall bounce or paddle hit. Two parameters need calibration: whether walls clamp at the radius or the court edge, and whether the paddle collision triggers at the face boundary or the face plus radius.
+
+I am now inferring the angle sign from the first observed return. I am also re-reading the prompt to confirm whether paddle movement precedes ball movement and whether wall bounces are perfect reflections.
+
+The prompt clarifies the return mechanics: the ball's centre must sit within the 80-pixel span plus radius of the paddle face, and every return multiplies speed by 1.05 up to a maximum of 24 pixels per frame. The simulation will be faithful and self-correcting, with prediction accuracy being the top priority.
+
+I am now writing the `predictIntercept` simulation. It uses continuous collision detection to step the ball frame by frame, checking for wall collisions and paddle hits at sub-frame precision. This avoids the frame-order errors that would accumulate in a simple discrete loop.
+
+I am abandoning the continuous collision detection approach. Exact frame-by-frame simulation is more reliable, and a reflection-unfolding method will handle vertical wall bounces precisely.
+
+The reflection-unfolding shortcut is invalid because the arena updates ball position once per discrete frame, not continuously. I will use exact frame-by-frame simulation instead.
+
+I will use both a continuous reflection-unfolded prediction and a discrete simulator. The continuous model gives the exact intercept y, while the discrete model catches frame-order errors. I will track the two results and blend them. A few pixels of error is harmless because the 40-pixel paddle margin covers it.
+
+Recomputing the intercept every frame lets the prediction converge as the ball approaches. Early errors fade because the last few frames are linear motion, and wall bounces become irrelevant once the ball is close. The only remaining risk is a wall bounce in the final frames before arrival.
+
+I will use radius-based wall collisions rather than center-based ones. The six-pixel error is safely within the paddle margin. I also checked the paddle face boundary: a six-pixel offset in x would only shift the ball's y by about three pixels at typical serve angles, so it is not a concern.
+
+I am now weighing whether the arena checks paddle collisions at the face boundary or at the face plus ball radius. I will parameterize this and adapt it from observed ball positions each frame.
+
+I will detect wall bounces by checking for a sign flip in the ball's vertical velocity between frames. When the ball is heading toward the opponent, I will predict their return and position myself defensively, assuming they will aim at a corner away from me.
+
+I will position the paddle near the predicted intercept of a centered return, but slightly toward the center to stay reachable on both sides. I am also weighing a more aggressive defensive strategy that covers the worst-case return from a perfect opponent.
+
+I calculated the maximum reach from center. At speed 24, a horizontal return takes about 31 frames and covers roughly 154 pixels, so the full court is reachable within the hit window. A 55-degree return needs about 54 frames and covers 268 pixels. The paddle can therefore reach any part of the court.
+
+Fast, shallow shots aimed at corners are the most dangerous. The ace strategy is to hit with a small offset so the ball lands near a distant corner. Speed rises by 5% after each return, reaching the maximum of 24 pixels per frame after roughly 29 hits. Matches will therefore be long rallies where positioning and not missing matter most in the early stages, while angle control becomes decisive later.
+
+I will stay conservative when uncertain and aggressive only when confident. The serve starts at the court center with speed 6 and a ±30° angle. I will simulate that trajectory to plan the opening hit. The paddle move is simply the clamped vertical offset divided by 5, capped between -1 and 1. I can arrive early and wait for the ball.
+
+I will calculate the exact move as the clamped vertical offset divided by five. If the distance to the target is small enough, the paddle will stop rather than oscillating.
+
+I am now defining the exact aiming logic. The paddle must be within its reachable vertical range at arrival time, and the ball must land inside the 46-pixel hit window around that y coordinate.
+
+I am now enumerating candidate paddle Y positions across the hittable range in two-pixel steps. For each position I compute the angle offset as clamp((ballY − paddleY) / 40, −1, 1), derive the new speed and direction, and simulate the ball’s path to the opponent face to find the arrival time and y-coordinate.
+
+The opponent is also moving during the approach. I must predict their position at the moment of contact, since they can cover more distance than just the frames between now and the ball's arrival.
+
+The opponent’s reachable zone is simply their total movement budget from now until the ball arrives. If the ball lands outside that zone, the shot scores a huge bonus as an ace. Otherwise, the aim is to push the ball to the edge of the opponent’s reach so they cannot return it.
+
+I am adding a post-hit positioning heuristic. After returning the ball, I will prefer shots that leave my paddle near the center so I can cover the opponent's return. If I cannot ace, I will target the corner that makes the next ball harder to reach while keeping my paddle reachable. I will also avoid extreme edges of the hit window when prediction is uncertain.
+
+The shot-scoring formula is now concrete. It weights ace potential by the opponent’s reach margin, adds a safety bonus for staying near the center of the hit window, and slightly penalizes off-center positioning when the ball is still returnable.
+
+I am now considering a brief game-tree search. Simulating an opponent's optimal return and my own response is feasible within the one-millisecond budget, so I can evaluate roughly fifty to one hundred candidate angles per frame. I also plan to record the opponent's paddle placement during their hits to infer their aim tendencies.
+
+I will record the opponent's hit offset at each contact to detect their strategy. If they center, I will still aim for an ace; otherwise I will force them to a corner and intercept their return. After hitting, I will position near the center to maximize coverage. I am now drafting the `createPlayer` function.
+
+I am now defining the exact arena constants: 800 by 500 pixels, 80-pixel paddles, 5-pixel speed, 6-pixel ball radius, and a 24-pixel maximum speed. The commentary will be limited to 48 characters and updated only when the plan changes.
+
+I am now writing the core simulation functions. I defined `clamp` and paddle boundary helpers, then began `stepBall` to advance the ball one frame with wall bounces. Because the maximum vertical speed is roughly 19.7 pixels per frame, a single bounce per frame is sufficient.
+
+I am refining the wall collision model. I will detect whether the arena clamps overshoot or reflects the ball by checking for a sign flip in vertical velocity between frames. This lets me learn the exact wall physics from observed ball positions.
+
+I will distinguish wall reflection from clamping by checking whether the ball’s new y position matches the expected reflected value or the boundary clamp. Paddle hits are identified by a flipped horizontal velocity and a speed increase of 5%. I will record the opponent’s hit offset and angle during each contact to learn their strategy. Physics parameters will be calibrated from the first few bounces, but a default model will suffice until then.
+
+I am refining the discrete simulation to handle wall-bounced balls. I will iterate frame by frame until the ball crosses the contact line, using a contact inset of either the ball radius or zero. I also noted that scoring when the ball passes the paddle face is irrelevant to my strategy.
+
+I will simulate the ball frame by frame, checking collisions before and after wall bounces to calibrate the exact physics model. I am drafting a `predictArrival` function that steps through the trajectory until the ball crosses the contact line. I also realized the arena may check collision at a specific frame rather than at the exact moment the ball reaches the paddle face, so I must account for that timing when predicting arrival.
+
+The simulation loop now steps the ball one frame at a time, applying wall reflection or clamping based on the calibrated physics model, and detects contact when the ball crosses the paddle face from either direction.
+
+I will use the ball’s final position after movement as the collision point, since the arena likely checks collision after applying the frame’s displacement.
+
+The main prediction error is overshoot. When the ball moves fast enough to cross the contact line in one frame, the arena likely checks collision at the end-of-frame position rather than interpolating. That can place the hit test far from the true crossing point. I am weighing whether to interpolate the exact contact y or use the discrete end-of-frame value.
+
+I will test both discrete collision checks and interpolation. Because the ball is re-predicted every frame, a one-frame prediction error is harmless; the next frame corrects it. The only critical value is the exact y position on the final frame, which can be computed precisely if the wall model is correct.
+
+I will use a default wall model that reflects the ball when it hits a boundary, since the first wall bounce may occur during the opening serve. I am still deciding whether to interpolate the exact collision y or use the ball’s end-of-frame position.
+
+I am now modeling the arena's exact deterministic update loop. The ball advances by its velocity, then reflects at the top and bottom walls using the formula `r + (r - y)` or `h-r - (y - (h-r))`. Paddle collision is detected when the ball's center crosses the face from the left, with the check comparing the previous and next x positions relative to the face.
+
+The arena's paddle hit formula is now clear: the ball's vertical offset from the paddle center determines a 55-degree angle, the speed increases by 5% but caps at 24 pixels per frame, and the ball snaps to the face. I also noted that if the arena checks collision after updating position, it compares the previous x coordinate against the face.
+
+The arena likely uses the ball’s end-of-frame y for the hit test, not an interpolated value. Because the ball may be reset to the face after collision, the predicted arrival y must match that post-wall position.
+
+I will simulate the ball until it crosses the contact plane and record the end-of-frame y as the hit position. I also need to account for a timing issue: the arena calls move() before applying ball updates, so my prediction must align with that exact update sequence.
+
+I am analyzing the exact frame sequence. The arena applies my paddle move first, then updates the ball position, then checks collision. I need to know whether the collision test uses the ball's state after that update or before.
+
+I will define `framesUntilHit` as the number of ball updates until collision succeeds. That same count is the number of paddle moves available before the hit check. If the ball has already crossed the contact line, it is a scoring frame and irrelevant to my strategy. I am also considering the edge case where the ball is one pixel away from the contact plane.
+
+I confirmed that one frame of movement is available before the collision check. The opponent also receives frames until their own collision check. The total travel time from hit to opponent is the sum of both sides' pre-move frames.
+
+I am drafting the `simulateReturn` function. It resets the ball to the contact plane with the predicted hit y, then computes the return angle and speed from the paddle offset and the arena's 55-degree formula.
+
+I am unsure whether the ball moves on the hit frame after being reset to the contact plane. The one-frame difference is minor for opponent reach, but my own intercept is harmless because I re-predict every frame.
+
+I will add a safety bias that prioritizes centering the paddle on the ball when it is within eight frames, blending toward the chosen aim only if the ball remains safely reachable. I will also tune aggressive shots to the opponent's reach edge, but only attempt aces when the difficulty margin exceeds fifteen pixels.
+
+I will only attempt an ace when I have at least ten pixels of safety margin and the ball is not too close or near a wall bounce. Otherwise, I will hit with a moderate offset toward the opponent's weak side while keeping fifteen pixels of safety. For non-ace shots, I will aim for the corner farthest from the opponent that still allows a safe hit.
+
+Steep angles give the opponent more time to reach, so the difficulty metric naturally favors flatter shots. I will search candidate offsets from -1 to 1 in steps of 0.1, plus the centering and edge-of-reach offsets, and clamp each candidate to the paddle’s reachable vertical range.
+
+The hit window is 46 pixels, so the paddle can reach up to ±1.15 times the offset scale, but the angle is clamped to ±55 degrees. I will not use positions beyond ±40 from the hit point because they yield the same extreme angle with less safety margin. I will prefer closer positions unless an ace requires the maximum angle.
+
+I will search reachable paddle Y positions in 4-pixel steps. The candidate count is small and simulation time is trivial.
+
+When the ball is moving away, I will predict the opponent's return. I will estimate their likely offset from their history or default to an aim opposite my current position. I will then compute their arrival point and reachable paddles given their available moves. I will prepare for the worst return they can make that I might not reach.
+
+Defensive positioning will compute the convex hull of all possible return arrival y-values. The paddle will center on that region to cover the widest threat. If the opponent's reachable returns exceed the paddle's reach, the AI will prioritize the most likely ones.
+
+I will weight each possible return arrival by its likelihood. If the opponent's style is unknown, I will assume a uniform distribution over reachable offsets or use a worst-case assumption. The median of all possible arrival positions would cover both extremes equally, but ball speed complicates that calculation. I am now considering a simpler defensive heuristic: predict where the ball will be when the opponent hits.
+
+The defensive heuristic is now concrete. The AI will wait near the y-coordinate where a zero-offset return would land, because shallow returns arrive fastest and are hardest to reach from the center. Steep returns are slower and can be adjusted later.
+
+When the ball is heading to the opponent, I will predict their contact y and assume a horizontal return at that y. Rather than standing still, I will move toward that predicted landing spot. To hedge against a smart opponent aiming at the opposite corner, I will blend toward that predicted contact point with a weighted position: 60 percent center court plus 40 percent predicted contact y.
+
+I am stepping back from the complex defensive clamping and focusing on a simpler strategy. Most AI bots are either naive ball-chasers or basic predictive interceptors, so a solid prediction and aiming system should beat them easily. The real challenge is competing against other bots that share the same prompt and likely use similar ideas.
+
+I will observe the opponent's paddle velocity from history to predict their future position, since some bots chase the ball's current y instead of its predicted intercept. I am also guarding against common bugs that would lose matches: incorrect wall math, missed bounces, slow execution, random number generation, and unclamped inputs.
+
+Ace calculations will use the opponent's maximum reachable position rather than their predicted intercept. This conservative model assumes the opponent moves optimally to cover every possible return. The opponent's velocity history will only guide defensive positioning, not ace planning.
+
+The 55-degree angle limit creates a blind spot for direct shots to certain y-coordinates. Wall bounces can still reach any vertical position if enough bounces occur.
+
+Shallow 55-degree shots travel roughly 1040 pixels vertically across the court. That exceeds the playable height by more than twice, so small angle changes cause dramatic shifts in final y. The ball’s landing position is highly sensitive to tiny aiming errors.
+
+Steep angles are unreliable for precise aces because small hit-position errors cause large arrival shifts. Flat angles or direct shots with no wall bounces are more predictable. I will calculate whether the ball can reach a target corner in a single straight flight before attempting an ace.
+
+I will add a stability check to the ace search. A candidate offset will be perturbed by two hundredths of a unit, and if the resulting landing y shifts sharply, that shot is rejected as unreliable.
+
+Stability is now measured as the absolute difference between two perturbed landing y-values; lower values are preferred. If an ace margin is large enough, jittery shots are still acceptable. The simulation only needs incoming speed magnitude, not angle, because returns completely reset direction and add five percent speed. Initial serve speed is six pixels per frame, with horizontal and vertical components derived from a ±30 degree angle.
+
+I am verifying the ball direction sign. The offset formula is (ballY - paddleCentreY) / 40, and the new direction is offset × 55 degrees from horizontal. I will assume positive offset means downward movement for both players, but I must confirm this by observation or correct it quickly if it is wrong.
+
+The ball direction sign is ambiguous because standard math assumes positive angles rotate counterclockwise, which would map to negative screen y, but game developers often use positive angles for downward movement. I will observe the first paddle hit to determine the correct mapping, and until then I will keep the paddle centered so the sign does not matter.
+
+Centering the paddle forever would prevent learning the ball direction sign, because no nonzero offset is ever generated. I will instead deliberately apply a small offset early on and observe the resulting ball velocity after the hit to determine the correct mapping.
+
+I will detect the ball direction sign by watching for a dx sign flip. When the ball turns positive after being negative, I will compare the resulting dy against my intended offset to learn the correct mapping.
+
+I realized the offset is computed from the ball's y-coordinate at the exact moment of collision, not from the previous frame's position. If the ball moves before the hit, that value may be reset or continue into the next frame, so I must account for this timing when observing the resulting ball velocity to learn the correct angle sign.
+
+The post-hit frame is too messy to observe the ball direction sign directly. The ball's y stays near collision while the paddle moves again, so the next step is to record the intended paddle position and predict the collision y before hitting.
+
+I will store the paddle y from the previous frame. When the ball dx flips to positive, I can estimate the collision offset as (collisionBallY - last.me.y) / 40, even though the ball may have moved slightly after redirect.
+
+The ball’s outgoing angle can be read directly from its velocity vector, so the offset at collision still needs to be derived from the exact contact positions.
+
+I can reconstruct the paddle y at collision from the previous move and position, but the ball y is harder to pin down. I will probe by placing the paddle at a known offset near the predicted hit point and watching whether the ball goes up or down.
+
+A calibration shot with offset 0.5 will reveal the ball direction sign. The paddle will sit 20 pixels above the predicted hit point, so a positive offset implies a downward return. Until this sign is known, the bot will stay centered and only attempt one easy calibration hit. After that, it will switch to the full strategy.
+
+The opponent's paddle position at collision is hard to pin down because the observed state reflects one move after the hit. I am working out the exact frame sequence so I can estimate their collision position from the history.
+
+The arena loop applies both paddle moves before updating the ball, so the observed state at frame N+1 already contains the post-collision positions. The opponent has not moved again yet, and the ball carries its new velocity.
+
+The ball y at collision is simply the observed ball y if the arena updates velocity before moving the ball again. The opponent's collision offset is therefore (s.ball.y - s.opp.y) / 40, and the outgoing angle is atan2(s.ball.dy, -s.ball.dx). This gives a direct equation to solve for the angle sign.
+
+The ball direction sign can be learned from any nonzero offset hit, including the opponent's first angled return. If both paddles remain centered, a self-calibration shot will reveal it.
+
+Wall mode will be detected by comparing the predicted next position against the observed one. A near-perfect match indicates a straight flight, while a sign flip in vertical velocity with nearly unchanged magnitude signals a wall bounce.
+
+I will test two wall models—reflection and clamping—and lock in whichever prediction matches the observed ball y within half a pixel. I also plan to watch for an x-reset when dx flips, noting whether the ball lands exactly on the paddle face or overshoots slightly.
+
+I will default the collision x to the paddle face plus radius and test whether the ball lands exactly on the face or slightly overshoots. I also re-read the prompt to confirm the vertical contact window is 40 pixels plus the ball radius.
+
+I am deciding whether the ball's centre or edge must reach the paddle face. I will use a six-pixel contact inset until I observe a hit and learn the true inset from the ball's previous position and velocity.
+
+I will track physics confidence and fall back to centering when the ball's landing is uncertain. The commentary will be kept short and entertaining, updating only when the plan changes.
+
+I am drafting specific commentary lines like "No kill yet — pushing them deep" and "Calibrating the angle on this one." I briefly considered hitting the ball at the very edge of the paddle face, but that is too risky. I also realized that every hit always adds exactly five percent speed, so there is no benefit to soft contact; rallies simply accelerate for both players equally, meaning superior aim at high speed wins.
+
+I confirmed the code will be fully deterministic, using only plain JavaScript math with no randomness. The serve is handled immediately because the ball’s initial velocity is visible from frame zero. I also sketched a simple risk adjustment: play more conservatively when ahead and more aggressively when behind.
+
+I will add a time-based safety check. When the match is near its 36000-frame limit, the bot will play more conservatively if it is ahead and attack aggressively if it is behind.
+
+The bot will return an object with a `target` y-coordinate for the on-screen intercept line and a `say` string. The commentary will be truncated to 48 characters and only updated when the plan changes. I also noted that the arena mirrors the opponent's side, so the bot always sees itself on the left.
+
+I verified the paddle center stays within 40 to 460 pixels. The ball radius of 6 means wall bounces must occur between y = 6 and y = 494. I also confirmed that even at maximum speed, a single frame cannot produce more than one wall bounce.
+
+I will write the simulator to handle two bounces in case the ball hits both walls. I will avoid infinite loops and keep allocations light for speed. When the ball is within three frames, the bot will switch to a panic mode that centers the paddle exactly on the predicted intercept point to prevent misses.
+
+The bot will commit to a target paddle Y and move toward it. It will only switch if a new prediction changes the intercept y significantly. Last-moment centering is safer than risky late aim adjustments.
+
+The bot will commit to a single target side for each incoming ball. It will only switch if the planned ace becomes impossible.
+
+I will recompute the best shot every frame but add hysteresis: if the previous offset scores within ten percent of the best, I will keep it to prevent jitter. The committed aim side resets whenever the ball changes direction or moves away.
+
+I drafted a reflection-based wall-unfolding formula for ball position, but discrete simulation remains the primary prediction method.
+
+The prompt says the ball bounces off the top and bottom walls with perfect reflection, but it does not mention the ball radius. I am deciding whether the wall collision happens at the arena edges or at a distance equal to the ball radius from them.
+
+The ball will hit the walls at a distance equal to its radius, with proper reflection. The serve starts exactly at (400, 250). I may track the opponent's reaction to their position relative to the ball.
+
+I will add a bonus for shots that bounce one frame before the opponent's paddle. This forces the ball to hit the wall just ahead of the opponent, making it harder for weaker AIs to predict while still allowing good AIs to return it.
+
+I realized that near-wall shots can force the opponent into a steep return. When the ball lands within six pixels of the top or bottom wall, the paddle center is clamped to 40 or 460. The resulting negative offset means the opponent must hit the ball with an upward angle, making it harder for weaker predictors to return it.
+
+The opponent can still return a ball that lands near the wall even when the forced offset is steep. That return angle is predictable, so the bot can prepare for it. The exact y-values that would be completely unreachable are being calculated.
+
+The paddle clamp does not create any completely unreachable zones. Even at the extreme edges, the ball remains within reach of a properly positioned paddle, so the opponent can still return it. The only effect is forcing a specific offset, which makes the return predictable but not impossible.
+
+The bot will target the extreme top or bottom wall to force the opponent into a narrow return cone. It will position itself at the predicted return location and wait for the ball.
+
+I calculated the exact ace window. From the bottom edge, a ball at y=6 is unreachable if the opponent starts at y=460 and moves at maximum speed; they can only reach y=305 in about 31 frames. This confirms that a flat shot to the extreme wall is a guaranteed ace.
+
+The ace window is tighter than first calculated. From center, the opponent can only reach y = 49, so a ball at y < 49 is an automatic ace. The bot must deliver flat shots to the extreme top or bottom wall to exploit this.
+
+I realized that a horizontal return from the extreme wall is impossible. The ball lands at y=6, but the paddle center cannot reach 6 because it is clamped to 40. A flat shot therefore cannot land at the wall edge; the bot must use a curved trajectory with wall bounces instead.
+
+The bot will use simulation to search for the best angle and speed that lands the ball at the extreme wall. Flat shots at maximum speed are preferred because they accelerate faster and are harder to return.
+
+A direct shot from the center can reach the extreme wall without any bounce. The required angle is only about 16 degrees, which is well within the 55-degree limit. This means a flat, no-bounce ace to the top or bottom edge is feasible.
+
+A direct corner shot from center at maximum speed still takes about 32 frames, so it remains an automatic ace. I am now calculating the speed threshold below which the opponent can reach the extreme wall in time.
+
+A corner ace from center requires a speed of roughly 23.2. If the opponent is slightly off-center, the far corner can be reached at about 18 speed. The bot will aim for the opposite extreme wall whenever the opponent is not directly in front.
+
+The bot will execute a classic corner-to-corner sequence. It will drive the ball to the extreme wall opposite the opponent, forcing them to chase down. Then it will return to the other extreme wall before the opponent can recover, setting up an ace on the next ball.
+
+The bot will track the opponent's return and redirect it to the opposite extreme wall. A steep return leaves the ball slow and low, giving the bot time to reach it. Even if the opponent tries to recover center or aim unpredictably, the bot can still intercept and send the ball back across the court.
+
+The bot will stay near the ball center while aiming. A 16-degree corner shot only requires a 12-pixel offset, so it does not need to reach the wall edge. This keeps the paddle ready for the next return. The exception is when the incoming ball is already at the wall.
+
+The bot will stay near the center while waiting, only moving to the wall edge if the ball arrives there. It will sprint to the predicted intercept as soon as the opponent's return angle is known. At high speed it can cover roughly 150 pixels in about 30 frames.
+
+I realized a perfect corner shot from center is barely reachable. The bot can predict the opponent's return offset from their paddle position relative to the ball before contact. This allows early movement toward the predicted intercept.
+
+The bot will simulate the opponent's return trajectory as soon as their paddle offset is locked in, then sprint to the predicted intercept immediately. This anticipatory movement can gain several frames of headroom at high speed. The warning window shrinks if the opponent waits until the last moment or tries to disguise their aim.
+
+The bot assumes the opponent positions early and arrives before contact. It predicts the ball's contact point, estimates the opponent's intended paddle y from their velocity, and simulates the return trajectory to find the intercept. It then moves directly toward that intercept.
+
+The bot will shade toward the side that kills it when uncertain. If the opponent is near the predicted ball y and slow, they can still nudge at the last moment by up to framesLeft times five pixels. That equals roughly one full offset unit per ten frames left, so they can still choose any return angle until contact.
+
+Anticipation is most useful when the opponent is close to contact. With four frames left, they can still shift the ball by about 20 pixels, giving a 0.5 offset change and a roughly 3.4 degree angle shift. At one frame left, the movement drops to about 5 pixels and the angle shift to roughly 6.9 degrees, so the warning window shrinks to just one frame.
+
+Even a single frame of anticipation can save the bot from corner aces. At high speed, just three frames of early movement covers the extra distance needed to reach the far wall. A one-frame offset change can shift the ball's final landing by roughly one hundred pixels, so reading the opponent's current position alone is insufficient if they intend to juke.
+
+Shading toward the opponent's threatened corner can actually make it reachable. A one-frame 5-pixel paddle shift can move the ball by roughly 100 pixels, so a corner ace might land inside the bot's reach instead of outside it. The bot will compute the full range of possible arrival y values from the opponent's maximum last-moment adjustment to plan its defense.
+
+The bot will position itself at the midpoint of the opponent's possible arrival interval. This keeps both ends equally reachable and avoids the extra cost of moving near the walls.
+
+Bounce folding creates gaps in the possible arrival y values, so the bot will sample discrete paddle positions and simulate each return trajectory. It will then pick a defensive position that minimizes the maximum distance to all possible arrivals.
+
+The bot will keep its paddle at the midpoint of the opponent's possible arrival interval. This naturally keeps it centered until the opponent's aim is readable, then commits to a specific side.
+
+When the ball is incoming, the opponent's aim is already locked in, so the bot only needs to intercept and aim its counter. If the possible arrival set splits into two clusters due to bounce folding, the midpoint may land in a gap where neither ball lands. The bot will instead pick the more dangerous cluster or the larger one, and it will score candidate defensive positions by coverage.
+
+The bot will sample defensive positions every ten pixels from 40 to 460. For each candidate, it computes the worst-case reach margin across all possible arrivals. It then scores each position by that margin minus a slight penalty for moving away from its current paddle height.
+
+The bot will factor in the opponent's return angle when estimating frames until contact, since horizontal speed varies with angle. Its defensive target will update each frame as it moves toward the ball. When the ball is incoming, the bot may aim its paddle at a different point than the exact intercept center.
+
+The `target` display will show the predicted ball y, while the move target is the paddle y. The hit window constant will be kept as a variable for easy tuning. To guarantee a hit even if the arena collision margin is slightly smaller than expected, the bot will aim within 36 pixels of the ball center rather than the full 40-pixel half-width.
+
+The bot will calibrate its wall model in the first few frames by simulating the ball with four hypotheses: walls at radius with reflection, walls at radius with clamping, walls at zero with reflection, and walls at zero with clamping. It will store whichever simulation matches the actual ball movement.
+
+The safety hit window is being tightened to 34 pixels, giving roughly a 4–6 pixel prediction error tolerance. A 36-pixel offset still achieves a 49.5-degree angle, which is more than enough to reach corners.
+
+The bot will default to model 1 until a bounce frame is reached, since all wall models agree when no wall is involved. It will also use a larger contact uncertainty: when the ball is close, it will center its paddle within 30 pixels to avoid costly misses from small y errors. The code is now ready to be written, and the author will add entertaining commentary while keeping the reply under the 48-character limit.
+
+The bot will cap return speed at 24 pixels per frame. It will compute ball angle from the paddle offset using a 55-degree scale and derive velocity components with hypot for accuracy. It will default to positive downward motion and correct the sign if observations disagree.
+
+The bot will detect its own hits by watching for the ball's horizontal velocity to flip from negative to positive. It will read the paddle and ball y coordinates at that instant, compute the vertical offset divided by forty, clamp it between minus one and one, and use it to calibrate the return angle only when the offset exceeds 0.08 and the vertical speed is above 0.3.
+
+The bot will compare the observed return angle against the predicted angle from the offset and only flip the vertical motion sign if they match within 0.3 radians. It will wait for two consistent observations before locking the angle sign, preventing a single noisy hit from corrupting the physics model.
+
+Self-calibration will be more reliable than relying on opponent hits. The bot will intentionally hit the ball with a known vertical offset, record the predicted and actual paddle y at contact, and verify the resulting velocity sign on the next frame. A simpler angle convention is also being considered: positive offset means the ball is below the paddle, matching standard pong coordinate conventions.
+
+The bot will default to a positive-downward angle convention, where positive offset means the ball lands below the paddle. It will verify this by checking whether its own corner shots land in the expected direction; if the observed vertical velocity sign contradicts the intended aim, it will flip the sign.
+
+The wall model will be learned by comparing each frame’s predicted ball y against the actual observed y. The bot will simulate the ball with four wall hypotheses—reflective and clamping at both the top and bottom edges—and select whichever one matches the current position. It will only update its wall model when no paddle hit occurs, since a hit resets the ball’s horizontal position.
+
+The wall model will only be updated when the simple prediction differs from the actual ball position, which naturally skips frames after paddle hits or bounces. The author has finalized the design and is now drafting specific commentary strings for different match states.
+
+The bot will use eight short commentary phrases for match states like pushing, centering, and panic. The author is also considering whether to model the arena physics more precisely to match its source code.
+
+The bot will use a `phys` object to store wall boundaries, contact offsets, and angle sign. It will detect paddle snap by checking whether the ball lands exactly at the expected contact x coordinate; if the ball moves by its velocity instead, it did not snap. The author is also re-reading the prompt to confirm the exact paddle front face position.
+
+The ball radius of 6 pixels likely only affects the y collision boundary, not the x contact line. The bot will detect whether the ball center reaches the paddle face at x=30 or x=36 by recording the previous x coordinate when the ball’s horizontal velocity flips.
+
+The bot will detect paddle snap by checking whether the ball lands exactly at x=36 or x=30 on the frame after a hit, using a 0.01 tolerance. It is also weighing which contact offset is safer to assume before that measurement is learned.
+
+The bot will center its paddle within 30 pixels when the ball is close, which absorbs small x-miscalculations. Even if the contact offset is wrong, the aim offset is relative to the actual arrival y and updates each frame as the ball approaches, so the angle corrects itself in the last few frames.
+
+The bot will err on the side of arriving early rather than late, since moving too slowly can cause a miss. The existing move formula already drives the paddle at full speed until it is within five pixels of the target, then fine-tunes.
+
+The bot will subtract one frame from its reachability estimate to avoid miscalculating distance. It will always prioritize the hit window over fancy offsets.
+
+The bot will track prediction accuracy by comparing each frame’s predicted ball position against the actual one. Once ten consecutive frames match exactly, it will mark the physics model as trusted and switch to exact frame counts instead of conservative estimates. The author is now ready to write the code.
+
+The reply will contain only raw JavaScript, with no markdown fences or explanations. Edge cases are being guarded: a zero horizontal velocity will not cause an infinite loop, and the simulation will be capped at two thousand frames to prevent runaway calculations.
+
+Opponent velocity will be smoothed for defensive reads. The bot will track opponent misses and returns to adapt its strategy: if the opponent frequently misses edge shots, it will exploit that weakness; otherwise it will use ace math. Scoring logic is being omitted since the arena handles it.
+
+The bot will track opponent misses by watching the score state. When its own score increases, it records an ace. It will keep this simple rather than adding complex behavioral modeling to reduce bugs. A subtle physics issue with the return position is also being considered.
+
+The bot will start its opponent simulation from the contact point on the next frame. It will add an 18-pixel safety margin to the ace threshold. The difficulty formula is the absolute arrival offset minus the opponent’s reachable range, which is five pixels times total frames. A shot counts as an ace only if the difficulty exceeds the opponent’s reach plus that margin.
+
+The bot will assume the opponent has one extra frame available. It will also clamp the opponent’s reachable range to the arena edges, so a paddle near the top or bottom cannot reach beyond y=40 or y=460.
+
+The bot will precompute cosine and sine for candidate angles to speed up calculations. It will use floating-point positions throughout, since the arena allows continuous moves in [-1, 1] and the paddle can shift by fractions of a pixel.
+
+A `say` helper will truncate commentary to 48 characters for the video audience. The move value will be clamped to the [-1, 1] range before returning. A try/catch block will wrap the entire frame so that any thrown error counts as a zero move instead of causing a forfeit.
+
+The move function will wrap the decision logic in a try/catch block so any thrown error returns 0 for that frame. The bot will store the previous state at the end of each frame to enable opponent hit detection on the next call. It will detect an opponent return by checking whether the ball’s horizontal velocity flipped from positive to negative. To distinguish a paddle hit from a wall bounce, it will verify that the ball speed increased slightly after the flip, and only treat the collision as a paddle hit when both the horizontal and vertical velocities change.
+
+The bot will test four wall models with different y-bounds and reflection flags. It will compare each frame’s ball position against the simple integration prediction to identify which model matches the arena physics.
+
+The bot will test four wall models against each frame’s ball position and velocity. It will only lock onto a physics model when exactly one matches, or when the same model matches twice in a row. It will also detect paddle snaps by checking which of the four candidate contact x coordinates the ball lands on after a horizontal velocity flip.
+
+The bot will default its own paddle contact offset to 36 pixels and its reach to 46, since learning those values is too complex. It will infer the opponent’s contact offset by checking whether the ball landed at x=30 or x=36 after a hit. The arena’s serve angle randomness is acceptable because the bot reads the resulting dx and dy directly.
+
+A grid search with 41 candidate offsets is sufficient for offense. The paddle position is hitY minus offset times 40, and the offset must satisfy angleSign times offset to control the ball’s downward direction.
+
+The bot will score each candidate offset by simulating the outgoing ball trajectory with the actual angleSign, rather than manually calculating direction. The outgoing function computes the angle from the normalized offset, clamps it to ±1, and derives dx and dy from speed multiplied by 1.05 and capped at 24.
+
+The bot will add a bounce count to the prediction result for stability scoring. It will test nearby offsets to measure trajectory sensitivity and penalize unstable shots unless both neighbors also ace. The going-away case after a hit is handled with standard logic.
+
+The bot will start by moving to the center of the court. It will display the predicted intercept y only when the ball is coming toward it, and show the defensive target y while waiting. The clamp formula already prevents erratic movement once the target is reached.
+
+The simulation will advance the ball by one frame, apply wall bounces first, then check for paddle contact using the updated position. This ordering prevents a ball from crossing the paddle on the same frame it hits a wall.
+
+The wall bounce formula is verified: when reflection is active, the ball lands at `2*wall - y` after overshoot. The author then begins writing the `predictToX` function, which will simulate ball movement toward a given contact x coordinate and return null if the horizontal velocity is near zero.
+
+The `predictToX` function now enforces direction: it returns null if the ball is moving away from the target. It simulates up to 1500 frames, counting bounces and recording the ball’s position, velocity, and speed at the exact moment it crosses the contact x coordinate.
+
+The bot will infer its own paddle contact offset by watching which x-coordinate the ball lands on after a hit. It will then derive the opponent’s contact point as 770 minus that same offset. A y-bias calibration is considered optional for the first version.
+
+The bot will treat the ball’s snap x as the contact x. For defense, it predicts arrival at the opponent’s contact point and samples their paddle positions across the reachable range, clamped to the arena edges.
+
+The bot will only consider an opponent paddle position if the ball lands within the hit radius. It then simulates the return trajectory to the bot’s contact point and collects valid arrivals. The defensive target is the robust center of these arrival points. Sampling step size is set to the larger of four pixels or one-fifteenth of the reachable range.
+
+The bot will skip the expensive defense sampling when the opponent has more than eight frames to reach the ball. In that case it simply holds the center of the court, since the opponent can already cover any reachable offset.
+
+The reachable paddle positions that can actually hit the ball are far narrower than the full movement range. The hit window is only 92 pixels wide, so the relevant sample space shrinks to that small band rather than spanning the entire court.
+
+The reachable paddle range is the intersection of the opponent’s movement window and the 92-pixel hit window, clamped to the court edges. Sampling about fifteen positions there is cheap. If that intersection is empty, the opponent cannot reach the ball and the bot should prepare for a point win.
+
+The bot will sample the opponent’s full reachable range as a robust worst-case defense. For offense, it predicts arrival at its own contact point and clamps its movement window to the ball’s travel frames. It then shrinks the hit window by a safety margin of 8 pixels when physics are trusted and 14 otherwise, keeping the paddle inside the 40-pixel margin.
+
+If the safe zone is unreachable, the bot will panic toward the predicted hitY. It then samples every even-numbered candidate paddle position across that zone and scores each shot with a new evalShot function.
+
+The evalShot function simulates the return trajectory to the opponent’s contact point. It scores the shot as negative infinity if that return is impossible. The total flight time is the ball’s remaining frames plus the return frames. The opponent’s reachable range is then clamped to their movement window, with an extra frame added when physics are untrusted.
+
+The evalShot function now computes a difficulty score from the return trajectory’s y-position relative to the opponent’s reachable cover range. A positive value indicates an ace margin, while a negative value reflects how close the ball lands to the edge of the opponent’s reach. The bot will maximize this difficulty to select the most challenging and precise shot.
+
+The evalShot function now doubles the difficulty score. It subtracts three points per bounce for stability and 0.15 times the distance from the paddle to the predicted hitY for safety. If the shot is not an ace, it also prefers landing near a court edge to displace the opponent.
+
+The evalShot function now adds a 100-point bonus for aces and a small edge-distance penalty. After selecting the top-scoring candidate, the bot will verify its stability by simulating neighboring paddle positions and choosing a more stable alternative if the best shot is too risky. The bounce penalty may also be reduced, since one bounce can still produce a good corner shot.
+
+The bounce penalty will be raised for non-ace shots so the bot favors direct, stable returns over chaotic multi-bounce trajectories. The top three candidates will undergo an explicit stability check. The bot will also prefer shots that land on the opposite side of the court from where the opponent is positioned.
+
+The difficulty metric already favors the opposite side of the court. Low-speed shots keep all difficulties negative, but the edge-distance term still separates corners. A hysteresis bonus will be added: if a candidate’s paddle offset is within 0.1 of the previous frame’s offset, it receives a 5-point bump to prevent flip-flopping. This is small enough that an ace still overrides it. A close-range override is also being considered.
+
+A close-range override will center the paddle when the ball is two frames away and the ace is not clear. To avoid turning a precise shot into a horizontal return, the bot will only center if the predicted hitY has been shifting; otherwise it trusts the stable aim and stays at its offset.
+
+The bot will track variance in recent predicted hitY values to detect instability. When the ball is three frames or fewer away and the prediction is unstable, it will center the paddle on hitY. At one frame remaining, the target must be exact and the paddle moves full speed toward it; conservative frame reduction only applies to offset reachability, not movement itself.
+
+The bot will gain deterministic physics trust after fifteen consecutive next-frame predictions match, provided at least one includes a wall bounce. Until then it keeps x-integration but treats wall bounces with caution. Once trusted, the bot will stay in that mode for five exact frames. The AI will also include entertaining commentary that references its ball read.
+
+The bot will add a y-bias parameter to correct for interpolated ball positions at collision. It will estimate this bias by aiming center and measuring the residual offset from the observed return angle.
+
+The y-bias correction will self-calibrate during the match. When the bot aims center and the opponent returns the ball with a nonzero angle, it computes the actual offset from that angle and updates the bias parameter. This lets the physics model improve its ball position prediction on the fly.
+
+The y-bias correction is smoothed by averaging the new error with the previous bias. It is only applied once the return-angle sign is confirmed, since an unconfirmed sign makes the error meaningless.
+
+The y-bias correction will be clamped to ±20 to prevent a single bad sample from corrupting the physics model. The bot will also record its intended aim at the one-frame mark—paddle position, predicted hit y, and offset—so it can verify that prediction against the actual ball position on the following frame.
+
+The pending aim stores the expected outgoing angle sign to validate the next frame’s collision. If the ball is already past reach at one frame, no aim is recorded.
+
+The bot will infer the opponent’s angle sign directly from their return trajectory, removing the need for a separate calibration shot. It is working out the correct atan2 formula to map the opponent’s leftward velocity into a signed horizontal angle.
+
+The opponent’s angle sign will be inferred from their return trajectory, but the formula is error-prone. The bot will instead self-calibrate by deliberately aiming with a 0.35 offset on the first easy ball.
+
+The bot will calibrate its angle sign during the first few returns by playing at offset 0 while learning from the opponent. Once the sign is known, it will use a small positive offset of 0.4 to push the opponent, even if the ball is slightly off. This calibration phase is gated by low speed and enough frames remaining.
+
+A wrong angle sign cannot cause a miss, because a miss depends only on paddle-ball overlap. This makes the first hit safe for calibration. The bot will also detect missed contacts by checking whether the ball’s horizontal velocity flips when it should have hit; if not, it will tighten its safety margin and refine the contact model.
+
+A missed contact resets the physics trust flag and increments a miss counter. The first miss triggers a flip of the inset parameter to test the opposite side. If the ball is still centered and misses, the y prediction or contact timing is likely wrong.
+
+The bot will keep a simple fallback set of physics parameters. If it misses while the paddle is within 20 pixels of the predicted hit, it will toggle the inset and wall model once. After three consecutive successful returns, it will lock the current physics configuration.
+
+The bot will hedge its paddle position by averaging the predicted hit y from two physics models: one with inset 6 and one with inset 0. The difference is typically only a few pixels, so centering between them is safe within the 40-pixel paddle margin.
+
+The bot will avoid over-engineering physics learning for hitting. It will center the paddle with small aim offsets, which tolerate angle error. Precise aces will be reserved for when physics is confirmed by matching observations. Otherwise it will push toward the corner with a moderate offset.
+
+A 5-pixel y-error on the hit may misdirect the ball slightly, but the opponent still receives a push. Physics will lock quickly after the first wall bounce. The inset parameter may remain uncertain, so an extra 25-pixel margin covers that uncertainty. Aces require a margin greater than 30 pixels before the bot commits to a risky offset; otherwise it plays a safe corner push with a stable angle.
+
+The bot will recompute its aim every frame toward the latest predicted corner. The paddle target is hitY minus offset times 40, so the paddle smoothly tracks the ball as predictions update.
+
+A fast baseline will pick the corner farthest from the opponent’s reachable center, compute the direct-shot angle, and clamp it to ±55°. If that angle is too steep for a direct hit, the search will run instead. The search still handles bounces and aces, and the simple corner aim is always included as a candidate. Offset 0 is also kept as a safe horizontal fallback.
+
+The commentary will adapt to the opponent’s position and the ball’s speed. It will flag when the opponent is out of position, camping in the center, or when the pace is high. Each line pairs a plan id with a detail, keeping strings short to fit the display.
+
+The bot will relearn physics from scratch each match because state resets per match. It is also verifying whether createPlayer runs once per match or once total.
+
+The bot will switch to ultra-safe play when it leads and fewer than 4000 frames remain. It will then hit only center shots to avoid missing and giving the opponent a point. The exact time threshold is being weighed.
+
+When ahead, the bot will still aim for corners but with a wider safety margin and avoid thin aces. When behind, it will accept thinner margins. It is now ready to write the code.
+
+The launch function clamps the offset to ±1 and converts it to a 55-degree angle. It caps speed at 24 and scales it by 1.05, using Math.hypot for floating-point safety. The ball’s horizontal and vertical velocity are computed from that angle and the stored angle sign.
+
+The bot will read court dimensions, paddle height, face positions, and speed limits directly from the state object to avoid hardcoded values. A clamp helper will keep the paddle inside the court bounds. The commentary string will only be updated when the planned strategy changes.
+
+The bot will return the same commentary string every frame when the plan is unchanged, rather than omitting it. It will always include a target line whenever a predicted meet point exists. The defensive code is being checked for potential slowdowns.
+
+The worst-case search loop is only about 16,000 iterations, so it is fast enough. To avoid garbage-collection pauses that could push a frame past the 5 ms limit, the hot loop will reuse objects and plain variables instead of allocating new ones each step.
+
+The `predictToX` helper simulates ball motion up to 1200 frames. It advances position each frame and reflects off the top and bottom walls when enabled. It detects contact by checking whether the ball crosses the target x coordinate.
+
+The `predictToX` helper returns a single object per call, so the allocation cost is negligible and stays well under 1 ms. The file will start with the `createPlayer` function definition so the arena can evaluate it directly.
+
+The function will be a plain top-level declaration with no exports. A guard will reject non-finite ball coordinates. The serve distance is small enough that the ball cannot cross the court in one frame, and the search already covers direct shots.
+
+A scoring bonus will reward zero-bounce shots that land within 30 pixels of a corner, encouraging the classic strategy. The reach calculation for offensive planning is confirmed correct: it uses maximum speed multiplied by total flight time, which accurately reflects how far the opponent can move before the ball arrives.
+
+The bot will prefer the corner with the wider safety margin when both corners are reachable. When neither corner is safe, it will pick the shot that pushes the opponent into a corner and leaves a return the bot can attack. A two-ply search will also simulate the opponent's best return after each shot to see if they can still ace the ball.
+
+The two-ply search will be capped at 4,000 inner steps by reducing the shot and response samples, keeping it safely under 1 ms. It will only run when ball speed exceeds 16 and physics is trusted; below that threshold, a cheaper one-ply corner push suffices.
+
+The two-ply search will evaluate each shot by assuming the opponent returns from their predicted hit position. The bot will prefer shots that either ace immediately or push the opponent into a corner while positioning itself to cover the opponent's best return.
+
+The bot will keep its paddle near the ball after each hit, so it rarely needs to run to the edge. The two-ply score will add the bot’s defensive reach margin after the opponent’s predicted return.
+
+The two-ply threat score is now defined. It subtracts the bot’s reach margin from the opponent’s best possible arrival y, then penalizes the shot if that threat exceeds 46 pixels. Because the ball lands at a corner, the opponent cannot freely aim and must use a constrained edge offset.
+
+The two-ply search will sample the opponent’s possible return y-values to find the one farthest from the bot. At roughly 160 predictions, the total workload is about 96,000 operations. To stay safely under the 5 ms limit, the target is to finish in under 0.2 ms.
+
+The two-ply search is being replaced by an analytical threat model. The bot will sample 21 offensive candidates across a 4-pixel step, then approximate the opponent’s most dangerous return using flat shots to the far corner and flight-time estimates. This avoids the costly inner simulation while still evaluating counterattack risk.
+
+The two-ply search is being simplified to a single analytical heuristic. The bot will estimate the opponent’s most dangerous return by sampling only five paddle positions per candidate, keeping the workload at roughly four thousand iterations. This shortcut will run only when ball speed is at least eighteen; below that threshold, the bot will skip it entirely.
+
+The analytical threat model is now fully defined. It computes a return flight time from the horizontal distance and a fixed 16-degree angle, then subtracts the bot’s cover time plus the ball’s remaining flight time. If the result is positive, the opponent could still ace the bot. Because the bot pushes the opponent to the edge, their angle freedom is constrained, so the threat is reduced when they are near a corner. This O(1) check will be combined with the one-ply simulation for fast scoring.
+
+The counterThreat helper is being drafted to estimate the opponent’s most dangerous return. It assumes the opponent can choose any paddle position within their reach and hit window, but then realizes that assumption may be incorrect.
+
+The counterThreat helper is simplified. It now assumes the opponent can reach the entire hit window if they can reach the ball at all, and returns zero threat when the opponent is already near a corner, since they cannot freely aim there.
+
+The counterThreat helper is now fully implemented. It computes the opponent’s return flight time from horizontal distance and a fixed 20-degree angle, then subtracts the bot’s cover time plus the ball’s remaining flight time. If the result is positive, it returns the threat margin; otherwise it returns zero. Shots that leave the bot aceable will be penalized in the score so the bot prefers to stay central.
+
+The threat penalty will not override the need to hit the ball. It is a small factor compared to the ace bonus, so non-ace shots still favor safer positions. A slight recovery-position bias will also be applied. If the bot is already at the edge and every reachable shot leaves it vulnerable, it will simply hit from that position and defend afterward.
+
+The bot will start moving toward its defensive position while the ball is still incoming, using roughly fifteen predictions per frame. It will switch between offense and defense based on the ball’s horizontal velocity, hold when the ball is stationary, and include a small deadzone to prevent micro-oscillation. The last planned side will be cached so the commentary stays stable.
+
+The defense samples will use the total reaction time—frames until the opponent hits plus return flight frames—to set a target position. The bot will move toward that position each frame and update it continuously, rather than trying to arrive at a precise moment before the ball lands.
+
+A 20-pixel threshold will govern defense target changes. The bot will switch to a new target immediately if it differs by more than 20 pixels, and otherwise keep the current position. This avoids lag at high speeds while preventing minor oscillations.
+
+The bot will also track the opponent's preferred side over the match to exploit weaknesses. To keep the code fast, it will avoid creating closures in the hot path.
+
+All helper functions will be defined once inside createPlayer and called from move. A wall collision helper is being added to model ball reflection at the top and bottom edges. The bot will also use incoming observations to learn the exact wall boundaries.
+
+The bot will test four wall-reflection models against the first bounce and eliminate any that do not match. The clamp-and-flip approach matches the arena’s Math.abs-style reflection, but a different undo-and-redo method would be detected.
+
+If all wall models fail, the bot will fall back to short-term linear prediction and treat the wall as unknown. The main adaptation mechanism is learning the contact inset from missed shots.
+
+The bot will also learn from successful hit y errors via angle residual to correct bias. This absorbs constant errors even when the contact inset is wrong, though its benefit is limited to similar angles. When no wall separates the ball from the paddle, linear prediction is exact regardless of inset.
+
+The contact inset only shifts the collision frame, so its y-error is tiny at typical speeds. A 15-pixel safety margin and centering when very close should keep the bot from missing even with a slightly wrong physics model. Aces will need more precision, but the 30-pixel margin handles them.
+
+Re-predicting every frame compensates for one-frame timing errors. If the bot overestimates its remaining frames, it simply moves half the distance this frame and finishes the rest next. The final collision y is computed from free-flight motion alone, so it is independent of the contact inset.
+
+A one-frame ambiguity remains when the ball crosses the contact line between 30 and 36 pixels. If the bot underestimates the contact inset, it may predict the hit for the next frame instead of the current one, causing a one-frame miss.
+
+The off-by-one timing error is fixed. When the ball is near the paddle, the bot will move at full speed toward its target instead of proportionally slowing down based on potentially overestimated remaining frames. The existing movement law already achieves this by only clamping to half-speed within five pixels.
+
+The bot will use a conservative reach estimate—predicted frames minus two—when choosing targets. It will always include the center-on-ball target if reachable under that estimate, and will still attempt to reach it even if it is not conservatively reachable.
+
+The bot will clamp its target y to a conservative reach range of ±10 pixels, calculated as five pixels per frame times the predicted frames minus two. If the ideal hit position lies outside this range, it will still move toward the hit position anyway as a panic fallback.
+
+The conservative reach estimate is refined. When only one or two frames remain, the bot trusts the prediction exactly and subtracts nothing. For longer predictions, it subtracts one frame to hedge against timing errors.
+
+The displayed target line will follow the predicted ball y. The bot will comment when the opponent misses. It will also measure the opponent's tracking error by comparing their paddle position to the predicted contact point, and use bounce shots if the opponent is a weak predictor.
+
+The bot will approximate the opponent's tracking error by comparing their paddle position to the ball's y on the hit frame. It will maintain a running average of this error and use it to adjust strategy: high error means sloppy play, so the bot will favor difficult bounce shots; low error means precise play, so it will target real aces and edge pins instead. A moderate score bonus for high bounce shots will help steal points when the opponent is weak.
+
+The bounce angle formula is being double-checked: the vertical offset is divided by forty, clamped to [-1, 1], and scaled to fifty-five degrees. The ball’s new horizontal velocity will be positive so it heads toward the opponent.
+
+The return angle formula is confirmed. Ball speed will increase by 5% per return, capped at 24. The ball position will be placed at the paddle face after a hit to prevent an immediate re-collision.
+
+The outgoing ball simulation starts at the contact x, not past it. If the ball overshoots the face, it continues from that overshot position with new velocity; this one-frame error is absorbed by the ace margin. The simulation is used only for aim planning, not for tracking, because the bot re-predicts from the actual ball position each frame after a hit. Initial serve handling when the ball is centered and coming toward the bot is also covered.
+
+A fallback will move the paddle toward the ball’s current y if prediction fails. The bot will adjust safety margins based on score: it will play more defensively when behind, and more aggressively when ahead. The final output will contain only the JavaScript code.
+
+The bot will use a sharp, confident analyst voice for its commentary. It will deliver short, punchy lines like "Low pin. Next one goes upstairs" and "Contact in three. Holding my spot." to keep the audience engaged without over-explaining.
+
+The bot will comment on its own physics learning, lead mode, and ace attempts. Plan changes will be detected by plan key. The memory object will track ball history, commentary, strategy state, wall models, contact inset, opponent tracking error, and score history.
+
+The bot will store the previous predicted y and a stability counter to detect when the ball’s path is settling. The main move function branches between offense and defense based on the ball’s horizontal velocity, then returns 0 if any error occurs. A snapshot helper will copy only primitive values from the current state for safe history tracking.
+
+The observation step will copy the ball’s position, velocity, both paddles’ y-positions, score, and frame into memory. Wall models will be updated by simulating free-flight motion and reflecting off the top or bottom edges when appropriate. A model is eliminated if the observed ball state matches its prediction within a 0.2 pixel and 0.2 velocity tolerance.
+
+Paddle hits are detected by a flipped horizontal velocity or a speed increase of more than 0.05. When the ball stays on the same side but its x and y match the integrated wall model, the bot either confirms no false wall or eliminates models that do not match.
+
+If all wall models are eliminated, the bot restores them and treats the match as unknown, picking the closest remaining model. It locks the wall configuration only after a single clean wall match; with two or more models remaining, it does not lock and instead uses whichever model matched most recently. The locked top, bottom, and reflect values are stored in the physics object for use during prediction. The contact inset will also be learned from the ball’s snap position.
+
+The bot will measure its own return angle by comparing the observed outgoing ball velocity against the planned expected velocity.
+
+The bot will flip the angle sign when the observed outgoing ball velocity has the opposite sign to the planned expected velocity, and it will mark that sign as confirmed. If the planned offset is nearly flat but the ball still gains significant vertical speed, the bot will infer a y bias from the actual angle. After any return, the hit counter increments and the pending plan clears.
+
+The y bias is updated by blending 40% of the residual error with the existing bias, using a 30-pixel cap. The residual is derived from the actual return angle divided by 55 degrees and the confirmed angle sign. This avoids double-counting because the residual reflects only the remaining uncorrected error after the biased prediction.
+
+The residual error is now computed directly from the true ball position relative to the predicted hit point, bypassing the need to read the post-collision state ball.y. This removes any ambiguity from redirect or snap offsets and isolates the prediction error cleanly.
+
+The collision frame is confirmed to occur after the current move but before the next one, so the observed paddle y matches the stored collision position. This validates using the live state for the residual error calculation.
+
+The bot assumes the arena updates ball position after applying paddle moves. It will detect if the order is reversed, since that would make the current move irrelevant to the collision.
+
+The bot will assume the standard update order: apply paddle moves first, then update the ball. If the arena reverses this order and the ball is updated before the paddles, the bot will still arrive early at its target spot and wait, relying on its 15-pixel safety margin to compensate for the one-frame delay.
+
+The conservative reach logic ensures the bot selects targets it can reach one frame early. This guarantees the paddle is already in position before the ball arrives, regardless of whether the arena updates the ball before or after applying paddle moves.
+
+The yBias will be added directly to the predicted hit y before aiming. The design is now considered robust enough to write.
+
+Predicted y will be clamped to the paddle bounds. The search will check only one neighbor for stability; if the winning candidate is unstable and difficulty is below 20, it will pick the best low-bounce alternative instead. Bounce count and offset will factor into a score that favors zero-bounce returns when scores are close.
+
+Opponent velocity is ignored in ace calculations because the arena allows instant direction changes each frame with no momentum. The search loop will also be capped for safety.
+
+The bot will define `createPlayer` as a top-level function declaration to match the arena's expected interface. It is now drafting the final code and beginning a mental simulation of the opening frame.
+
+The opening simulation shows the ball arriving near frame 70 with a predicted hit around y=460, suggesting a bounce. The bot will push to the top corner, comment on mid-court pinning, and then switch to defense after the opponent returns.
+
+The bot will alternate corners to keep rallies interesting. When both corners are equally distant, it prefers the one opposite to its last target. A 12-point bonus is added to that preferred side during search. The last corner sent is stored in memory and updated after each hit.
+
+The last corner target is locked immediately upon plan selection to prevent mid-rally flips. When the opponent is clearly closer to one side, the bot will take the opposite corner instead of alternating, since the difficulty penalty for a far corner far outweighs the 12-point alternation bonus. The `target` field will store the predicted intercept point, and during defense it will show either the predicted meeting point or the defensive y.
+
+The move will be clamped to [-1, 1] and NaN will be rejected. Plain ASCII will be used for commentary to avoid unicode length issues. The memory object will store the last move and scores for debugging. A one-frame hit expectation flag will be set when the bot predicts it can hit on the next frame; if the ball does not flip direction by then, it counts as a miss.
+
+The bot will only flip wall physics after the second consecutive miss. A single missed hit is treated as a positioning error, so the wall model stays locked and the y bias resets. After two misses, it toggles the top and bottom wall insets and clears the lock. Once two hits are confirmed, the ball trajectory model is marked as trusted.
+
+Missed hits will only trigger physics adaptation when the bot is already well centered, preventing unnecessary wall flips on positioning errors. A fast path will move the paddle toward center whenever the ball is more than twelve frames away from the opponent, skipping trajectory sampling entirely.
+
+The ready-position idea was rejected. Shading toward the predicted contact y would sacrifice coverage of the opposite corner, and pure center is the minimax position when the opponent's aim is unknown.
+
+The ready-position idea was rejected. Shading toward the predicted contact y would sacrifice coverage of the opposite corner, and pure center is the minimax position when the opponent's aim is unknown.
+
+The defensive sampler now uses a conservative 40-pixel hit half. It scores each candidate y by the worst margin across all possible arrival points, then adds a slight penalty for moving away from the current position to reduce jitter.
+
+The bot is verifying that total arrival frames equal the opponent's hit frame plus the return flight duration. It wants to avoid double-counting or skipping a frame in the timeline.
+
+The bot is simulating a one-frame opponent hit followed by a one-frame return to confirm the total arrival frames equal F + R. It checks whether the ball snaps to the opponent's contact on the same frame or only travels back on the next, ensuring the defensive sampler counts every update correctly.
+
+The bot confirmed that two moves are available before the collision check when the ball updates after the paddle. It accepted that a same-frame hit and return would overestimate flight duration, but this conservative estimate is safe.
+
+For opponent trajectory sampling, it will step roughly six pixels across the hittable range—about fourteen samples—and predict each one for about forty frames. That totals around five hundred sixty predictions, which is acceptable. If the hittable range collapses to a single point, only one sample is needed; if the range is invalid, the bot assumes the opponent cannot hit.
+
+When the opponent's hittable range collapses to an impossible interval, the bot will move to center and declare the ball is past. It also realized that in the arena's inverted y-axis, a shot landing below the court midpoint means the top corner was hit, so the alternation memory must be updated accordingly.
+
+The bot will label low y as "top" and high y as "floor" to match the audience's view. It verified that flat shots use maximum horizontal speed and confirmed negative angles preserve forward motion. It will also clamp dy to prevent NaN and read ball speed directly from state.
+
+Outgoing speed will be capped at 24 pixels per frame, with a small 5% tolerance. A tight custom clamp is being added to prevent floating-point edge cases from breaking the move value. The ball's contact detection logic was also reviewed for an edge case where the ball starts exactly on the paddle face, though this is unlikely in practice.
+
+The bot will precompute a 55-degree angle constant and cap the move search loop. It is also mapping out the eight offense plans and four defense plans, deciding to build each plan's commentary string once at plan change.
+
+A `setPlan` helper will update the commentary string only when the plan changes, keeping numbers fresh at each decision. The return object will always include the predicted target y. A default opening line is chosen to fill the first-frame gap. Caching trigonometry is skipped as unnecessary.
+
+When the ball is already past the paddle face and moving away, the bot will hold center instead of predicting. If the opponent has missed and the ball is past them, it will also hold center.
+
+The pin strategy will target the y that maximizes difficulty, with alternation bonus breaking ties. To exploit opponent error, the bot will add a bonus for shots that arrive after a recent bounce near the paddle. It will track frames since the last bounce by returning that value from the prediction function.
+
+The bot will track frames since the last bounce to exploit opponent error. A bonus of fifteen points is added when the opponent's error exceeds twenty-two pixels and the ball has bounced within three frames. This targets erratic players, but it risks misclassifying a good opponent with a large aiming offset as "bad."
+
+The opponent-error exploit is dropped because intentional aiming offsets make that metric unreliable. The bot will stick to a clean ace, pin, and cover strategy. When physics are trusted and an ace is clearly difficult, it will take the shot even if it means moving slightly off-center. During lead protection, aces below difficulty 40 will be ignored in favor of safer, more centered shots.
+
+The bot will never rely on the full 46-pixel hit window. It caps its aim offset at 40 minus a safety margin, which is 12 pixels when protecting a lead, 8 when desperate, and 18 otherwise. This keeps every shot safely inside the smaller 40-pixel hit half. Even with the tightest 12-pixel safety margin, the maximum angle remains about 38 degrees, which is still sufficient to reach the corners from most court positions.
+
+Even from the far edge of the court, a 38-degree angle is sufficient to send the ball to the opposite corner. The required paddle offset there is only about 22 pixels, which fits comfortably inside the safe 40-pixel hit half.
+
+The bot confirmed that a direct cross-court corner shot from the far edge to the opposite corner requires zero bounces and lands near y=40. This stable, predictable path is always available within the safety limits, so risky edge hits are unnecessary.
+
+The discrete simulation will not land exactly on the corner, but the small pixel error is acceptable for scoring. To guarantee the search evaluates the ideal cross-court corner shot even if the grid misses it, an analytically computed "ideal corner" candidate will be added. A helper function is being derived to compute the required paddle offset directly from the target y and horizontal distance.
+
+The helper computes the required paddle offset from the target y and horizontal distance using a ratio of dy/dx and the angle sign. If the sign is wrong, the simulated ball will fly the opposite way and score poorly because the search uses the same sign.
+
+The bot will not trust the analytically computed corner shot until it has calibrated its angle sign. Before confirmation, it will either use a small calibration offset or hold center. The search will be skipped entirely during this calibration phase.
+
+The bot will infer its own angle sign from the opponent's first hit. When the ball changes direction after the opponent strikes, it computes the angle from the ball's velocity and flips the sign. This lets the AI calibrate before its own serve receive.
+
+The bot estimates the opponent's paddle offset from the ball's collision position and the opponent's paddle centre. It compares the angle magnitude against this estimate to infer the sign of the angle. Rather than locking immediately, it accumulates votes and only commits once two opposing signs have been observed.
+
+The bot will require two agreeing votes before locking the angle sign, and its own calibration hit will carry extra weight. It also briefly considered defaulting to a positive angle sign, since the standard formula typically assumes positive offset produces positive vertical velocity.
+
+The bot will assume a positive angle sign by default and flip it on the first observed hit. It will use modern ES6 syntax like const, let, and Math.hypot.
+
+String concatenation will be used instead of template literals for maximum compatibility. The bot will prioritize reliability over fancy shots because a single high-speed miss often decides the point and points get faster. A small flag to track whether the last pin actually moved the opponent is also being considered for commentary.
+
+Incoming speed is now factored into the ace difficulty calculation. Because the ball's horizontal velocity stays constant after each bounce, travel time can be computed analytically from distance divided by dx. Only the final vertical position still needs simulation.
+
+Discrete simulation is preferred over analytical time for accuracy. A commitment mechanism will lock the paddle to a target within five frames of contact, preventing corner switches that could leave the bot between two targets.
+
+The commitment logic now clamps the locked paddle position to within 36 pixels of the predicted hit point, and if that would miss it falls back to replanning. The committed offset is cleared whenever the ball moves away from the paddle.
+
+The committed offset will only update when the paddle is outside the five-frame lock window, so the locked target stays fixed. A new validation step will compare the simulated next ball position against the actual arena state; if they match within a small threshold, the physics model is marked as trusted.
+
+The physics model is only marked trusted after twenty consecutive good frames and the first wall bounce. Until then, aces require a difficulty above forty to compensate for model uncertainty; once trusted, the threshold drops to eighteen. Pins remain allowed at any time.
+
+The wall-lock flag will trigger once a bounce is confirmed and only one physics model remains. The validation logic checks that the ball's horizontal position matches the expected bounce point and that the vertical velocity flips, which correctly distinguishes a wall hit from a paddle hit. The court height will be stored in the physics object on the first frame to support wall models.
+
+The default physics model is the first one. A frame is only eliminated if free motion fails to match the ball's actual position and velocity, and if the horizontal position aligns with a wall bounce. If free motion matches, all models remain active.
+
+The bot is now adding personality commentary strings. Each line is being checked to ensure it stays under 48 characters.
+
+The bot will also describe the opponent's court position in its commentary, noting whether they are high, low, or mid-court. All new strings were checked against the 48-character limit.
+
+Frame-based variety was considered but rejected. The committed offset and calibration logic were verified. A panic mode was added: if the bot cannot reach the safe zone, it will sprint toward the predicted hit point at full speed and announce the panic.
+
+The predicted ball meet line will show the most likely arrival point, extrapolated from the opponent's current paddle position. The worst-case cover position was rejected as too pessimistic for the visual indicator.
+
+The bot will initialize its memory with a startup commentary so the first frame always has something to say. It will fall back to a hardcoded paddle speed of 5 if the arena state reports zero, preventing division errors. The search loop will step by 2 pixels across roughly 28 iterations to cover the available aim range.
+
+The bot estimates roughly two thousand iterations per frame across its offense and defense searches. Even a pessimistic one-microsecond cost per iteration would total about two milliseconds. Real JavaScript execution is far faster, so the loop should finish well under one millisecond.
+
+The ball simulation will be capped at 800 frames. Even the slowest possible serve trajectory needs only about 215 frames, so this limit is more than sufficient. If the simulation exceeds it, the function returns null and the bot falls back to centering or following the ball. The code is now considered ready.
+
+The scoring function now rewards shots that push the opponent far from center. This maximizes displacement for the next ace. The existing difficulty metric already favors extreme edges, so the two together strengthen the pin strategy.
+
+When the opponent can reach every part of the court, the ball should be aimed at the nearest court edge. That minimizes the slack and maximizes difficulty.
+
+The difficulty function now computes the opponent's reachable coverage window from their current position and speed, then measures slack against the ball's predicted arrival point. When both court edges are equally reachable, the alternation bonus breaks the tie.
+
+The difficulty formula now returns positive slack when the ball lands outside the opponent's reachable window and negative slack when it lands inside. The opponent's reach is conservatively set to 46 pixels, so aces are only attempted if the ball can clear that wider margin. The travel-time estimate adds two extra frames when the physics model is untrusted.
+
+A recovery term now penalizes shots that leave the bot stranded at the court edge. If the ball lands near a corner and the bot cannot return it, the score drops by a small amount proportional to how far the nearest edge is outside its reach.
+
+A bonus of six points is added for shots that land on the opposite corner from the previous one, encouraging varied attack patterns.
+
+The corner-alternation bonus is now gated so it only applies when the difficulty difference between candidates is small, preventing it from overriding a clear advantage. The committed offset and pending target are also cleared whenever the score changes or the ball teleports to center, ensuring stale state does not corrupt the next frame.
+
+A teleport detection was added to prevent physics mislearning. If the ball jumps more than 40 pixels from its predicted next position, the stored last state is discarded. This catches score resets and glitches that would otherwise corrupt the physics model.
+
+A frame counter will be stored in the last state so that any jump or backward step invalidates the physics model. A `moveToward` helper is being added to simplify paddle movement. The return object will include a commentary string every frame so the display stays updated.
+
+The hit-detection timing was verified. The pending data is set during the frame before the ball arrives, then consumed by observe at the start of the next move. This ensures the post-hit state is available for physics learning without being cleared too early.
+
+A false-adaptation risk was identified: if the bot predicts a hit in one frame but the ball arrives later, a missing vertical velocity flip could corrupt the physics model. The fix is to only expect a hit when the ball will actually cross the paddle face on this update. When a hit is expected, the code checks that the ball's horizontal velocity flipped from negative to positive. If the flip never occurs and the bot was centered, it will not adapt; this prevents premature or incorrect model updates.
+
+The hit-detection logic now distinguishes a real hit from a false expectation. If the ball passes the paddle face and its horizontal velocity has not flipped, the bot treats it as a genuine miss and adapts its physics model. If the ball is still inbound when the expected hit frame arrives, the expectation is cleared without adapting.
+
+The opponent's paddle angle will be learned on every inbound hit, not only when the bot expects one. The teleport check must run first to avoid misreading score resets as velocity flips. An estimated opponent offset will also be used for this learning.
+
+A vote-based opponent-angle estimator is being added. It compares the ball's inbound angle against two candidate angles derived from the estimated offset: one with the current sign and one flipped. The sign that best matches the observed angle wins a vote. Votes are discarded if the offset magnitude differs from the angle magnitude by more than 40 percent.
+
+The opponent-angle estimator now ignores noisy data when the best candidate error exceeds 0.3 radians. My own hit learning will be treated as an immediate confirmation. The xDist calculation will use the learned inset.
+
+A `contacts` helper now computes the exact paddle faces using the learned inset. The bot will also weight defensive cover by shot probability, since corners are more likely targets than random hits.
+
+The visual prediction line will mark the most threatening arrival point, not the midpoint of all threats. This aligns the drawn target with the actual ball path the audience should see.
+
+The visual prediction line will mark the bot's intended meeting point. During defense it follows the opponent's likely ball arrival; during offense it follows the predicted hit point.
+
+The opponent's likely return is simulated from their current paddle position clamped to the reachable zone. The visual line shows this read, even if the opponent jukes. The bot still computes the best defensive cover over all samples for movement.
+
+The separate likely-return path is being dropped. The bot will always target the worst-case defensive cover, because that naturally converges on the opponent's actual arrival point as the ball approaches. This removes the need for a blended strategy and keeps the logic uniform across all distances.
+
+The opponent's angle sign is shared between horizontal and vertical velocity, so a wrong sign would mirror the entire defensive simulation. Until the bot confirms this sign, it will stay centered rather than sample for defense. This prevents incorrect movement while the mapping is still unknown.
+
+The bot will force a calibration hit on its first offense if the opponent's angle sign is still unconfirmed. It will use an estimated offset of 0.4 to observe the result and confirm the mapping immediately. After that, it will switch to full strategy.
+
+The first hit is always slow because the ball alternates between players. The bot can therefore safely calibrate its opponent angle on that initial hit without risking a fast return.
+
+The calibration hit will retry with a larger offset if the observed vertical velocity is too small to confirm the angle sign. The sign assignment must also be checked against the formula used to hit, since a negative angle sign would flip the expected dy direction.
+
+The calibration hit uses a fixed positive offset of 0.4, which places the paddle above the predicted ball position. The bot then observes the resulting vertical velocity to confirm whether the opponent's angle sign is positive or negative.
+
+The calibration hit now validates the observed angle magnitude. The bot only confirms the opponent's angle sign if the ball's launch angle falls between 8 and 45 degrees, preventing a wrong sign from being locked in when the predicted offset is inaccurate.
+
+The calibration hit now derives the opponent's angle sign directly from the observed launch angle. It skips estimating a y-axis bias on that frame because the true incoming offset is unknown, deferring that learning to later hits.
+
+The bot will still set the opponent angle sign from the observed vertical velocity whenever its absolute value exceeds 0.5, even if the launch angle magnitude is outside the usual calibration window. It assumes the arena's physics formula is correct and will detect any deviation later through y-axis bias or missed shots. A quick check confirms that a 10-pixel prediction error only shifts the measured offset by about 3 degrees, so the sign remains reliably readable.
+
+The calibration threshold is tightened to a launch angle between 10 and 42 degrees. A y-axis bias will be learned from subsequent hits once the opponent's angle sign is confirmed.
+
+The y-axis bias is updated by averaging the true offset error with the current bias, clamped between -20 and 20. The opponent angle sign is confirmed immediately if the launch angle exceeds 0.15 radians and the intended offset is greater than 0.2.
+
+The bot will record a pending hit on every first-frame offense attempt, not only during calibration, so it keeps learning the y-axis bias. The final code is expected to be around 400–500 lines. To avoid bugs, the bot will keep only the most critical adaptations: wall model learning, opponent angle sign confirmation, inset estimation from snap, and y-axis bias correction.
+
+Miss adaptation is being restricted to two centered misses before the wall model flips, and only once. A single predict function will return null or a flight record with frames, y, and bounces. The launch simulation starts at the contact x, though a slight offset from the end position would change the path by less than one frame.
+
+The physics model will be initialized from the court height and ball radius on the first frame, using the state values rather than a hardcoded constant. The opponent's hit half will be calculated as half the paddle height plus the ball radius, while the bot's safe half subtracts a safety margin. The offset divisor may also be set to half the paddle height.
+
+The offset divisor is fixed at half the paddle height, matching the 40-pixel value from the prompt. An opening book was considered but rejected as unnecessary. The reflection formula and search loop bounds are being mentally checked for numerical stability before finalizing the code.
+
+The search loop is being simplified by collecting all candidate paddle positions into an array. This includes the center target, the exact hitY position, and the two corner analytical offsets. The loop bounds are also being tightened so that if the lower bound exceeds the upper bound, the bot falls back to hitY immediately.
+
+The analytical corner candidates are computed with a new `offsetForDirect` helper that derives the required offset from the desired dy/dx ratio, factoring in the opponent's angle sign. If the sign is still unconfirmed, the search loop is skipped entirely. Offsets outside the valid range are clamped so the simulation can still evaluate them as fallback targets.
+
+The offset is clamped to [-1, 1] before mapping to a paddle position, and the resulting candidate is further clamped to the aim range. The commentary will vary with score for entertainment. A quick check confirms that `offsetForDirect` behaves correctly when the opponent's angle sign is negative.

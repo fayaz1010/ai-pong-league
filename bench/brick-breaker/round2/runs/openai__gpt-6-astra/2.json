@@ -1,0 +1,31 @@
+{
+ "model": "openai/gpt-6-astra",
+ "attempt": 2,
+ "seconds": 201.751,
+ "usage": {
+  "prompt_tokens": 636,
+  "completion_tokens": 9296,
+  "total_tokens": 9932,
+  "cost": 0.47116,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.47116,
+   "upstream_inference_prompt_cost": 0.00636,
+   "upstream_inference_completions_cost": 0.4648
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 3106,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "provider": "OpenAI",
+ "id": "gen-1792532586-GpUT7z6dGilsv1zcDFDv",
+ "at": "2026-10-20T21:46:28.387Z"
+}

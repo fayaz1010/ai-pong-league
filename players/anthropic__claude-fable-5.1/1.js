@@ -1,0 +1,162 @@
+function createPlayer() {
+  const DEG = Math.PI / 180;
+  const MAXANG = 55 * DEG;
+
+  let wallMargin = 6;          // learned: where the ball centre reflects off the walls
+  let prev = null;
+  let oppVy = 0;
+  const hist = [1, 1, 1, 1, 1, 1, 1, 1, 1]; // opponent's return-offset tendencies
+  let histN = 9;
+  let say = "Warming up - show me what you've got";
+  let planKey = "";
+  let lastO = NaN;
+
+  function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+
+  function fold(y, lo, hi) {
+    const range = hi - lo;
+    if (range <= 0) return lo;
+    const per = 2 * range;
+    let p = (y - lo) % per;
+    if (p < 0) p += per;
+    if (p > range) p = per - p;
+    return lo + p;
+  }
+
+  function setSay(key, text) {
+    if (key !== planKey) { planKey = key; say = String(text).slice(0, 48); }
+  }
+
+  return function move(s) {
+    const b = s.ball, me = s.me.y, opp = s.opp.y;
+    const H = s.court.h, W = s.court.w, R = b.r || 6;
+    const planeMe = s.paddle.faceX + R;
+    const planeOpp = s.paddle.oppFaceX - R;
+    const half = s.paddle.h / 2, tol = half + R;
+    const spd = s.paddle.speed;
+    const pMin = half, pMax = H - half;
+
+    // learn wall reflection boundary
+    if (b.y < wallMargin) wallMargin = Math.max(0, b.y);
+    if (H - b.y < wallMargin) wallMargin = Math.max(0, H - b.y);
+    const lo = wallMargin, hi = H - wallMargin;
+
+    // opponent tracking / modelling
+    if (prev) {
+      oppVy = opp - prev.opp;
+      if (prev.dx > 0 && b.dx < 0 && b.x > W / 2) {
+        const o = clamp(Math.atan2(b.dy, -b.dx) / MAXANG, -1, 1);
+        const bin = clamp(Math.round((o + 1) * 4), 0, 8);
+        hist[bin] += 1; histN += 1;
+      }
+    }
+    prev = { opp: opp, dx: b.dx };
+
+    const v = Math.hypot(b.dx, b.dy);
+    const v2 = Math.min(v * 1.05, 24);
+    let P = H / 2;
+    let target = H / 2;
+
+    if (b.dx < 0 && b.x > planeMe) {
+      // ---------- ball coming to me: pick the return that hurts most ----------
+      const tA = (planeMe - b.x) / b.dx;
+      const yA = fold(b.y + b.dy * tA, lo, hi);
+      target = yA;
+
+      // uncertainty about exact contact frame -> don't hit with the very edge
+      const u = 6 * Math.abs(b.dy) / Math.abs(b.dx) + 2;
+      const maxOffPx = clamp(tol - 4 - u, 8, half);
+      const oMax = maxOffPx / half;
+
+      const oppEst = clamp(opp + clamp(oppVy, -spd, spd) * Math.min(tA, 8), pMin, pMax);
+      const reach = spd * Math.max(0, tA - 0.5);
+
+      let best = null, bestScore = -Infinity;
+      const N = 20;
+      for (let i = -N; i <= N; i++) {
+        const o = oMax * i / N;
+        const Pc = yA - o * half;
+        if (Pc < pMin || Pc > pMax) continue;
+        if (Math.abs(Pc - me) > reach) continue;
+        const ang = o * MAXANG;
+        const dx2 = v2 * Math.cos(ang), dy2 = v2 * Math.sin(ang);
+        const T = (planeOpp - planeMe) / dx2;
+        const yEnd = fold(yA + dy2 * T, lo, hi);
+        const margin = Math.abs(yEnd - oppEst) - tol - spd * T;
+        let score = margin + 3 * Math.abs(o);
+        if (Math.abs(o - lastO) < 0.08) score += 4;
+        if (score > bestScore) {
+          bestScore = score;
+          best = { o: o, P: Pc, margin: margin, yEnd: yEnd };
+        }
+      }
+
+      if (best) {
+        P = best.P;
+        lastO = best.o;
+        if (v > 5.9 && v < 6.1 && Math.abs(b.x - W / 2) < 60) {
+          setSay("serve-in", "Serve to me - reading bounce, picking my spot");
+        } else if (best.margin > 0) {
+          if (best.yEnd < H / 2) setSay("win-top", "Gap up top! Firing high - they won't get there");
+          else setSay("win-bot", "Gap down low! Firing low - they won't get there");
+        } else if (v2 >= 24) {
+          setSay("max", "Max speed rally - nerves of steel, hold the line");
+        } else if (best.yEnd < oppEst) {
+          setSay("setup-up", "No gap yet - dragging them up, then I strike");
+        } else {
+          setSay("setup-down", "No gap yet - dragging them down, then I strike");
+        }
+      } else {
+        // can't reach a planned contact point: move minimally and still get paddle on it
+        P = clamp(yA + clamp(me - yA, -maxOffPx, maxOffPx), pMin, pMax);
+        setSay("scramble", "Caught out! Lunging just to get a paddle on it");
+      }
+    } else if (b.dx > 0 && b.x < planeOpp) {
+      // ---------- ball going away: cover the most likely / most dangerous returns ----------
+      lastO = NaN;
+      const tO = (planeOpp - b.x) / b.dx;
+      const yO = fold(b.y + b.dy * tO, lo, hi);
+      const K = 10;
+      const ys = [], Ts = [], ws = [];
+      for (let i = -K; i <= K; i++) {
+        const o = i / K;
+        const ang = o * MAXANG;
+        const dx2 = v2 * Math.cos(ang), dy2 = v2 * Math.sin(ang);
+        const T = (planeOpp - planeMe) / dx2;
+        ys.push(fold(yO + dy2 * T, lo, hi));
+        Ts.push(T);
+        const bin = clamp(Math.round((o + 1) * 4), 0, 8);
+        ws.push(0.5 + Math.abs(o) + 9 * hist[bin] / histN);
+      }
+      let bestQ = H / 2, bestC = -Infinity;
+      for (let q = pMin; q <= pMax; q += 5) {
+        let c = 0;
+        for (let k = 0; k < ys.length; k++) {
+          if (Math.abs(ys[k] - q) <= tol + spd * Ts[k] - 6) c += ws[k];
+        }
+        c -= 0.003 * Math.abs(q - H / 2) + 0.002 * Math.abs(q - me);
+        if (c > bestC) { bestC = c; bestQ = q; }
+      }
+      P = bestQ;
+      target = bestQ;
+
+      const high = hist[0] + hist[1] + hist[2];
+      const low = hist[6] + hist[7] + hist[8];
+      if (s.score.me === 6) setSay("mp-me", "Match point - cover everything, no gifts");
+      else if (s.score.opp === 6) setSay("mp-opp", "They're on match point - time to dig in");
+      else if (histN > 15 && low > 1.6 * high) setSay("def-low", "They love going low - I'm covering that side");
+      else if (histN > 15 && high > 1.6 * low) setSay("def-high", "They love going high - I'm covering that side");
+      else setSay("def", "Ball's away - covering their favourite angles");
+    } else {
+      // ball behind me or not moving: hold / recentre
+      lastO = NaN;
+      if (b.dx < 0) { P = me; target = me; }
+      else { P = H / 2; target = P; setSay("reset", "Resetting to centre - next point, fresh plan"); }
+    }
+
+    let mv = (P - me) / spd;
+    if (!isFinite(mv)) mv = 0;
+    mv = clamp(mv, -1, 1);
+    return { move: mv, say: say, target: isFinite(target) ? target : undefined };
+  };
+}

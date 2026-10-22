@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Brick Breaker</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #080e1c;
+    color: #dbeafe;
+    font-family: system-ui, sans-serif;
+  }
+  h1 { margin: 20px 0 14px; font-size: 24px; letter-spacing: 4px; }
+  canvas {
+    display: block;
+    width: 800px;
+    height: 600px;
+    background: #101b30;
+    border-radius: 8px;
+    outline: 1px solid #314360;
+    box-shadow: 0 20px 70px #0008;
+  }
+  p { margin: 16px 0 24px; color: #94a3b8; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>BRICK BREAKER</h1>
+<canvas id="game" width="800" height="600" aria-label="Brick Breaker game"></canvas>
+<p>← → or mouse to move · Space to launch / restart · P to pause</p>
+<script>
+"use strict";
+
+(() => {
+  const canvas = document.getElementById("game");
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+  const R = 8;
+  const PADDLE_H = 14;
+  const keys = { left: false, right: false };
+  const colors = ["#fb7185", "#fb923c", "#facc15", "#4ade80", "#38bdf8"];
+  let bricks = [];
+  let resumeState = "ready";
+
+  const game = window.game = {
+    score: 0,
+    lives: 3,
+    bricksLeft: 50,
+    state: "ready",
+    ball: { x: 400, y: 549, dx: 0, dy: 0 },
+    paddle: { x: 344, y: 558, w: 112 },
+    setBall(x, y, dx, dy) {
+      if (![x, y, dx, dy].every(Number.isFinite)) return;
+      Object.assign(this.ball, { x, y, dx, dy });
+      this.state = "playing";
+      resumeState = "playing";
+    }
+  };
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+  function attachBall() {
+    game.ball.x = game.paddle.x + game.paddle.w / 2;
+    game.ball.y = game.paddle.y - R - 1;
+    game.ball.dx = 0;
+    game.ball.dy = 0;
+  }
+
+  function newGame() {
+    game.score = 0;
+    game.lives = 3;
+    game.bricksLeft = 50;
+    game.state = "ready";
+    resumeState = "ready";
+    game.paddle.x = (W - game.paddle.w) / 2;
+    bricks = [];
+    for (let row = 0; row < 5; row++) {
+      for (let col = 0; col < 10; col++) {
+        bricks.push({
+          x: 44 + col * 72,
+          y: 80 + row * 32,
+          w: 64,
+          h: 24,
+          color: colors[row],
+          alive: true
+        });
+      }
+    }
+    attachBall();
+  }
+
+  function loseLife() {
+    game.lives--;
+    game.state = game.lives === 0 ? "over" : "ready";
+    attachBall();
+  }
+
+  function canMove() {
+    return game.state === "ready" || game.state === "playing";
+  }
+
+  window.addEventListener("keydown", event => {
+    if (["ArrowLeft", "ArrowRight", "Space", "KeyP"].includes(event.code)) {
+      event.preventDefault();
+    }
+
+    if (event.code === "ArrowLeft") keys.left = true;
+    if (event.code === "ArrowRight") keys.right = true;
+    if (event.repeat) return;
+
+    if (event.code === "Space") {
+      if (game.state === "over" || game.state === "won") {
+        newGame();
+      } else if (game.state === "ready") {
+        game.ball.dx = 2.7;
+        game.ball.dy = -4.8;
+        game.state = "playing";
+      }
+    }
+
+    if (event.code === "KeyP") {
+      if (game.state === "paused") {
+        game.state = resumeState;
+      } else if (canMove()) {
+        resumeState = game.state;
+        game.state = "paused";
+      }
+    }
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.code === "ArrowLeft" || event.code === "ArrowRight") {
+      event.preventDefault();
+    }
+    if (event.code === "ArrowLeft") keys.left = false;
+    if (event.code === "ArrowRight") keys.right = false;
+  });
+
+  window.addEventListener("blur", () => {
+    keys.left = false;
+    keys.right = false;
+  });
+
+  canvas.addEventListener("mousemove", event => {
+    if (!canMove()) return;
+    const bounds = canvas.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) * W / bounds.width;
+    game.paddle.x = clamp(x - game.paddle.w / 2, 0, W - game.paddle.w);
+    if (game.state === "ready") attachBall();
+  });
+
+  function intersects(rect) {
+    const b = game.ball;
+    const closestX = clamp(b.x, rect.x, rect.x + rect.w);
+    const closestY = clamp(b.y, rect.y, rect.y + rect.h);
+    return (b.x - closestX) ** 2 + (b.y - closestY) ** 2 <= R * R;
+  }
+
+  function bounceFromBrick(brick, oldX, oldY) {
+    const b = game.ball;
+
+    if (oldY + R <= brick.y && b.dy > 0) {
+      b.y = brick.y - R;
+      b.dy = -Math.abs(b.dy);
+    } else if (oldY - R >= brick.y + brick.h && b.dy < 0) {
+      b.y = brick.y + brick.h + R;
+      b.dy = Math.abs(b.dy);
+    } else if (oldX + R <= brick.x && b.dx > 0) {
+      b.x = brick.x - R;
+      b.dx = -Math.abs(b.dx);
+    } else if (oldX - R >= brick.x + brick.w && b.dx < 0) {
+      b.x = brick.x + brick.w + R;
+      b.dx = Math.abs(b.dx);
+    } else {
+      // Resolve even when setBall places the ball inside a brick.
+      const distances = [
+        Math.abs(b.x - (brick.x - R)),
+        Math.abs(b.x - (brick.x + brick.w + R)),
+        Math.abs(b.y - (brick.y - R)),
+        Math.abs(b.y - (brick.y + brick.h + R))
+      ];
+      const side = distances.indexOf(Math.min(...distances));
+      if (side === 0) {
+        b.x = brick.x - R;
+        b.dx = -Math.abs(b.dx);
+      } else if (side === 1) {
+        b.x = brick.x + brick.w + R;
+        b.dx = Math.abs(b.dx);
+      } else if (side === 2) {
+        b.y = brick.y - R;
+        b.dy = -Math.abs(b.dy);
+      } else {
+        b.y = brick.y + brick.h + R;
+        b.dy = Math.abs(b.dy);
+      }
+    }
+  }
+
+  function update() {
+    if (!canMove()) return;
+
+    const p = game.paddle;
+    p.x = clamp(p.x + (Number(keys.right) - Number(keys.left)) * 8, 0, W - p.w);
+
+    if (game.state === "ready") {
+      attachBall();
+      return;
+    }
+
+    const b = game.ball;
+    // Substeps prevent fast balls from tunneling through bricks or the paddle.
+    const steps = Math.max(1, Math.ceil(Math.hypot(b.dx, b.dy) / 4));
+
+    for (let step = 0; step < steps; step++) {
+      const oldX = b.x;
+      const oldY = b.y;
+      b.x += b.dx / steps;
+      b.y += b.dy / steps;
+
+      if (b.x < R) {
+        b.x = R;
+        b.dx = Math.abs(b.dx);
+      } else if (b.x > W - R) {
+        b.x = W - R;
+        b.dx = -Math.abs(b.dx);
+      }
+
+      if (b.y < R) {
+        b.y = R;
+        b.dy = Math.abs(b.dy);
+      }
+
+      if (b.y - R > H) {
+        loseLife();
+        return;
+      }
+
+      if (b.dy > 0 && oldY <= p.y && intersects({
+        x: p.x, y: p.y, w: p.w, h: PADDLE_H
+      })) {
+        const speed = Math.max(5.5, Math.hypot(b.dx, b.dy));
+        const offset = clamp((b.x - (p.x + p.w / 2)) / (p.w / 2), -1, 1);
+        const angle = offset * Math.PI / 3;
+        b.y = p.y - R;
+        b.dx = speed * Math.sin(angle);
+        b.dy = -speed * Math.cos(angle);
+      }
+
+      for (const brick of bricks) {
+        if (!brick.alive || !intersects(brick)) continue;
+        bounceFromBrick(brick, oldX, oldY);
+        brick.alive = false;
+        game.score += 10;
+        game.bricksLeft--;
+        if (game.bricksLeft === 0) {
+          game.state = "won";
+          return;
+        }
+        break;
+      }
+    }
+  }
+
+  function drawOverlay(title, subtitle, color) {
+    ctx.fillStyle = "rgba(5, 12, 25, 0.76)";
+    ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = "center";
+    ctx.fillStyle = color;
+    ctx.font = "bold 48px system-ui, sans-serif";
+    ctx.fillText(title, W / 2, 305);
+    ctx.fillStyle = "#dbeafe";
+    ctx.font = "18px system-ui, sans-serif";
+    ctx.fillText(subtitle, W / 2, 345);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = "#101b30";
+    ctx.fillRect(0, 0, W, H);
+
+    ctx.strokeStyle = "#19273e";
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= W; x += 40) {
+      ctx.beginPath();
+      ctx.moveTo(x, 60);
+      ctx.lineTo(x, H);
+      ctx.stroke();
+    }
+    for (let y = 60; y <= H; y += 40) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+
+    for (const brick of bricks) {
+      if (!brick.alive) continue;
+      ctx.fillStyle = brick.color;
+      ctx.fillRect(brick.x, brick.y, brick.w, brick.h);
+      ctx.fillStyle = "#ffffff40";
+      ctx.fillRect(brick.x, brick.y, brick.w, 4);
+      ctx.fillStyle = "#00000020";
+      ctx.fillRect(brick.x, brick.y + brick.h - 4, brick.w, 4);
+    }
+
+    const p = game.paddle;
+    ctx.fillStyle = "#67e8f9";
+    ctx.fillRect(p.x, p.y, p.w, PADDLE_H);
+    ctx.fillStyle = "#cffafe";
+    ctx.fillRect(p.x, p.y, p.w, 4);
+
+    ctx.beginPath();
+    ctx.arc(game.ball.x, game.ball.y, R, 0, Math.PI * 2);
+    ctx.fillStyle = "#ffffff";
+    ctx.fill();
+
+    if (game.state === "ready") {
+      ctx.textAlign = "center";
+      ctx.fillStyle = "#dbeafe";
+      ctx.font = "bold 23px system-ui, sans-serif";
+      ctx.fillText("Press SPACE to launch", W / 2, 365);
+    } else if (game.state === "paused") {
+      drawOverlay("PAUSED", "Press P to resume", "#67e8f9");
+    } else if (game.state === "over") {
+      drawOverlay("GAME OVER", "Press SPACE for a fresh game", "#fb7185");
+    } else if (game.state === "won") {
+      drawOverlay("YOU WIN", "All 50 bricks cleared! Press SPACE to play again", "#4ade80");
+    }
+
+    // Keep the live score and lives clearly visible in every state.
+    ctx.fillStyle = "#0b1426";
+    ctx.fillRect(0, 0, W, 58);
+    ctx.fillStyle = "#e2e8f0";
+    ctx.font = "bold 20px system-ui, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText("SCORE  " + game.score, 24, 37);
+    ctx.textAlign = "center";
+    ctx.font = "14px system-ui, sans-serif";
+    ctx.fillStyle = "#94a3b8";
+    ctx.fillText("BRICKS  " + game.bricksLeft, W / 2, 35);
+    ctx.textAlign = "right";
+    ctx.font = "bold 20px system-ui, sans-serif";
+    ctx.fillStyle = "#e2e8f0";
+    ctx.fillText("LIVES  " + game.lives, W - 24, 37);
+  }
+
+  function frame() {
+    update();
+    draw();
+    requestAnimationFrame(frame);
+  }
+
+  newGame();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

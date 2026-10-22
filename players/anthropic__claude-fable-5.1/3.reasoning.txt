@@ -1,0 +1,82 @@
+I'm sketching out the Pong mechanics: an 800x500 court with paddles at either edge, a ball that bounces off walls, and a return angle calculated from where the ball hits the paddle relative to its center, capped at a max deflection angle.
+
+Now I'm thinking through strategy for the AI paddle: predicting where the ball will cross my paddle's x-position (accounting for wall bounces via reflection), then choosing the best interception offset to aim the return shot so the opponent's paddle, which only moves 5px per frame, can't reach it in time—comparing required travel distance versus how far the opponent could realistically move before the ball arrives.
+
+My paddle needs to reach the predicted intercept y-offset in time, clamped within court bounds, and I should favor offsets near the paddle edge for maximum angle since the physics should be deterministic enough to predict precisely, though I'm unsure exactly how edge-case collisions are handled.
+
+Actually the discrete frame-stepping nature of the simulation worries me—if the ball moves in fixed increments per frame rather than continuously, my continuous-time prediction could be off by up to a full frame's worth of vertical movement, which could be tens of pixels at high speeds. A safer bet is to simulate frame-by-frame myself, matching likely collision-check logic, to pin down the exact y-position when the ball crosses the paddle's x-threshold.
+
+I'm considering a self-calibration approach instead: track the frame where dx flips sign to see where the actual bounce registers, then compare against my prediction. Since the crossing y depends linearly on which x threshold triggers the bounce, I'm trying to reason out whether the arena logic uses the ball's edge or center position when checking for a paddle hit.
+
+I could try to infer which repositioning rule the arena uses by comparing the ball's position before and after a bounce frame—if the pre-bounce trajectory would have landed exactly between 30 and 36, I could distinguish the two hypotheses over several observed bounces. It's over-engineered, but tracking a flag across collisions could let me learn the exact rule empirically.
+
+Rather than pinning down the exact bounce mechanics though, I think a simpler approach is to aim for a safety margin in paddle positioning so that even with some error in my assumptions about the collision threshold, the ball still connects.
+
+I'm thinking through how a typical Pong implementation likely detects paddle collisions—checking if the ball's edge crosses the paddle's x-position and whether its y falls within the paddle's vertical range at that frame. I'll go with a post-step collision check against the face position, and build in calibration logic that records actual observed collisions to determine which collision-detection hypothesis best matches reality.
+
+Actually, since the uncertainty spans from the continuous crossing frame to the next discrete frame, the true range could be up to 2*|dy|, roughly 40px — meaning I should widen the target range to cover from y_{k-1} through y_{k+1} rather than just two hypotheses, and pick the paddle offset from that wider midpoint.
+
+I'm leaning toward betting on the simpler hypothesis rather than hedging, so I want to verify it with actual evidence: at the observed bounce frame, I can check the previous frame's position and velocity, extrapolate forward, and see whether the predicted x-position would have already crossed the wall boundary before the recorded bounce — which tells me whether the collision happened earlier than the frame where I detected the sign flip.
+
+I'll also compare the observed y-position against what each hypothesis predicts (exact pre-bounce y vs. post-bounce y vs. continuous-crossing y) to distinguish between the discrete, lookahead, and continuous collision models, defaulting to the simplest one unless the evidence clearly favors another, while keeping a small safety margin in my predictions.
+
+Then for the paddle logic, I need to account for clamping within the valid y-range and factor in my own movement speed limit—computing frames until the ball arrives and checking which target offsets are actually reachable given that constraint, then picking the best reachable position for a good hit angle.
+
+For offense, I simulate where each candidate hit would send the ball toward the opponent's side including wall bounces, then estimate whether the opponent's paddle could realistically reach that spot in time given their movement speed. I score each option by how far short the opponent would fall, preferring shots that either go fully unreachable or force the largest unavoidable movement.
+
+I should also account for the opponent's current trajectory — rather than assuming they stay still, I could extrapolate their position forward using their recent velocity to predict where they'll actually be when the ball arrives.
+
+Since I can't predict the opponent's exact return angle, centering my paddle position seems like the safest default strategy, since possible return trajectories span the whole court anyway. I'll just default to center positioning when the ball is moving away, unless the opponent clearly can't reach it.
+
+I'll assume the opponent intercepts wherever the ball reaches them and returns at that frame, treating serves the same as general shots, and guard against the degenerate dx=0 case. For commentary I'll keep short status strings under 48 characters that only update when the plan changes. Then I'm writing the discrete simulation that steps the ball position and reflects it off the walls until it reaches my paddle's face.
+
+Writing the prediction function...
+
+For edge cases near the paddle, I'll just chase the ball's y directly. I'm also adding logic to detect the bounce model by comparing the ball's x position just after a bounce at my paddle against thresholds to distinguish H1 from continuous bounce behavior, falling back to ambiguous if neither threshold is confirmed yet.
+
+I'm also uncertain whether the arena applies my paddle move before or after it moves the ball each frame, so for safety I'll assume only k-1 of my moves land before the collision check at step k when calculating hit offsets, while still continuing to move toward the target each frame.
+
+For movement, I'll clamp my step toward the target so I don't overshoot once within range. Then I compute the range of paddle positions I can actually reach by arrival time, intersect that with the valid screen bounds and a margin from the ball's position, and if that range is empty I just chase the nearest edge; otherwise I sample candidate positions at small increments and simulate each briefly to pick the best one, which stays well within performance budget.
+
+I'm estimating opponent return trajectories using a closed-form extrapolation rather than full simulation to save time, then scoring each candidate shot by how far it lands from the opponent's paddle minus their reach based on travel time — taking the minimum across their current and projected positions, and adding a small bias toward central hits for safety.
+
+I'll settle on extrapolating a few frames of current velocity, clamped, and scoring the worst case between current and projected positions. For flavor, I'm drafting distinct commentary lines for different situations — camping while waiting, taunts when a shot is unreachable for the opponent, acknowledging when I'm making them run, serve announcements, and a special line for match point.
+
+Now I'm setting up the player function itself, defining the court dimensions, paddle size, speed limits, and tracking variables for the opponent's previous position and velocity to model their movement.
+
+Still writing prediction logic...
+
+Since the intersection range always includes part of [40,460], a valid position exists. For the hedge strategy when moving away, I want to anticipate where the opponent will likely return the ball by sampling possible return angles around their predicted intercept point, then compute my own ideal position that minimizes worst-case travel distance across those scenarios, weighted by time available.
+
+I should also handle edge cases: if the ball has already passed either paddle, just hold position rather than chasing. For the uncertainty margin before the bounce model is confirmed, I'm weighing how much to pad my target position to hedge against alternate hypotheses (H2 or H3) that could shift the real arrival y by a noticeable amount.
+
+Actually H1 and H2 predict the same y when the collision happens on the same frame, so the ambiguity only bites in that narrow 30<x1≤36 window — if a bounce actually occurs there it confirms H1, if the ball instead continues past that boundary still moving left it points to H2, distinguishing them by watching whether the expected hit under H1 materializes.
+
+For the mirrored opponent-side case, I'll apply the same model symmetrically since it's a minor detail. Checking the paddle offset math with margin 3: clamping to ±1 still allows full-angle shots, though near the top wall (yb=10) the paddle position limits restrict offsets to roughly -1.07 to -0.75, meaning only upward-angled returns are reachable there, which is fine since the ball will reflect off the wall anyway.
+
+I'm evaluating candidates by scanning paddle offsets in 1px increments across the 86px range using a cheap closed-form score function, then extrapolating the opponent's position by velocity (difference between current and previous frame, clamped to ±5) projected forward and capped at 40-460, taking the worse of their current and predicted position scores since a strong opponent will reposition optimally. For tiebreaking among candidates, I pick the highest score, with a tiny penalty for extreme offsets to prefer safer angles.
+
+Since the target is recomputed every frame as the opponent moves, the chosen offset can flip between options, but since each candidate must satisfy reachability given remaining frames, this flipping stays consistent and doesn't risk going out of position. The key is the movement granularity -- each frame moves exactly 5px toward target, so I need to make sure the clamped step calculation handles fractional distances correctly.
+
+Now I'm drafting the commentary lines for each scenario (defense, top/bottom kills, chase, serve), checking character counts to keep them concise and punchy for the UI.
+
+Setting up the player object with court dimensions, boundaries, and state variables for position prediction and commentary, then starting to define helper functions for clamping values and predicting ball trajectories...
+
+Finishing the ball-trace loop, then I'm adding a closed-form intercept calculation for defending against the opponent's shot, and starting the shot evaluation function that maps ball position and speed to an offset from the paddle center.
+
+Defining the main move function...
+
+I need to track the previous paddle y-position with a tolerance for the bounce check, since the arena state might reflect position after the last move. Now I'm writing the movement logic that determines target position based on ball trajectory—chasing directly when the ball is near my face, otherwise predicting its bounce path.
+
+Computing reachable range...
+
+Thinking through the `lo > hi` edge case: when reachability limits leave no safe spot, I should fall back to chasing the ball's predicted y-position, clamping it within bounds if it's near a wall. Then I'm working out a defensive fallback that projects where the ball crosses the opponent's face to estimate a target y.
+
+Working through arrival angle sampling to minimize worst-case timing risk...
+
+I should output the predicted meeting point as the target when attacking, falling back to my computed safe position otherwise. For sampling candidate positions between lo and hi, I'll handle the fractional range by dividing into a small number of evenly spaced steps rather than assuming integer bounds, making sure edge cases like a zero-width range still work.
+
+I also need to confirm the paddle boundary clamping is consistent — the opponent can only reach within [40,460], but since the ball's y range folds within [6,494], any reflected position stays within reach after accounting for the paddle's half-height. I'm verifying the reflection math works correctly, like confirming y=500 folds back to 488 within the [6,494] boundary.
+
+Now I'm finalizing the commentary lines and match-point logic, plus drawing the target marker showing where the ball will meet the paddle for the attack.
+

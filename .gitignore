@@ -1,0 +1,4 @@
+node_modules/
+league/league.rerun.json
+.DS_Store
+*.log

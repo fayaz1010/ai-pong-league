@@ -1,0 +1,185 @@
+```javascript
+function createPlayer() {
+    let lastSay = "Ready for action!";
+    let lastSayFrame = -100;
+    let prevDx = 0;
+    let oppHistory = [];
+
+    function clamp(val, min, max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    // Fast analytical simulation of ball trajectory to targetX
+    function predictY(x, y, dx, dy, targetX, r, courtH) {
+        if ((targetX > x && dx <= 0) || (targetX < x && dx >= 0)) {
+            return { y: y, frames: 0, finalDy: dy };
+        }
+        const dist = targetX - x;
+        const frames = dist / dx;
+        let rawY = y + dy * frames;
+        
+        const minY = r;
+        const maxY = courtH - r;
+        const span = maxY - minY;
+        
+        // Triangle wave reflection for top/bottom walls
+        let norm = (rawY - minY) % (2 * span);
+        if (norm < 0) norm += 2 * span;
+        
+        let finalY, finalDy;
+        if (norm <= span) {
+            finalY = minY + norm;
+            finalDy = dy;
+        } else {
+            finalY = maxY - (norm - span);
+            finalDy = -dy;
+        }
+        
+        return { y: finalY, frames: Math.ceil(frames), finalDy: finalDy };
+    }
+
+    return function move(s) {
+        const { me, opp, ball, court, paddle, score, frame } = s;
+        const r = ball.r || 6;
+        const myHitX = paddle.faceX + r;
+        const oppHitX = paddle.oppFaceX - r;
+        const halfPaddle = paddle.h / 2;
+        const minPaddleY = halfPaddle;
+        const maxPaddleY = court.h - halfPaddle;
+
+        // Track opponent movement to detect stationary/lazy habits
+        oppHistory.push(opp.y);
+        if (oppHistory.length > 60) oppHistory.shift();
+
+        let targetY = court.h / 2;
+        let desiredSay = lastSay;
+        let predYForLine = court.h / 2;
+
+        if (ball.dx < 0) {
+            // BALL COMING TOWARD US
+            let impactX = ball.x <= myHitX ? ball.x : myHitX;
+            const pred = predictY(ball.x, ball.y, ball.dx, ball.dy, impactX, r, court.h);
+            const hitY = pred.y;
+            const framesLeft = pred.frames;
+            predYForLine = hitY;
+
+            const currentSpeed = Math.hypot(ball.dx, ball.dy);
+            const nextSpeed = Math.min(24, currentSpeed * 1.05);
+
+            let bestOffset = 0;
+            let maxAdvantage = -Infinity;
+
+            // Evaluate 29 possible return angles across our paddle face
+            const steps = 28;
+            for (let i = 0; i <= steps; i++) {
+                const offset = -1 + (2 * i) / steps;
+                
+                // Keep a dynamic safety margin from the very edge of the paddle
+                const safeLimit = framesLeft < 10 ? 0.70 : 0.85;
+                if (Math.abs(offset) > safeLimit) continue;
+
+                const reqPaddleY = clamp(hitY - offset * halfPaddle, minPaddleY, maxPaddleY);
+                const actualOffset = clamp((hitY - reqPaddleY) / halfPaddle, -1, 1);
+
+                // Check if we can physically reach this paddle position in time
+                const distToMove = Math.abs(me.y - reqPaddleY);
+                const bufferFrames = 2; 
+                if (distToMove > Math.max(0, framesLeft - bufferFrames) * paddle.speed) {
+                    continue; // Unreachable angle
+                }
+
+                const bounceAngle = actualOffset * 55 * (Math.PI / 180);
+                const nextDx = nextSpeed * Math.cos(bounceAngle);
+                const nextDy = nextSpeed * Math.sin(bounceAngle);
+
+                const oppPred = predictY(myHitX, hitY, nextDx, nextDy, oppHitX, r, court.h);
+                
+                // Estimate where opponent will be by the time we hit the ball
+                // Assume most bots drift slightly toward center when awaiting returns
+                const oppEstY = opp.y + clamp((court.h / 2 - opp.y) * 0.2, -framesLeft * 3, framesLeft * 3);
+                const oppDist = Math.abs(oppPred.y - oppEstY);
+                const oppReach = (framesLeft * 0.5 + oppPred.frames) * paddle.speed + halfPaddle;
+
+                // Score this shot: prioritize beating opponent's reach, corner shots, and steep angles
+                let advantage = (oppDist - oppReach) * 2.0 + oppDist * 0.5 + Math.abs(actualOffset) * 25;
+
+                // Heavy bonus if this shot is mathematically unreachable for opponent from their current spot
+                const hardMaxReach = (framesLeft + oppPred.frames) * paddle.speed + halfPaddle;
+                if (Math.abs(oppPred.y - opp.y) > hardMaxReach) {
+                    advantage += 500;
+                }
+
+                // Slight penalty for extreme paddle movement right before impact
+                advantage -= (distToMove / paddle.speed) * 0.4;
+
+                if (advantage > maxAdvantage) {
+                    maxAdvantage = advantage;
+                    bestOffset = actualOffset;
+                }
+            }
+
+            // If no offensive offset is reachable, just do whatever it takes to touch the ball
+            if (maxAdvantage === -Infinity) {
+                targetY = clamp(hitY, minPaddleY, maxPaddleY);
+                desiredSay = "Diving for the save!";
+            } else {
+                targetY = clamp(hitY - bestOffset * halfPaddle, minPaddleY, maxPaddleY);
+                if (prevDx >= 0) {
+                    if (maxAdvantage > 400) desiredSay = "Spotted a wide open corner!";
+                    else if (Math.abs(bestOffset) > 0.65) desiredSay = "Going for a sharp angle.";
+                    else if (nextSpeed > 18) desiredSay = "Handling the high speed!";
+                    else desiredSay = "Lining up the counter-shot.";
+                }
+            }
+
+        } else {
+            // BALL GOING AWAY TOWARD OPPONENT
+            const oppPred = predictY(ball.x, ball.y, ball.dx, ball.dy, oppHitX, r, court.h);
+            const oppHitY = oppPred.y;
+            const currentSpeed = Math.hypot(ball.dx, ball.dy);
+            const nextSpeed = Math.min(24, currentSpeed * 1.05);
+
+            // Simulate the range of possible returns the opponent can make
+            const minAngle = -55 * (Math.PI / 180);
+            const maxAngle = 55 * (Math.PI / 180);
+
+            // What if opponent hits with top edge (-55 deg), center (0 deg), or bottom edge (+55 deg)?
+            const p1 = predictY(oppHitX, oppHitY, -nextSpeed * Math.cos(minAngle), nextSpeed * Math.sin(minAngle), myHitX, r, court.h);
+            const p2 = predictY(oppHitX, oppHitY, -nextSpeed * Math.cos(maxAngle), nextSpeed * Math.sin(maxAngle), myHitX, r, court.h);
+            const pCenter = predictY(oppHitX, oppHitY, -nextSpeed, 0, myHitX, r, court.h);
+
+            // Position ourselves at the midpoint of their dangerous return options, weighted slightly toward flat returns
+            const midExtreme = (p1.y + p2.y) / 2;
+            targetY = clamp(midExtreme * 0.65 + pCenter.y * 0.35, minPaddleY, maxPaddleY);
+            predYForLine = targetY;
+
+            if (prevDx < 0) {
+                if (Math.abs(opp.y - oppHitY) > oppPred.frames * paddle.speed + halfPaddle) {
+                    desiredSay = "That shot looks unstoppable!";
+                } else if (score.me > score.opp) {
+                    desiredSay = `Holding the lead (${score.me}-${score.opp}).`;
+                } else {
+                    desiredSay = "Recovering to optimal guard position.";
+                }
+            }
+        }
+
+        prevDx = ball.dx;
+
+        // Throttle commentary updates so viewers can read them easily
+        if (desiredSay !== lastSay && frame - lastSayFrame > 45) {
+            lastSay = desiredSay.slice(0, 48);
+            lastSayFrame = frame;
+        }
+
+        const diff = targetY - me.y;
+        const moveCmd = clamp(diff / paddle.speed, -1, 1);
+
+        return {
+            move: moveCmd,
+            say: lastSay,
+            target: Math.round(predYForLine)
+        };
+    };
+}
+```

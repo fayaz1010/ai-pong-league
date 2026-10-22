@@ -1,0 +1,92 @@
+{
+ "file": "runs2/openai__gpt-6-astra/2.html",
+ "passed": 15,
+ "total": 15,
+ "results": [
+  {
+   "name": "01 loads with no console errors",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "02 test interface is complete",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "03 starts on level 1: 50 one-hit bricks, 3 lives",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "04 tick(n) advances exactly n frames",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "05 brick hits score 10 each",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "06 losing the ball costs a life",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "07 \"multi\" power-up gives 3 balls",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "08 \"wide\" doubles the paddle for 600 frames",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "09 autopilot clears level 1 without losing a life",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "10 autopilot wins all 3 levels with no life lost",
+   "pass": true,
+   "note": "won at 23000 frames, min lives 3"
+  },
+  {
+   "name": "11 level 2: 60 bricks, top two rows need 2 hits",
+   "pass": true,
+   "note": "60 bricks, 20 two-hit"
+  },
+  {
+   "name": "12 level 3: 40+ bricks, 10+ need 2 hits",
+   "pass": true,
+   "note": "70 bricks, 30 two-hit"
+  },
+  {
+   "name": "13 high score is saved to localStorage",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "14 P pauses and resumes",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "15 runs at 50+ frames per second",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "errors": [],
+ "run": {
+  "minLives": 3,
+  "l2": 60,
+  "l3": 70,
+  "wonAt": 23000,
+  "frames": 23000,
+  "level1At": 6440,
+  "livesAtL2": 3
+ }
+}

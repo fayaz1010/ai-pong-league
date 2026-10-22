@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Pong League</title>
+<meta name="description" content="Five AI models each wrote three Pong players from the same prompt. Watch any two fight, play one yourself, and try the Brick Breaker games they built.">
+<meta name="theme-color" content="#0b0d12">
+<meta property="og:title" content="AI Pong League: 5 AIs wrote Pong players. One never lost.">
+<meta property="og:description" content="Watch any two of the 15 AI-written Pong players, play against them, and try each AI's Brick Breaker.">
+<meta property="og:image" content="https://fayaz1010.github.io/ai-pong-league/screenshots/watch-desktop.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0d12'/%3E%3Crect x='5' y='9' width='3' height='14' fill='%233fd6a4'/%3E%3Crect x='24' y='9' width='3' height='14' fill='%23e8875f'/%3E%3Ccircle cx='16' cy='15' r='3' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">AI Cited · free and open source</p>
+    <h1>5 AIs wrote Pong players.<br><span>One never lost.</span></h1>
+    <p class="lede">Every model got the same prompt, word for word, and wrote three players. The 15 players then fought 420 matches in a frozen, seeded arena. Watch any two of them right here, play one yourself, or try the Brick Breaker games they built.</p>
+    <div class="cta">
+      <a class="btn primary" href="#watch" data-tab="watch">Watch two AIs</a>
+      <a class="btn" href="#play" data-tab="play">Play an AI</a>
+      <a class="btn ghost" id="videoLink" href="https://youtu.be/7GJfxWFiFDI" target="_blank" rel="noopener">Watch the episode ↗</a>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <div class="wrap tabrow" role="tablist">
+    <button role="tab" data-tab="watch">Watch</button>
+    <button role="tab" data-tab="play">Play</button>
+    <button role="tab" data-tab="bricks">Brick Breaker</button>
+    <button role="tab" data-tab="league">League table</button>
+    <button role="tab" data-tab="how">How we tested</button>
+  </div>
+</nav>
+
+<main class="wrap">
+  <!-- WATCH -->
+  <section id="watch" class="panel" role="tabpanel">
+    <div class="presets" aria-label="Presets">
+      <button class="preset" data-preset="champion"><b>The champion's 56-0</b><small>GPT-6 Astra #3 replays its whole season</small></button>
+      <button class="preset" data-preset="upset"><b>The upset</b><small>Gemini #1 beats Fable 5.1 #1, 7-6</small></button>
+      <button class="preset" data-preset="closest"><b>Closest call</b><small>Astra #2 v Astra #3, 6-7 in 32,638 frames</small></button>
+    </div>
+    <div class="pickers">
+      <label class="pick"><span>Left</span><select id="wL"></select></label>
+      <span class="vs">vs</span>
+      <label class="pick"><span>Right</span><select id="wR"></select></label>
+      <label class="pick seed"><span>Seed</span><input id="wSeed" type="number" min="1" max="99999" value="1" inputmode="numeric"></label>
+      <button class="btn primary" id="wGo">Start</button>
+    </div>
+    <div class="stage">
+    <div class="courtbox" id="wBox">
+      <canvas id="wCanvas" width="800" height="500" aria-label="Pong court"></canvas>
+      <div class="overlay" id="wOver" hidden></div>
+    </div>
+    <div class="controls">
+      <button class="btn small" id="wPause">Pause</button>
+      <div class="speeds" role="group" aria-label="Speed">
+        <button data-speed="1" class="on">1×</button><button data-speed="2">2×</button><button data-speed="4">4×</button><button data-speed="16">16×</button><button data-speed="64">64×</button>
+      </div>
+      <button class="btn small" id="wSkip">Skip to result</button>
+      <span class="meta" id="wMeta"></span>
+    </div>
+    <div class="says">
+      <div class="say" id="wSayL"><div class="who"></div><p class="line">…</p></div>
+      <div class="say right" id="wSayR"><div class="who"></div><p class="line">…</p></div>
+    </div>
+    </div>
+    <div class="gauntlet" id="gauntlet" hidden>
+      <div class="ghead"><b>GPT-6 Astra #3: the 56-0 season</b><span id="gTally"></span></div>
+      <ol id="gList"></ol>
+    </div>
+    <p class="note">Every AI sees itself on the left; the arena mirrors the court for the right-hand player. The words under the court are each AI's own live commentary (its <code>say</code> line), written by the model inside its player code. Same two players + same seed = the same match, every time.</p>
+  </section>
+
+  <!-- PLAY -->
+  <section id="play" class="panel" role="tabpanel" hidden>
+    <div class="pickers">
+      <label class="pick"><span>You (left) vs</span><select id="pR"></select></label>
+      <button class="btn primary" id="pGo">New match</button>
+    </div>
+    <div class="stage">
+    <div class="courtbox" id="pBox">
+      <canvas id="pCanvas" width="800" height="500" aria-label="Pong court, you are on the left"></canvas>
+      <div class="overlay" id="pOver"></div>
+    </div>
+    <div class="controls">
+      <span class="meta">Keys: <kbd>↑</kbd><kbd>↓</kbd> or <kbd>W</kbd><kbd>S</kbd> · Touch: drag on the court · <kbd>Space</kbd> pause</span>
+      <span class="meta" id="pMeta"></span>
+    </div>
+    <div class="says">
+      <div class="say" id="pSayL"><div class="who"><b>You</b></div><p class="line">First to 7.</p></div>
+      <div class="say right" id="pSayR"><div class="who"></div><p class="line">…</p></div>
+    </div>
+    </div>
+    <p class="note">Same physics as the league: your paddle moves at most 5 pixels a frame, just like theirs. Tip: hit the ball near the edge of your paddle for a steep angle. Start with Gemini #3 (0 wins all season) before you try GPT-6 Astra #3.</p>
+  </section>
+
+  <!-- BRICKS -->
+  <section id="bricks" class="panel" role="tabpanel" hidden>
+    <p class="intro">Before Pong, each model built a full Brick Breaker game in one HTML file, three times per round. Every one passed every check in our frozen Playwright test suite. Pick one and play it.</p>
+    <div class="seg" role="group" aria-label="Round">
+      <button data-round="round2" class="on">Round 2: the hard spec (15 checks)</button><button data-round="round1">Round 1 (13 checks)</button>
+    </div>
+    <div class="bgrid" id="bGrid"></div>
+    <p class="note">Controls: <kbd>←</kbd><kbd>→</kbd> or mouse, <kbd>Space</kbd> launch, <kbd>P</kbd> pause. Round 2 games also have <kbd>A</kbd> autopilot, which had to clear all three levels without losing a life. Built for keyboard and mouse; on a phone use the buttons under the game.</p>
+  </section>
+
+  <!-- LEAGUE -->
+  <section id="league" class="panel" role="tabpanel" hidden>
+    <h2>By model</h2>
+    <div class="tablewrap"><table class="lt" id="tModel"></table></div>
+    <h2>All 15 players</h2>
+    <div class="tablewrap"><table class="lt" id="tTeam"></table></div>
+    <p class="note">P played, W won, L lost, F points for, A against, GD difference, Pts (win 3, draw 1). "Write cost" and "Write time" are what it took the model to write that player. Tap a row to watch that player.</p>
+  </section>
+
+  <!-- HOW -->
+  <section id="how" class="panel" role="tabpanel" hidden>
+    <ul class="facts">
+      <li><b>Same prompt, word for word.</b> Every model got the exact text below, with no system prompt and no follow-ups. Three separate attempts each, so luck evens out.</li>
+      <li><b>Frozen rules.</b> The arena and the prompt were hashed (SHA-256) before any model wrote a line; the hashes are in the repo.</li>
+      <li><b>420 matches.</b> 15 players, everyone plays everyone home and away on two serve seeds. First to 7, a 10-minute cap.</li>
+      <li><b>Deterministic.</b> Serve angles come from a seeded generator and <code>Math.random</code> is blocked, so anyone can re-run the league and get the same 420 results. This page uses a browser port of the arena that reproduces all 420 recorded matches exactly.</li>
+      <li><b>Cheap.</b> <span id="costLine">All model calls for both games cost about $24.</span></li>
+    </ul>
+    <details class="prompt" open>
+      <summary>The exact prompt every model got</summary>
+      <pre id="specText"></pre>
+    </details>
+    <p class="note">Run it yourself: clone the repo and run <code>npm run league</code> (Node 18+, no installs). Add your own AI player in <code>players/</code> and it joins the league.</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Made for the AI Cited episode <a href="https://youtu.be/7GJfxWFiFDI" target="_blank" rel="noopener">"I Let 5 AIs Fight in Pong… One Never Lost"</a>. Code and data: <a id="repoLink" href="https://github.com/fayaz1010/ai-pong-league">GitHub</a> (MIT).</p>
+    <p class="fine">Not affiliated with or endorsed by OpenAI, Anthropic, Google or xAI. Logos are trademarks of their owners, shown only to identify each model. The player and game code is the models' own output, shared for education.</p>
+  </div>
+</footer>
+
+<div class="modal" id="bModal" hidden>
+  <div class="mbox" role="dialog" aria-modal="true" aria-labelledby="bTitle">
+    <div class="mhead"><b id="bTitle"></b><span><a id="bOpen" target="_blank" rel="noopener">Open full page ↗</a><button class="btn small" id="bClose" aria-label="Close">Close</button></span></div>
+    <div class="frame"><iframe id="bFrame" title="Brick Breaker game"></iframe></div>
+    <div class="pad" id="bPad">
+      <button data-key="ArrowLeft" data-hold>◀</button><button data-key=" ">Launch</button><button data-key="a">Autopilot</button><button data-key="p">Pause</button><button data-key="ArrowRight" data-hold>▶</button>
+    </div>
+  </div>
+</div>
+
+<script src="fdlibm.js"></script>
+<script src="engine.js"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

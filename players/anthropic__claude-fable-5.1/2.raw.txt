@@ -1,0 +1,187 @@
+```js
+function createPlayer() {
+  const DEG = Math.PI / 180;
+  let TOP = 6, BOT = 494;
+  let prevOpp = null, oppVy = 0, prevDx = 0;
+  let pred = null;
+  const errs = [0, 0, 0];
+  let samples = 0, hyp = 0;
+  let sayText = "Let's dance. I'm reading every angle you throw.";
+  let sayKey = "", sayFrame = -999, holdUntil = -1;
+  let lastMe = 0, lastOpp = 0;
+
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  function fold(y0, dy, t) {
+    const L = BOT - TOP;
+    const u = y0 - TOP + dy * t;
+    let m = u % (2 * L);
+    if (m < 0) m += 2 * L;
+    if (m > L) m = 2 * L - m;
+    const bounces = u >= 0 ? Math.floor(u / L) : Math.floor(-u / L) + 1;
+    return { y: m + TOP, bounces: bounces };
+  }
+
+  // Discrete simulation to a paddle face, returning several collision hypotheses
+  function simTo(b, r, left, faceX) {
+    let x = b.x, y = b.y, dx = b.dx, dy = b.dy, n = 0;
+    while (n < 600) {
+      if (left ? x - r <= faceX : x + r >= faceX) break;
+      x += dx; y += dy; n++;
+      if (y < TOP) { y = 2 * TOP - y; dy = -dy; }
+      else if (y > BOT) { y = 2 * BOT - y; dy = -dy; }
+    }
+    const yD = y, dyD = dy;
+    const over = left ? (faceX + r - x) : (x - (faceX - r));
+    const yC = fold(y, dy, -over / (Math.abs(dx) || 1)).y;
+    let n2 = n;
+    while (n2 < 600) {
+      if (left ? x <= faceX : x >= faceX) break;
+      x += dx; y += dy; n2++;
+      if (y < TOP) { y = 2 * TOP - y; dy = -dy; }
+      else if (y > BOT) { y = 2 * BOT - y; dy = -dy; }
+    }
+    return { yD: yD, yC: yC, yD2: y, frames: n, dy: dyD };
+  }
+
+  function setSay(key, text, frame, force) {
+    if (frame < holdUntil && !force) return;
+    if (key !== sayKey && (force || frame - sayFrame >= 25)) {
+      sayKey = key; sayText = text; sayFrame = frame;
+    }
+  }
+
+  return function move(s) {
+    const me = s.me.y, opp = s.opp.y, b = s.ball;
+    const r = b.r || 6;
+    const faceX = s.paddle.faceX, oppFaceX = s.paddle.oppFaceX;
+    const PS = s.paddle.speed, HALF = s.paddle.h / 2;
+    const PMIN = HALF, PMAX = s.court.h - HALF;
+    const REACH = HALF + r;
+    const W = s.court.w;
+    const frame = s.frame || 0;
+    TOP = r; BOT = s.court.h - r;
+
+    // opponent velocity estimate
+    if (prevOpp !== null) oppVy = 0.5 * oppVy + 0.5 * (opp - prevOpp);
+    prevOpp = opp;
+
+    // learn the arena's collision convention from observed hits on my paddle
+    if (prevDx < 0 && b.dx > 0 && b.x < W * 0.3 && pred) {
+      errs[0] += Math.abs(b.y - pred.yD);
+      errs[1] += Math.abs(b.y - pred.yC);
+      errs[2] += Math.abs(b.y - pred.yD2);
+      samples++;
+      let bi = 0;
+      for (let i = 1; i < 3; i++) if (errs[i] < errs[bi] - 1e-9) bi = i;
+      hyp = bi;
+      pred = null;
+    }
+    prevDx = b.dx;
+
+    // score commentary
+    if (s.score.me !== lastMe || s.score.opp !== lastOpp) {
+      let txt;
+      if (s.score.me > lastMe) {
+        txt = s.score.me === 6 && s.score.opp < 6
+          ? "Match point. One more and we're done here."
+          : "That one had their name on it. " + s.score.me + "-" + s.score.opp;
+      } else {
+        txt = s.score.opp === 6 && s.score.me < 6
+          ? "They're at match point. Deep breath. Lock in."
+          : "Okay, you got one. Resetting the trap. " + s.score.me + "-" + s.score.opp;
+      }
+      lastMe = s.score.me; lastOpp = s.score.opp;
+      sayKey = "score"; sayText = txt; sayFrame = frame; holdUntil = frame + 90;
+    }
+
+    let mv = 0, target = me;
+    const speed = Math.sqrt(b.dx * b.dx + b.dy * b.dy);
+    const ns = Math.min(speed * 1.05, 24);
+    const travel = (oppFaceX - r) - (faceX + r);
+
+    if (b.dx < 0 && b.x - r > faceX) {
+      // Ball coming at me: predict the meeting point, pick the nastiest return
+      const h = simTo(b, r, true, faceX);
+      pred = h;
+      const hitY = hyp === 0 ? h.yD : hyp === 1 ? h.yC : h.yD2;
+      const T = h.frames;
+      const canMove = PS * T - 1;
+      const dyAbs = Math.abs(h.dy);
+      const uncert = samples >= 3 ? 0.3 : 0.7;
+      const maxOff = clamp((REACH - 3 - uncert * dyAbs) / HALF, 0.25, 0.95);
+      const oppP = clamp(opp + oppVy * Math.min(T, 8), PMIN, PMAX);
+      let best = null;
+      for (let i = -19; i <= 19; i++) {
+        const off = i * 0.05;
+        if (Math.abs(off) > maxOff + 1e-9) continue;
+        const pt = hitY - off * HALF;
+        if (pt < PMIN || pt > PMAX) continue;
+        if (Math.abs(pt - me) > canMove) continue;
+        const ang = off * 55 * DEG;
+        const ndx = ns * Math.cos(ang), ndy = ns * Math.sin(ang);
+        const t = travel / ndx;
+        const a = fold(hitY, ndy, t);
+        const dist = Math.max(0, Math.abs(a.y - oppP) - REACH);
+        const req = dist / t;
+        const score = req + 0.015 * a.bounces + 0.005 * Math.abs(off);
+        if (!best || score > best.score) {
+          best = { off: off, pt: pt, req: req, arr: a.y, bounces: a.bounces, score: score };
+        }
+      }
+      if (best) {
+        target = hitY;
+        mv = clamp((best.pt - me) / PS, -1, 1);
+        if (best.req > PS) {
+          if (best.bounces > 0) setSay("winwall", "Banking it off the wall into the open gap!", frame, false);
+          else if (best.arr < oppP) setSay("wintop", "They're caught low — ripping it to the top!", frame, false);
+          else setSay("winbot", "They're caught high — ripping it to the bottom!", frame, false);
+        } else if (best.req > 0.5 * PS) {
+          setSay("press", "Making them sprint for it — long way to go", frame, false);
+        } else {
+          setSay("build", "No opening yet. Adding pace, pulling them wide", frame, false);
+        }
+      } else {
+        target = hitY;
+        mv = clamp((hitY - me) / PS, -1, 1);
+        setSay("scramble", "Too fast to aim — just getting a paddle on it", frame, false);
+      }
+    } else if (b.dx > 0) {
+      // Ball heading away: park where every possible return is coverable
+      pred = null;
+      const h = simTo(b, r, false, oppFaceX);
+      const oy = h.yD;
+      const arrs = [];
+      for (let i = -10; i <= 10; i++) {
+        const off = i * 0.1;
+        const ang = off * 55 * DEG;
+        const ndx = ns * Math.cos(ang), ndy = ns * Math.sin(ang);
+        const t = travel / ndx;
+        arrs.push({ y: fold(oy, ndy, t).y, t: t });
+      }
+      const straight = arrs[10].y;
+      let bestW = s.court.h / 2, bestS = Infinity;
+      for (let w = PMIN; w <= PMAX + 1e-9; w += 10) {
+        let worst = 0;
+        for (let k = 0; k < arrs.length; k++) {
+          const a = arrs[k];
+          const need = Math.max(0, Math.abs(a.y - w) - HALF) / a.t;
+          if (need > worst) worst = need;
+        }
+        const sc = worst + 0.0001 * Math.abs(straight - w);
+        if (sc < bestS) { bestS = sc; bestW = w; }
+      }
+      target = bestW;
+      mv = clamp((bestW - me) / PS, -1, 1);
+      setSay("wait", "Their shot. I'm parked where every angle lands", frame, false);
+    } else {
+      // Ball already past my face (or stationary): chase it anyway
+      mv = clamp((b.y - me) / PS, -1, 1);
+      target = b.y;
+    }
+
+    if (typeof mv !== "number" || !isFinite(mv)) mv = 0;
+    return { move: mv, say: String(sayText).slice(0, 48), target: target };
+  };
+}
+```

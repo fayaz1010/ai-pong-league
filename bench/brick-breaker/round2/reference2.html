@@ -1,0 +1,89 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Reference Brick Breaker round 2 (suite check only, not a contestant)</title>
+<style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;height:100vh}canvas{background:#000}</style></head>
+<body><canvas id="game" width="800" height="600"></canvas>
+<script>
+const cv = document.getElementById('game'), cx = cv.getContext('2d');
+const SPEED = 6, PW = 100, R = 8;
+let rnd = mulberry(1);
+function mulberry(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const keys = {};
+const game = window.game = {score: 0, lives: 3, level: 1, state: 'ready', balls: [], paddle: {x: 350, y: 570, w: PW}, bricks: [], bricksLeft: 0, autopilot: false,
+  powerups: [], wideFor: 0, high: Number(localStorage.getItem('bb_highscore') || 0),
+  tick(n) { for (let i = 0; i < n; i++) step(true); },
+  seed(n) { rnd = mulberry(n | 0); },
+  setBall(x, y, dx, dy) { game.balls = [{x, y, dx, dy}]; game.state = 'playing'; },
+  spawnPowerUp(type, x, y) { game.powerups.push({type, x, y}); }};
+function layout(lv) {
+  const b = [], cols = 10, bw = 72, bh = 22, gap = 6, left = (800 - (cols * bw + (cols - 1) * gap)) / 2;
+  const rows = lv === 1 ? 5 : lv === 2 ? 6 : 5;
+  for (let r = 0; r < rows; r++) for (let k = 0; k < cols; k++) {
+    if (lv === 3 && (r + k) % 5 === 0 && r > 0) continue;
+    b.push({x: left + k * (bw + gap), y: 60 + r * (bh + gap), w: bw, h: bh, hits: lv === 2 ? (r < 2 ? 2 : 1) : lv === 3 ? (r < 2 ? 2 : 1) : 1});
+  }
+  return b;
+}
+function startLevel(lv) { game.level = lv; game.bricks = layout(lv); game.bricksLeft = game.bricks.length; game.powerups = []; onPaddle(); }
+function newGame() { game.score = 0; game.lives = 3; game.wideFor = 0; game.paddle.w = PW; startLevel(1); }
+function onPaddle() { game.state = 'ready'; game.balls = [{x: game.paddle.x + game.paddle.w / 2, y: game.paddle.y - R - 1, dx: 0, dy: 0}]; }
+function launch() { const a = (-0.35 + rnd() * 0.7); game.balls[0].dx = SPEED * Math.sin(a); game.balls[0].dy = -SPEED * Math.cos(a); game.state = 'playing'; }
+addEventListener('keydown', (e) => { keys[e.code] = true;
+  if (e.code === 'Space') { e.preventDefault(); if (game.state === 'ready') launch(); else if (game.state === 'over' || game.state === 'won') newGame(); }
+  if (e.code === 'KeyP') game.state = game.state === 'paused' ? 'playing' : game.state === 'playing' ? 'paused' : game.state;
+  if (e.code === 'KeyA') game.autopilot = !game.autopilot; });
+addEventListener('keyup', (e) => { keys[e.code] = false; });
+cv.addEventListener('mousemove', (e) => { if (game.autopilot) return; const r = cv.getBoundingClientRect(); game.paddle.x = (e.clientX - r.left) * (800 / r.width) - game.paddle.w / 2; clamp(); });
+function clamp() { game.paddle.x = Math.max(0, Math.min(800 - game.paddle.w, game.paddle.x)); }
+function predictX(b) { // where this ball will cross the paddle line, with wall bounces
+  if (b.dy <= 0) return b.x; const t = (game.paddle.y - R - b.y) / b.dy; let x = b.x + b.dx * t; const L = 800 - 2 * R;
+  x -= R; x = ((x % (2 * L)) + 2 * L) % (2 * L); if (x > L) x = 2 * L - x; return x + R; }
+function pilot() {
+  const p = game.paddle; if (game.state === 'ready') { launch(); return; }
+  const down = game.balls.filter((b) => b.dy > 0).sort((a, b) => b.y - a.y)[0] || game.balls[0]; if (!down) return;
+  const target = predictX(down) - p.w / 2 + (p.aim ?? 0);
+  const d = target - p.x; p.x += Math.max(-14, Math.min(14, d)); clamp();
+}
+function step(forced) {
+  if (game.state === 'paused' && !forced) return;
+  if (game.state === 'over' || game.state === 'won') return;
+  const p = game.paddle;
+  if (game.autopilot) pilot(); else { if (keys.ArrowLeft) p.x -= 8; if (keys.ArrowRight) p.x += 8; clamp(); }
+  if (game.wideFor > 0 && --game.wideFor === 0) { const c = p.x + p.w / 2; p.w = PW; p.x = c - PW / 2; clamp(); }
+  for (const u of game.powerups) u.y += 3;
+  game.powerups = game.powerups.filter((u) => { if (u.y + 8 >= p.y && u.y <= p.y + 12 && u.x >= p.x && u.x <= p.x + p.w) { apply(u.type); return false; } return u.y < 610; });
+  if (game.state === 'ready') { const b = game.balls[0]; b.x = p.x + p.w / 2; b.y = p.y - R - 1; return; }
+  for (const b of game.balls) {
+    b.x += b.dx; b.y += b.dy;
+    if (b.x < R) { b.x = R; b.dx = Math.abs(b.dx); } if (b.x > 800 - R) { b.x = 800 - R; b.dx = -Math.abs(b.dx); } if (b.y < R) { b.y = R; b.dy = Math.abs(b.dy); }
+    if (b.dy > 0 && b.y + R >= p.y && b.y + R <= p.y + 16 && b.x >= p.x - R && b.x <= p.x + p.w + R) {
+      const off = Math.max(-1, Math.min(1, (b.x - (p.x + p.w / 2)) / (p.w / 2))); const a = off * 1.0; b.dx = SPEED * Math.sin(a); b.dy = -SPEED * Math.cos(a);
+      p.aim = (rnd() - 0.5) * p.w * 0.7;
+    }
+    for (let i = 0; i < game.bricks.length; i++) { const k = game.bricks[i];
+      if (b.x + R > k.x && b.x - R < k.x + k.w && b.y + R > k.y && b.y - R < k.y + k.h) {
+        const ox = Math.min(b.x + R - k.x, k.x + k.w - (b.x - R)), oy = Math.min(b.y + R - k.y, k.y + k.h - (b.y - R)); if (ox < oy) b.dx = -b.dx; else b.dy = -b.dy;
+        k.hits--; game.score += 10;
+        if (k.hits <= 0) { game.bricks.splice(i, 1); if (rnd() < 0.1) game.powerups.push({type: rnd() < 0.5 ? 'wide' : 'multi', x: k.x + k.w / 2, y: k.y + k.h}); }
+        break; } }
+  }
+  game.balls = game.balls.filter((b) => b.y < 620); game.bricksLeft = game.bricks.length;
+  if (game.score > game.high) { game.high = game.score; localStorage.setItem('bb_highscore', String(game.high)); }
+  if (game.bricksLeft === 0) { if (game.level === 3) game.state = 'won'; else startLevel(game.level + 1); return; }
+  if (game.balls.length === 0) { game.lives--; if (game.lives <= 0) { game.lives = 0; game.state = 'over'; } else onPaddle(); }
+}
+function apply(t) { const p = game.paddle;
+  if (t === 'wide') { const c = p.x + p.w / 2; p.w = PW * 2; p.x = c - p.w / 2; clamp(); game.wideFor = 600; }
+  if (t === 'multi' && game.balls.length) { const b = game.balls[0]; for (const a of [-0.5, 0.5]) game.balls.push({x: b.x, y: b.y, dx: SPEED * Math.sin(a), dy: -SPEED * Math.cos(a)}); } }
+function draw() {
+  cx.fillStyle = '#000'; cx.fillRect(0, 0, 800, 600);
+  for (const k of game.bricks) { cx.fillStyle = k.hits > 1 ? '#c0392b' : '#f39c12'; cx.fillRect(k.x, k.y, k.w, k.h); }
+  for (const u of game.powerups) { cx.fillStyle = u.type === 'wide' ? '#2ecc71' : '#3498db'; cx.fillRect(u.x - 12, u.y - 6, 24, 12); }
+  cx.fillStyle = '#fff'; cx.fillRect(game.paddle.x, game.paddle.y, game.paddle.w, 12);
+  for (const b of game.balls) { cx.beginPath(); cx.arc(b.x, b.y, R, 0, 7); cx.fill(); }
+  cx.font = '18px sans-serif'; cx.fillText(`Score ${game.score}   Lives ${game.lives}   Level ${game.level}   Best ${game.high}${game.autopilot ? '   AUTO' : ''}`, 12, 28);
+  cx.font = '48px sans-serif'; cx.textAlign = 'center';
+  if (game.state === 'over') cx.fillText('GAME OVER', 400, 380); if (game.state === 'won') cx.fillText('YOU WIN', 400, 380); if (game.state === 'paused') cx.fillText('PAUSED', 400, 380); cx.textAlign = 'left';
+}
+function loop() { step(false); draw(); requestAnimationFrame(loop); }
+newGame(); loop();
+</script></body></html>

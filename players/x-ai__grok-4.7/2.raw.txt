@@ -1,0 +1,417 @@
+function createPlayer() {
+  const MAX_ANG = 55 * Math.PI / 180;
+  const SPD_CAP = 24;
+  const SPD_MUL = 1.05;
+  const OFF_DIV = 40;
+
+  let prev = null;
+  let wallMin = 6;
+  let wallMax = 494;
+  let wallMinN = 0;
+  let wallMaxN = 0;
+  let inset = 6;
+  let insetN = 0;
+  let insetLock = false;
+  let plan = "";
+  let say = "Eyes up. Make the first mistake.";
+  let prevOppY = null;
+  let oppSum = 0;
+  let oppN = 0;
+  let commit = null;
+  let phase = "";
+  let prevScoreMe = 0;
+  let prevScoreOpp = 0;
+
+  function clamp(v, a, b) {
+    return v < a ? a : v > b ? b : v;
+  }
+
+  function clip(s) {
+    return s.length > 48 ? s.slice(0, 48) : s;
+  }
+
+  function setPlan(id, line) {
+    if (id !== plan) {
+      plan = id;
+      say = clip(line);
+    }
+  }
+
+  function noteInset(v, r) {
+    if (insetLock) return;
+    if (!(v >= -1 && v <= 18)) return;
+    if (insetN >= 1 && Math.abs(v - inset) > 5) {
+      inset = r;
+      insetN = 0;
+      return;
+    }
+    insetN += 1;
+    inset = insetN === 1 ? v : inset * 0.4 + v * 0.6;
+    if (insetN >= 4) insetLock = true;
+  }
+
+  function yAt(y, dy, t) {
+    let a = wallMin;
+    let b = wallMax;
+    if (b < a) {
+      const tmp = a;
+      a = b;
+      b = tmp;
+    }
+    const span = b - a;
+    if (!(span > 1) || !isFinite(t)) return y;
+    let rel = y - a + dy * t;
+    const per = span * 2;
+    rel = rel % per;
+    if (rel < 0) rel += per;
+    if (rel > span) rel = per - rel;
+    return a + rel;
+  }
+
+  function simTo(x, y, dx, dy, planeX) {
+    if (!(dx < 0 || dx > 0)) return null;
+    const goingRight = dx > 0;
+    if (goingRight && x >= planeX) return { x: x, y: y, dx: dx, dy: dy, n: 0 };
+    if (!goingRight && x <= planeX) return { x: x, y: y, dx: dx, dy: dy, n: 0 };
+    let n = 0;
+    while (n < 4000) {
+      x += dx;
+      y += dy;
+      if (y < wallMin) {
+        y = wallMin + (wallMin - y);
+        dy = -dy;
+      } else if (y > wallMax) {
+        y = wallMax - (y - wallMax);
+        dy = -dy;
+      }
+      n += 1;
+      if (goingRight && x >= planeX) return { x: x, y: y, dx: dx, dy: dy, n: n };
+      if (!goingRight && x <= planeX) return { x: x, y: y, dx: dx, dy: dy, n: n };
+    }
+    return null;
+  }
+
+  function reachMargin(arrY, py0, t, pSpeed, minPy, maxPy, window) {
+    const reach = Math.max(0, t) * pSpeed + 3;
+    const ideal = clamp(arrY, minPy, maxPy);
+    const lo = Math.max(minPy, py0 - reach);
+    const hi = Math.min(maxPy, py0 + reach);
+    const got = clamp(ideal, lo, hi);
+    return Math.abs(arrY - got) - window;
+  }
+
+  function attackLine(best, oppY) {
+    if (best.margin > 6) {
+      return best.arrY < 250
+        ? "Ace, top shelf. You're not getting up."
+        : "Ace, basement. That one is gone.";
+    }
+    if (best.arrY < 70 || best.arrY > 430) return "Into the wall. Your reply angle dies.";
+    if (Math.abs(best.off) < 0.12) return "Flat heat. No time to get cute.";
+    if (oppY < 170) return "You're stranded high. Dropping it.";
+    if (oppY > 330) return "You're buried low. I'm going upstairs.";
+    return best.arrY < 250 ? "Top side. Come and get it." : "Low side. Bend the knees.";
+  }
+
+  function attackId(best, oppY) {
+    if (best.margin > 6) return best.arrY < 250 ? "ace-hi" : "ace-lo";
+    if (best.arrY < 70 || best.arrY > 430) return "wall";
+    if (Math.abs(best.off) < 0.12) return "flat";
+    if (oppY < 170) return "punish-hi";
+    if (oppY > 330) return "punish-lo";
+    return best.arrY < 250 ? "atk-hi" : "atk-lo";
+  }
+
+  return function move(s) {
+    const b = s.ball;
+    const h = s.court.h;
+    const r = b.r;
+    const minPy = s.paddle.h / 2;
+    const maxPy = h - s.paddle.h / 2;
+    const pSpeed = s.paddle.speed;
+    const myFace = s.paddle.faceX;
+    const oppFace = s.paddle.oppFaceX;
+    const meY = s.me.y;
+    const oppY = s.opp.y;
+    const oppVy = prevOppY == null ? 0 : oppY - prevOppY;
+
+    if (!prev) {
+      wallMin = r;
+      wallMax = h - r;
+      inset = r;
+    }
+
+    const teleported = prev && Math.abs(b.x - (prev.x + prev.dx)) > 30;
+
+    if (prev && !teleported) {
+      if (b.dx * prev.dx > 0 && b.dy * prev.dy < 0) {
+        const raw = prev.y + prev.dy;
+        const bound = (b.y + raw) / 2;
+        if (prev.dy < 0 && bound > -2 && bound < 40) {
+          if (wallMinN === 0 || Math.abs(bound - wallMin) < 2.5) {
+            wallMin = wallMinN === 0 ? bound : wallMin * 0.45 + bound * 0.55;
+            wallMinN += 1;
+          }
+        } else if (prev.dy > 0 && bound > h - 40 && bound < h + 2) {
+          if (wallMaxN === 0 || Math.abs(bound - wallMax) < 2.5) {
+            wallMax = wallMaxN === 0 ? bound : wallMax * 0.45 + bound * 0.55;
+            wallMaxN += 1;
+          }
+        }
+      }
+      if (prev.dx > 0 && b.dx < 0) {
+        noteInset(oppFace - b.x, r);
+        const ang = Math.atan2(b.dy, -b.dx);
+        const off = clamp(ang / MAX_ANG, -1, 1);
+        oppSum += off;
+        oppN += 1;
+      } else if (prev.dx < 0 && b.dx > 0) {
+        noteInset(b.x - myFace, r);
+      }
+    }
+
+    let scoredLine = "";
+    if (s.score.me > prevScoreMe) scoredLine = "That's the point. Run it back.";
+    else if (s.score.opp > prevScoreOpp) scoredLine = "Sloppy. Next rally is mine.";
+    prevScoreMe = s.score.me;
+    prevScoreOpp = s.score.opp;
+
+    const planeMe = myFace + inset;
+    const planeOpp = oppFace - inset;
+    const spd = Math.sqrt(b.dx * b.dx + b.dy * b.dy);
+    const oppWindow = OFF_DIV + r;
+    let dest = meY;
+    let target = meY;
+
+    if (b.dx < 0) {
+      if (phase !== "attack") {
+        phase = "attack";
+        commit = null;
+      }
+      const hit = simTo(b.x, b.y, b.dx, b.dy, planeMe);
+      if (!hit) {
+        dest = clamp(b.y, minPy, maxPy);
+        target = dest;
+        setPlan("panic", "Scrambling. This one's too tight.");
+      } else {
+        const hitY = hit.y;
+        const tMoves = hit.n;
+        const tSafe = Math.max(0, hit.n - 1);
+        target = hitY;
+
+        function evaluate(off) {
+          let py = clamp(hitY - off * OFF_DIV, minPy, maxPy);
+          const actual = clamp((hitY - py) / OFF_DIV, -1, 1);
+          if (Math.abs(hitY - py) > OFF_DIV + 0.6) return null;
+          const ang = actual * MAX_ANG;
+          const newSp = Math.min(SPD_CAP, spd * SPD_MUL);
+          const vx = Math.cos(ang) * newSp;
+          const vy = Math.sin(ang) * newSp;
+          if (!(vx > 0.2)) return null;
+          const tTo = (planeOpp - planeMe) / vx;
+          const arrY = yAt(hitY, vy, tTo);
+          const margin = reachMargin(arrY, oppY, tTo, pSpeed, minPy, maxPy, oppWindow);
+          const forcedPy = clamp(arrY, minPy, maxPy);
+          const forced = Math.abs(clamp((arrY - forcedPy) / OFF_DIV, -1, 1));
+          let worst = -1e9;
+          if (margin <= 6) {
+            const sp2 = Math.min(SPD_CAP, newSp * SPD_MUL);
+            const backCenter = Math.min(tTo * pSpeed, Math.abs(250 - py));
+            const posAfter = py + (250 > py ? backCenter : -backCenter);
+            for (let k = -2; k <= 2; k++) {
+              const o2 = k / 2;
+              const ang2 = o2 * MAX_ANG;
+              const dx2 = -Math.cos(ang2) * sp2;
+              const dy2 = Math.sin(ang2) * sp2;
+              if (!(dx2 < -0.2)) continue;
+              const tBack = (planeMe - planeOpp) / dx2;
+              const backY = yAt(arrY, dy2, tBack);
+              const ideal = clamp(backY, minPy, maxPy);
+              const react = Math.max(0, tBack - 1) * pSpeed;
+              const got = clamp(ideal, Math.max(minPy, posAfter - react), Math.min(maxPy, posAfter + react));
+              const def = Math.abs(backY - got) - oppWindow;
+              if (def > worst) worst = def;
+            }
+          }
+          let score = (250 - Math.min(arrY, h - arrY)) * 0.85;
+          score += Math.abs(arrY - oppY) * 0.32;
+          score += forced * 28;
+          score += margin * (newSp > 15 ? 1.15 : 0.12);
+          if (oppVy > 2 && arrY < oppY - 25) score += 7;
+          if (oppVy < -2 && arrY > oppY + 25) score += 7;
+          score -= Math.abs(py - 250) * 0.015;
+          if (margin > 6) score += 2000;
+          else if (worst > 12) score -= 420;
+          return { off: actual, py: py, arrY: arrY, margin: margin, score: score, worst: worst };
+        }
+
+        function pick(tAllow) {
+          let best = null;
+          for (let i = -18; i <= 18; i++) {
+            const cand = evaluate(i / 20);
+            if (!cand) continue;
+            if (Math.abs(cand.py - meY) > tAllow * pSpeed + 0.35) continue;
+            if (!best || cand.score > best.score) best = cand;
+          }
+          return best;
+        }
+
+        const best = pick(tSafe) || pick(tMoves);
+        if (!best) {
+          dest = clamp(hitY, minPy, maxPy);
+          setPlan("panic", "Scrambling. This one's too tight.");
+        } else {
+          if (!commit || best.score > commit.score + 80) {
+            commit = {
+              off: best.off,
+              score: best.score,
+              id: attackId(best, oppY),
+              line: attackLine(best, oppY)
+            };
+            plan = commit.id;
+            say = clip(commit.line);
+          }
+          let py = clamp(hitY - commit.off * OFF_DIV, minPy, maxPy);
+          const travel = tMoves * pSpeed;
+          if (Math.abs(py - meY) > travel) {
+            const contact = clamp(hitY, minPy, maxPy);
+            if (Math.abs(contact - meY) <= travel) {
+              const dir = py > meY ? 1 : -1;
+              py = meY + dir * travel;
+            } else {
+              py = contact;
+              setPlan("panic", "Scrambling. This one's too tight.");
+            }
+          }
+          dest = py;
+        }
+      }
+    } else {
+      phase = "defend";
+      commit = null;
+      const hit = spd > 0.05 ? simTo(b.x, b.y, b.dx, b.dy, planeOpp) : null;
+      if (!hit) {
+        dest = 250;
+        target = 250;
+        setPlan("def-mid", "Middle hold. Make a choice.");
+      } else {
+        const hitY = hit.y;
+        const tOpp = hit.n;
+        const touch = reachMargin(hitY, oppY, tOpp, pSpeed, minPy, maxPy, oppWindow);
+        if (touch > 4) {
+          dest = clamp(250, minPy, maxPy);
+          target = hitY;
+          setPlan("ace-watch", "That's through. Point's mine.");
+        } else {
+          const newSp = Math.min(SPD_CAP, spd * SPD_MUL);
+          const habit = oppN >= 3 ? oppSum / oppN : 0;
+          const narrow = oppN >= 3 && Math.abs(habit) <= 1;
+          const cands = [];
+          const travel = tOpp * pSpeed + 4;
+          for (let i = -10; i <= 10; i++) {
+            const off = i / 10;
+            let py = clamp(hitY - off * OFF_DIV, minPy, maxPy);
+            if (Math.abs(py - oppY) > travel) continue;
+            if (Math.abs(hitY - py) > oppWindow) continue;
+            const actual = clamp((hitY - py) / OFF_DIV, -1, 1);
+            const ang = actual * MAX_ANG;
+            const vx = -Math.cos(ang) * newSp;
+            const vy = Math.sin(ang) * newSp;
+            if (!(vx < -0.2)) continue;
+            const tBack = (planeMe - planeOpp) / vx;
+            const arrY = yAt(hitY, vy, tBack);
+            cands.push({ y: arrY, tBack: tBack, off: actual });
+          }
+          let pool = cands;
+          if (narrow && cands.length > 3) {
+            const filtered = [];
+            for (let i = 0; i < cands.length; i++) {
+              if (Math.abs(cands[i].off - habit) <= 0.35) filtered.push(cands[i]);
+            }
+            if (filtered.length >= 2) {
+              const wideCost = worstDef(cands, meY);
+              if (wideCost > 6) pool = filtered;
+            }
+          }
+          if (pool.length === 0) {
+            dest = clamp(hitY, minPy, maxPy);
+            target = hitY;
+            setPlan("def-mid", "Middle hold. Make a choice.");
+          } else {
+            let bestY = clamp(meY, minPy, maxPy);
+            let bestCost = 1e9;
+            for (let y = minPy; y <= maxPy; y += 5) {
+              let cost = -1e9;
+              for (let i = 0; i < pool.length; i++) {
+                const c = pool[i];
+                const react = Math.max(0, c.tBack - 1) * pSpeed;
+                const deficit = Math.abs(c.y - y) - react;
+                if (deficit > cost) cost = deficit;
+              }
+              const closer = Math.abs(y - meY) + 0.001 < Math.abs(bestY - meY);
+              if (cost < bestCost - 0.75 || (cost <= bestCost + 0.75 && closer)) {
+                bestCost = cost;
+                bestY = y;
+              }
+            }
+            dest = bestY;
+            let danger = pool[0].y;
+            let dangerD = -1;
+            for (let i = 0; i < pool.length; i++) {
+              const d = Math.abs(pool[i].y - meY) - Math.max(0, pool[i].tBack - 1) * pSpeed;
+              if (d > dangerD) {
+                dangerD = d;
+                danger = pool[i].y;
+              }
+            }
+            target = danger;
+            if (narrow && Math.abs(habit) < 0.2 && oppN >= 4) {
+              setPlan("def-read", "You keep hitting flat. I'm living there.");
+            } else if (bestY < 185) {
+              setPlan("def-hi", "Cheating up to kill the high reply.");
+            } else if (bestY > 315) {
+              setPlan("def-lo", "Sitting low. I smell a downstairs ball.");
+            } else {
+              setPlan("def-mid", "Middle hold. Make a choice.");
+            }
+          }
+        }
+      }
+    }
+
+    if (scoredLine) {
+      plan = s.score.me > s.score.opp ? "scored" : "conceded";
+      say = scoredLine;
+    }
+
+    let mv = (dest - meY) / pSpeed;
+    if (mv > 1) mv = 1;
+    else if (mv < -1) mv = -1;
+    if (Math.abs(dest - meY) < 0.3) mv = 0;
+    if (!isFinite(mv)) mv = 0;
+    if (!isFinite(target)) target = meY;
+
+    prev = { x: b.x, y: b.y, dx: b.dx, dy: b.dy };
+    prevOppY = oppY;
+
+    return { move: mv, say: say, target: target };
+
+    function worstDef(list, fromY) {
+      let bestY = fromY;
+      let bestCost = 1e9;
+      for (let y = minPy; y <= maxPy; y += 10) {
+        let cost = -1e9;
+        for (let i = 0; i < list.length; i++) {
+          const react = Math.max(0, list[i].tBack - 1) * pSpeed;
+          const deficit = Math.abs(list[i].y - y) - react;
+          if (deficit > cost) cost = deficit;
+        }
+        if (cost < bestCost) {
+          bestCost = cost;
+          bestY = y;
+        }
+      }
+      return bestCost;
+    }
+  };
+}

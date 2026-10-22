@@ -1,0 +1,18 @@
+I need to design a solid Pong AI that predicts the ball's intercept point at the paddle's x-position, accounting for wall bounces, then moves to meet it while choosing an angled return shot aimed away from where the opponent can reach, factoring in increasing ball speed capped at a max value and the paddle's own movement speed.
+
+I simulate the ball frame-by-frame to pin down exactly when it crosses the face boundary, accepting that at high speeds a one-frame error could shift the intercept y by up to 20px, so I should keep offsets conservative rather than pushing to the extremes. For defending against an unknown return shot, I think a reasonable heuristic is to move toward the predicted arrival y rather than just centering, biasing my position based on where the ball is likely headed back.
+
+For evaluating the opponent's reachability, I score by estimating the distance from their current y (or projected position) to the ball's predicted arrival point, then subtracting how far they can travel given their speed and paddle half-width plus margin -- picking whichever estimate (current position vs. center) gives them less reach advantage.
+
+I should add hysteresis so the chosen offset doesn't jitter between candidates as timing shrinks -- locking the plan per approach and only re-evaluating if the locked choice becomes unreachable, since the predicted path should be deterministic.
+
+Movement command comes from clamping the difference between target and paddle position scaled by speed. For serves, I need to detect direction from the ball's velocity sign and handle the zero case, and keep commentary strings short enough to fit the display.
+
+I'm sweeping candidate offsets from -0.85 to 0.85 in small steps, accounting for the paddle's hit margin, though running a full simulation for each of ~35 candidates across ~200 steps could get expensive.
+
+Writing ball trajectory simulation...
+
+Simulating where the ball would end up after the hit and estimating how far the opponent could realistically reach it, using their current position and a pessimistic center-drift assumption since I can't know their reaction in advance. I'm scoring candidate shots by how far this projected landing spot is from the opponent's likely reach.
+
+For other cases I'll use lines like "Sharp angle, make them run" or "Back to centre, reading their return" for different situations, keeping commentary tied once per approach rather than flickering every frame. I'll have the function return the move, the commentary line, and the target y.
+

@@ -1,0 +1,118 @@
+I'm working out the Pong AI's physics: paddle dimensions, ball collision thresholds, and how the return angle should be calculated based on where the ball strikes the paddle relative to its center.
+
+For strategy, I'm planning to predict the ball's trajectory with wall bounces to position my paddle correctly, then choose an offset angle that aims the return shot toward spots the opponent's paddle can't reach in time, factoring in their movement speed and whether they're likely a simple reactive tracker versus predictive.
+
+I'll predict the ball's position where its edge touches the paddle face, using a safety margin of offset around 0.9 instead of the full ±1 range to account for the ~8px prediction uncertainty, keeping the max return angle near 49.5° out of the 55° limit. I also need to account for how the arena likely handles the collision and recalculates the ball's direction after the bounce.
+
+For the trajectory prediction, I'm reflecting the ball's path off the top and bottom walls analytically to find where it crosses the opponent's side, then considering whether the opponent can realistically reach that position given their paddle speed and the ball's travel time across the arena.
+
+Rather than assume the opponent stays put, I should estimate their velocity from recent frame-to-frame movement and extrapolate their position forward to when my shot arrives, clamped to the court. Then I can score each possible shot by the margin between that predicted position and my target, picking whichever shot maximizes distance from where they're likely to be.
+
+I'll simplify by extrapolating their position using velocity capped at around 8 frames ahead rather than trying to account for the full range of possible movement, since that would make the margin calculation useless over long distances.
+
+Since wall bounces make the mapping nonmonotonic, I'll just take the min and max of all sampled arrival positions and aim for their midpoint. For precise stopping, I'll move by clamping (target minus current position) divided by speed to the range [-1,1], and I'll filter candidate offsets by whether the required paddle position is actually reachable within the remaining frames before impact.
+
+If no reachable offset exists because the ball's too fast, I'll just chase toward the hit point directly. I also need to clamp desired paddle positions to the playable range and verify edge cases near the walls work out, then account for speed increasing by 5% (capped at 24) after my return shot, and compute the arrival time and position on the opponent's side using the new velocity components.
+
+I'm working out the folding math for bounces between the walls, confirming that reflecting the continuous position matches how the discrete simulation actually updates y and flips dy each frame.
+
+I'm also wary that the exact collision threshold (whether it checks x<=36 or some nearby value) is uncertain, which means my predicted hit frame and the ball's y at that moment could be off by a noticeable margin given how fast dy can get—so I should treat my paddle positioning as approximate and account for that error tolerance.
+
+Given the ambiguity, I think the safest approach is to simulate the ball frame by frame from its current state and stop at the first frame where it crosses the paddle face threshold, using that frame's y-position as the prediction. This way the result matches whatever boundary convention the actual collision code uses, since I can't be certain whether it's x <= faceX or x - r <= faceX.
+
+That's too speculative to rely on, so I'll keep the margin-based approach simple instead. I should account for max ball speed near 24 px/frame crossing the court in roughly 58 frames, which keeps the discrete simulation cheap—only about 1300 steps per frame across all candidate offsets. I'll use discrete stepping to find my own hit point (stopping when the ball's edge reaches the paddle face) while using the analytic fold for evaluating shot outcomes.
+
+For predicting when the opponent's shot returns, I'll simulate discretely until the ball's edge crosses my side, then sweep paddle offsets from -0.95 to 0.95 in steps of 0.05, checking each target position lies within bounds and is reachable given my 5px/frame movement speed and the frames remaining—being careful about off-by-one timing since I'm unsure whether paddle movement happens before or after the collision check.
+
+I'm estimating the opponent's reachable range when the ball arrives and computing the margin beyond their reach as the main score, favoring shots that maximize that margin with tie-breaks for wall bounces and larger deflection angles that would confuse a naive tracker. If no shot guarantees an unreachable margin, I'll fall back to picking whichever option still maximizes distance from the opponent's position.
+
+Given the range of possible return angles likely spans the whole court width, the midpoint around y=250 is a reasonable default waiting spot that minimizes worst-case travel distance. Once the opponent actually hits, I can predict precisely since dx becomes negative, so I'll also track their movement history to refine my positioning estimate beforehand.
+
+For commentary, I want brief plan-based lines that change only when my strategy shifts: covering the middle while waiting, announcing a found opening with a corner shot, admitting no opening yet, or signaling a scramble when the ball's too fast to aim properly. Now I'm starting to write the player creation function with court boundary constants...
+
+Writing simulation function...
+
+I'm double-checking the bounce logic handles the loop termination correctly and capping iterations at 400 to avoid infinite loops, then thinking through how the ball's position should be predicted when it reflects off my paddle.
+
+Now I'm working out an analytic way to compute where the ball lands without simulating frame-by-frame, folding the y-position modulo twice the arena height and deriving the bounce count from the unfolded position.
+
+Moving to the main movement function, I'm tracking opponent paddle velocity by smoothing the difference between consecutive position readings, then considering whether the opponent's paddle should be assumed stationary or reactive at the start of a new point.
+
+For incoming balls, I'm simulating the ball's trajectory forward to find where it crosses the paddle's plane, predicting the opponent's future position based on their velocity, then searching across a range of possible hit offsets on my paddle to find a reachable spot that produces a good return angle and speed.
+
+To score each candidate, I'm computing where the resulting shot would land on the opponent's side and measuring how far outside their reachable range it falls—bigger margins mean the opponent has to move more, making the shot harder for them to return.
+
+I'll add small tiebreaker terms favoring wall bounces and larger offsets, since shorter required time is already captured by reqSpeed. I should also consider hedging against hit-point uncertainty—since the real hit y could shift by about 20px, picking an offset near the edge (0.95) risks the ball missing the intended target if that uncertainty pushes it past the paddle edge.
+
+I could detect the convention empirically by watching actual paddle bounces: store my predicted hitY each frame, then when a bounce occurs compare the predicted y against the actual y at collision to estimate a frame-error offset, averaging it over time to calibrate the threshold. The tricky part is that right after a bounce the ball's state already reflects the reflection, so I need to reconstruct what y was at the moment of collision itself.
+
+I could make the extra-frame offset fractional, applying partial dy steps with wall folding, and even allow it to go negative in case the arena uses continuous collision placing the ball slightly earlier than my discrete sim. I should also consider whether move ordering between paddle and ball updates affects the collision y I'm comparing against.
+
+For the max safe offset, I'll use a conservative bound before enough learning samples exist, then tighten the uncertainty margin once I have at least two samples.
+
+Now I'm working through the case where the ball moves away from me toward the opponent, modeling how they might return it across a range of offsets and estimating arrival timing back at my paddle for each scenario.
+
+Using the spread of possible return points, I'm picking a wait position near the midpoint of extremes as a reasonable worst-case strategy, while also considering weighting toward likely hit angles since naive opponents tend to hit straighter returns. I'm also thinking about refining this further by minimizing the worst-case required paddle speed across candidate wait positions.
+
+For the case where the ball has already passed me or is in contact, I'll just treat that as resolved and move toward center or hold position.
+
+I'm also sketching out commentary lines for different plan states — covering the return, spotting a gap and firing a shot, pulling the opponent out of position, or scrambling when there's no time to aim — plus a celebratory line for scoring a point, keeping each under character limits.
+
+I need to guard the output move so it's always a valid finite number in [-1,1], falling back to 0 otherwise. I'm also working through the timing logic — figuring out how many frames remain until the ball reaches me, and making sure my paddle's movement this frame and subsequent frames align correctly with when the collision check actually happens.
+
+Writing reachability logic...
+
+Still writing simulation logic...
+
+I realize I need to handle the edge case where the ball starts already past the paddle face, then move into writing the actual move function that reads paddle positions, speed, and bounds to compute the AI's response.
+
+Now I'm tracking the opponent's velocity with smoothing and trying to learn the collision timing by comparing predicted versus actual bounce positions to correct for prediction error over time.
+
+I should clamp fe to a reasonable range since exponential averaging bounds its impact, and I need to filter out serve resets by checking b.x < 200 so the dx-flip detection only triggers on real paddle hits. Now I'm starting to compute movement decisions based on ball speed.
+
+Still computing intercept angles...
+
+I'm confirming the candidate offsets all stay within reach of the predicted hit point, and that scrambling toward hitY handles the case when no valid return exists. Now I'm working through the dx>0 branch, simulating the bounce trajectory and building a set of candidate return positions.
+
+For each candidate position, I'm computing the worst-case required speed across all arrival offsets, then searching paddle widths to find the one minimizing that worst-case demand.
+
+Once the best width is chosen, I'm setting the movement target and clamping velocity toward it, defaulting to centering when the ball has already passed or dx is zero. I'm weighing whether to bias toward the straight-line return since naive opponents often return the ball directly, but decide the minimax approach is sufficient with a minor tie-break adjustment.
+
+Now I'm drafting short commentary labels for the paddle states, like a "wait" message about covering the middle of the return fan and a "scramble" message about reacting too fast to aim.
+
+I'm also writing winner messages based on whether the gap is top or bottom, pressure messages for stretching the opponent, and a fallback "building speed" line, plus score-change lines acknowledging points for either side.
+
+For persistence, I'm adding a hold timer so score lines stay visible for 90 frames before being overwritten by the plan text, and using hysteresis so the commentary key only changes every 20 frames unless the ball's direction actually flips, preventing flicker between categories.
+
+I'm also guarding against NaN movement values by defaulting to zero, and reasoning through early-game dynamics: at low starting speed the ball takes over 120 frames to cross the court, so a perfect opponent can reach nearly any shot, meaning the tiebreak logic (bounces and offset) matters more than raw reachability at that speed.
+
+Against trackers that follow the ball directly rather than predicting, wall-bounced steep shots cause lag, which is favorable. I'm weighing that aiming at paddle edges increases my own risk if prediction drifts, though maxOff already bounds that. I'm setting the target line to the predicted hit point while the ball approaches, falling back to the best wait position otherwise, and verifying the fold logic handles negative extra values correctly before checking how the learning signal is computed from the raw predicted hit position during the approach phase.
+
+Realizing collision happens at paddle center rather than edge means the ball travels 6px extra, but that correction varies in frame-count depending on angle -- so instead I should learn the extra distance in x and convert it to frames using the constant dx, clamping the averaged extraX to a reasonable range.
+
+But then I reconsider: if collision is continuous rather than discrete, the overshoot itself isn't constant in x either, so I should compute an exact crossing y based on the true overshoot distance, and track three competing hypotheses—discrete edge detection, exact continuous crossing, and discrete center detection—to see which one matches observed data best.
+
+I'll track accumulated error per hypothesis across flips and pick whichever minimizes total error, defaulting to D. There's still ambiguity about whether the arena snaps the ball exactly to the wall or leaves y untouched after collision, but the learning approach should naturally converge to whichever behavior matches observed data once enough samples accumulate.
+
+Writing player setup code...
+
+Still writing physics logic...
+
+Still writing simulation logic...
+
+I'm now wiring up the approach prediction into the move function and setting up error tracking at each paddle flip, comparing actual ball position against the three predicted hypotheses to accumulate which one is most accurate.
+
+Picking the hypothesis with the lowest accumulated error, letting ties favor the first one. I'm also considering edge cases like simultaneous wall and paddle bounces, and scaling uncertainty down once enough samples have accumulated.
+
+Checking the maxOff clamp across different serve and rally speeds confirms it stays sensible at both extremes. Now I'm turning to how I should smooth the opponent's velocity estimate, especially when their paddle gets clamped at the screen edge.
+
+I'm sketching the commentary system: a throttled setter that avoids repeating the same line too quickly, plus logic that fires specific taunt or encouragement text whenever the score changes based on who scored.
+
+Now I'm drafting match-point lines and phrases for different shot situations—scrambling to reach a fast ball, hitting winners caught low or high—making sure each line stays short enough to read in the HUD.
+
+Settling on a set of short commentary lines under the length limit for different game states, then moving on to build the return object with move, say, and target fields, making sure to reference the court width and handle cases where the ball has already passed the paddle's x-position.
+
+I'm also weighing whether deliberately stalling or returning toward the opponent ever helps when time is running low — it doesn't. For reachable shots, maximizing required opponent movement plus bounce bonus seems like the best scoring heuristic, since it pushes them toward the court edges; the incoming shot angle itself doesn't affect their return angle, only their travel time matters.
+
+I need to guard against the edge case where the ball is already at my hitting plane (zero time remaining), which should trigger a fallback scramble toward the ball's height rather than crashing from no valid candidates. Finally I'll finalize the code, making sure it's deterministic, efficient, and that any debug message string stays within the 48-character limit.
+

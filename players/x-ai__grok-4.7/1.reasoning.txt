@@ -1,0 +1,763 @@
+I'm writing a deterministic JavaScript Pong AI to compete against other AIs in head-to-head matches.
+
+I'm analyzing the exact physics rules: paddle movement, ball speed and angle, wall bounces, and return mechanics to build a competitive AI.
+
+The ball collision window is 46 pixels wide. The return angle clamps at ±55 degrees.
+
+I'm designing the AI's strategy around predicting where the ball will cross my paddle. I need to infer the exact collision detection logic from the physics rules, since I don't have access to the arena code.
+
+I'm assuming the ball contacts the paddle face when its centre reaches x = 36, accounting for the 6-pixel radius.
+
+The opponent face is at x = 770, so the ball contacts it when its centre reaches x = 764.
+
+I will simulate the full ball trajectory including wall bounces to predict where the ball crosses my paddle line. The strategy is to always return the ball by moving my paddle to that predicted intersection point, then control the return angle to place the ball where the opponent cannot reach it.
+
+I'm calculating the exact paddle centre position needed to hit the ball at a desired return angle. The 46-pixel hit window means I can still return with maximum angle even if I'm slightly outside the 40-pixel ideal range.
+
+I'm also factoring in the opponent's movement speed of 5 pixels per frame to predict where they will be when the ball reaches their side.
+
+The AI will simulate the full ball path to my paddle and choose an aim point that places the return at a Y coordinate the opponent cannot reach in time. If an immediate score is impossible, it will aim for a corner or set up the next shot.
+
+I'm calculating the ball's travel time across the court. At serve speed, the ball covers roughly 728 pixels in about 121 frames. The opponent can move 605 pixels in that same time, so they can reach any spot if they start immediately. This means a killer shot is only viable if the opponent is already badly positioned.
+
+The opponent can reach any ball within 84 frames. At maximum speed the ball still needs about 30 frames to cross the court, so they can only move 151 pixels in that time. This means a killer shot is only viable if the opponent is already badly positioned.
+
+Straight shots are the fastest and hardest to reach. At maximum speed, a straight ball covers the court in about 30 frames. From the center, the opponent can only cover roughly 54 to 446 pixels in that time. Even at a 55-degree angle, the ball still needs about 53 frames. This means straight shots are the most dangerous and should be avoided.
+
+A 0-degree shot stays at the current Y. To ace the opponent, the ball must arrive at an extreme Y while the opponent is far away. Extreme angles slow the ball down and give the opponent more time to move. Shallow angles are faster but barely change the ball's Y. The AI must balance speed against vertical placement.
+
+The ball's vertical travel is distance times tangent of the angle. At 55 degrees across the court, that is roughly 1040 pixels, so the ball bounces off walls multiple times before reaching the opponent. Wall bounces make trajectory prediction essential. The AI will evaluate every possible aim offset to find the one that places the ball at an arrival Y where the opponent cannot reach it in time.
+
+The opponent sees the ball's velocity vector each frame, so they will always move optimally toward the predicted intersection. The AI must assume perfect defense and only attempt a shot when the opponent cannot reach the predicted arrival point in time.
+
+I am refining the exact ball-to-paddle collision logic. I need to determine whether the ball centre must sit at or inside the paddle face, and how the 80-pixel span plus radius affects the contact condition.
+
+I'm now drafting the exact collision formula. The ball must reach the paddle face while its centre sits within the 80-pixel span plus the ball radius. A few pixels of error could cause a missed hit at high speed, so this logic needs to be precise.
+
+I am weighing two possible collision definitions: the ball centre reaches the paddle face, or the ball edge touches it. The latter is more likely because the ball radius would otherwise overlap the paddle before its centre even arrives. I will pick the most probable physics rule and proceed with a single submission.
+
+I'm modeling the ball's motion with sub-frame precision. Each frame the ball advances by its velocity components ball.dx and ball.dy, and speed equals the hypotenuse of those two values.
+
+I'm finalizing the wall-bounce physics. The ball's centre will be clamped to the court edges using a perfect reflection formula, reversing the vertical velocity when it hits the top or bottom wall.
+
+I am reconsidering the wall-bounce collision rule. The prompt does not specify whether the ball bounces when its centre reaches the court edge or when its radius touches the wall. I need to decide which definition is more likely before finalizing the simulation.
+
+I've settled on the wall-bounce physics: the ball centre is clamped to [6, 494]. I'm using edge-to-face collision for the paddles, so contact happens at x = 36 and x = 764. A six-pixel error at high speed could shift the Y hit point by about five pixels, so I'll aim with a safety margin inside the hit window rather than at its edges.
+
+The paddle centre is clamped to [40, 460]. The angle formula divides the Y offset by 40 and clamps it to [-1, 1], so the maximum return angle is 55 degrees. To avoid missing from prediction error, I will aim within a 36-pixel safety margin rather than the full 46-pixel hit window.
+
+The AI will pre-position defensively when the ball moves away, and intercept when it approaches. The paddle Y is set to the predicted ball contact Y minus a desired pixel offset.
+
+I am deriving the exact return physics. The ball speed increases by five percent but is capped at 24 pixels per frame. A positive pixel offset means the ball hits below the paddle centre, so the return angle is measured downward from horizontal. The new velocity components are speed times cosine of theta for horizontal and sine of theta for vertical.
+
+The AI will test every offset from -1 to 1. For each aim point it simulates the ball path to the opponent's face and records arrival Y and time. It then checks whether the opponent can reach that spot in time. The opponent must be within the hit half-height of the arrival Y, clamped to [40, 460]. A shot is only attempted if the opponent cannot reach the predicted contact point.
+
+The opponent can reach any ball within 46 pixels of their current paddle centre. The reachable set is the intersection of the legal range [40, 460] with the hit window [arrivalY-46, arrivalY+46]. A shot is only viable if the opponent cannot position their centre inside that intersection.
+
+The reachable set is never empty. The ball centre stays within 46 pixels of the nearest paddle edge, so every ball is hittable if the paddle is positioned correctly.
+
+The opponent must reach a paddle centre within 46 pixels of the ball and within their movement budget. The AI must also reach its own target position in time, since it can wait if it arrives early.
+
+The AI will fall back to centering on the ball if it cannot reach its ideal aim point. It is now drafting a discrete simulation loop that updates paddle positions, ball coordinates, and wall collisions in the same order as the arena game loop.
+
+I realized the ball can tunnel through the paddle if collision is only checked at the face plane. I will verify that the ball actually crossed the paddle plane during each frame. Small simulation mismatches could cause misses at high speed, so I will avoid relying on the exact paddle edge.
+
+I will center the paddle on the ball for defense and only aim aggressively when I have a clear margin. Continuous wall-unfolding simulation is more accurate than discrete frame steps, which can differ by one frame. I am now designing the physics simulation to match the arena code as closely as possible.
+
+I am now drafting the exact discrete collision formulas for wall reflection and paddle face crossing. I will shadow the ball's predicted Y with a lead, only aiming aggressively when the opponent cannot reach the target in time. I am also considering how to exploit opponent behavior.
+
+The opponent pool likely contains similarly intelligent AIs, so the strategy should assume near-optimal play. The top priority is avoiding any missed shots. Aggressive winners will only be attempted when the physics guarantee they are physically reachable.
+
+The AI will vary its placement using frame count or ball position to avoid predictability, since randomness is forbidden. Speed builds by five percent per return up to a twenty-four pixel cap; early returns are defensive, and aces only become possible once speed is high enough. The opponent sees the trajectory instantly after each hit.
+
+I am calculating the exact movement budget for an opponent to reach a ball at a given Y. The reachable set is the intersection of the legal range [40, 460] with the hit window [arrivalY-46, arrivalY+46]. I am checking whether the opponent can cover that distance in time, using the worst-case scenario where they start centered at 250.
+
+The worst-case opponent at y=250 needs 198 pixels to reach a corner ball. That is about 39 frames at five-pixel steps. A corner shot must arrive in under 40 frames, so the horizontal speed must exceed roughly 18 pixels per frame. The AI will use this threshold to decide when an ace is physically possible.
+
+At maximum speed, a return angle below roughly forty degrees is fast enough to reach a corner ball in time. A perfectly horizontal shot at speed twenty still arrives in about thirty-six frames, which is just under the opponent's movement budget.
+
+At high speed, the AI should aim for the ball to land as far from the opponent as possible while still arriving in time. At lower speeds, the opponent can always reach any ball, so the priority shifts to not missing and positioning the opponent poorly for the next return.
+
+I will predict the opponent's return trajectory and position myself to cover the most dangerous arrivals. Fast, shallow shots aimed at the far corner are the worst-case returns. Without knowing their aim, the ball could return anywhere.
+
+At maximum speed the opponent can reach a ball in about thirty frames, but the paddle can only move roughly one hundred fifty pixels in that time, so the entire court cannot be covered. The AI must therefore predict the opponent's return aim. It will assume the opponent tries to place the ball where it cannot reach, and position itself to cover their best attacking shot or minimize maximum regret. This is a game-theoretic problem where optimal server positioning matters.
+
+The AI is framing the return as a minimax game. It must choose its defensive position to cover the opponent's best attacking shot, since the paddle can still move during the entire return flight.
+
+The AI is refining the minimax defense. It must choose its defensive position so that, at the moment the opponent strikes, it can still reach the ball's required center before arrival. The travel time and required position both depend on the opponent's chosen return angle.
+
+The AI will position itself at the moment the opponent strikes. It must be within five times the flight time of the predicted arrival point. The return velocity is known immediately after the hit, so the full travel duration can be used to reach that spot.
+
+The AI is now deriving the exact return angle from the opponent's reachable paddle-centre range. That range is the intersection of the legal bounds, the hit window, and the movement budget. The offset between ball arrival and paddle centre determines the angle, which is then clamped to the available range.
+
+The AI is testing whether a single defensive position can cover every possible return angle. At maximum speed, some angles may still be unblockable from any fixed spot. It will instead choose the position that maximizes coverage over the most likely or widest set of angles. A classic pong-bot strategy is being considered.
+
+The AI will use two distinct phases. When the ball is coming toward it, it will predict an intercept and move to a strike position with an intentional offset for the best return. When the ball is going away, it will move toward a ready position based on the predicted return Y under a specific opponent strategy, such as hitting the weak side or mirroring. Because the paddle can move fractional amounts per frame, the AI will aim to arrive exactly at its target without oscillating. The implementation is now beginning with the `createPlayer` function.
+
+The `createPlayer` skeleton is now being written with state variables for commentary and movement planning. Exact physics constants from the arena spec are being pinned down: 80-pixel paddles, 5-pixel movement, face positions at 30 and 770, a 6-pixel ball radius, and a 24-pixel speed cap. The AI will use a 46-pixel hit window but aim with a 38-pixel offset for safety, yielding an angle near 52 degrees.
+
+The AI will simulate the game frame-by-frame to match the physics exactly. It is pinning down the return formula: the ball's Y position relative to the paddle centre at the moment of contact determines the return angle.
+
+The AI is refining the exact paddle-face collision rule. It will likely trigger when the ball's x-coordinate reaches the face, not merely when it passes through the face plus radius, because the arena specification only adds the ball radius to the vertical span.
+
+The AI is deciding whether the ball must cross the face edge or simply reach the face x-coordinate to trigger a return. It estimates that a few pixels of prediction error are harmless because the 46-pixel hit window absorbs them. A five-pixel offset error translates to roughly seven degrees of angle error, which is acceptable with margin. Tight aces will still use aims that include extra safety margin.
+
+The AI will re-predict the ball's path every frame from its current state. Small errors in the collision model shrink as the ball approaches, because the remaining distance to the face becomes tiny and the next Y position is simply ball.y + ball.dy. The AI must avoid committing to a fixed strike offset that would become incorrect.
+
+The AI estimates that a six-pixel error in the collision plane at a 55-degree angle produces roughly eight pixels of Y error at impact. That stays inside the 46-pixel hit window, so the ball will still be struck. The offset for aiming is more sensitive to this same error, so the AI will refine its aim in the final frames when prediction is most accurate.
+
+The AI will move toward a rough target early and refine the exact aim offset only in the final frames when prediction is solid. An eight-pixel offset requires about eight frames to reach, so the collision model must be accurate at least that far out. The edge-based collision rule is now fixed: the left face triggers at x = 36 and the right face at x = 764.
+
+The AI is now writing the discrete simulation function. It will step the ball one frame at a time, reflecting off the top and bottom walls when the ball center reaches the court edges.
+
+The simulation loop is being refined to handle wall bounces and paddle-plane crossings that occur within the same frame. Detecting the exact crossing point between steps while also reflecting off the top or bottom walls is proving tricky.
+
+The AI is switching to a continuous unfolded simulation. It will treat the court as an infinite periodic strip with period 976, compute the ball's exact Y position at the target X using linear interpolation, and fold the result back into the real bounds. This avoids frame-by-frame approximation errors.
+
+The arena updates position once per frame by full dx and dy before checking collisions. A hit is therefore detected at the end-of-frame position, which may sit past the paddle face by up to the ball's horizontal speed. This timing difference must be accounted for in the collision model.
+
+The AI now sees that the ball's Y at the end of the frame can differ by up to 24 pixels from the true plane-crossing Y. That error is large enough to push a 40-pixel aiming offset outside the 46-pixel hit window. The collision model must therefore account for this extra movement.
+
+The AI will cap its aim offset at 28 pixels. That keeps the ball inside the 46-pixel hit window even if the physics model overestimates the ball's Y by 15 pixels. It may still use a larger offset only when the ball is within 15 frames, because prediction uncertainty shrinks as the ball approaches.
+
+The AI will always target the ball's intercept Y as a safe center hit. It will blend toward a desired offset only as confidence increases, and never commit to an offset it cannot abort back to center within six frames.
+
+The AI is now framing the aim offset as a hard constraint. The desired paddle Y must stay within reach of the safe intercept Y before the ball arrives. If the ball is more than six frames away and prediction is stable, it can commit to a larger offset; otherwise it stays near the center. This ensures the AI can always abort back to the intercept if its prediction shifts.
+
+The AI is formalizing a recovery invariant: the paddle must stay within five pixels of the safe intercept target for every remaining frame. This guarantees it can always return to center before the ball arrives, even if it commits to an aggressive attack aim.
+
+The AI will also predict the opponent's return when the ball is moving away. It simulates the ball to the opponent's contact point, assumes they can reach it, and moves to the optimal waiting position.
+
+The AI is now solving a minimax waiting position for the opponent's return. It will test every possible opponent angle in steps of 0.05, compute each return arrival point and travel time, and pick the waiting Y that keeps the paddle within reach of every possible return.
+
+The AI is now deriving the opponent's return trajectory. It assumes the opponent can reach any position in the 46-pixel hit window early in the flight, so every angle between -1 and 1 is possible. Each offset maps to a 55-degree angle, and the return speed caps at 24 pixels per frame while reversing direction.
+
+The AI is finalizing the opponent's return trajectory. Positive offset means the ball sits below the paddle center, so the return angle is offset times 55 degrees and the vertical speed is newSpeed times sine of that angle. The horizontal direction is negative because the ball travels toward the AI. It will simulate this return to the AI's face to get the arrival Y and travel frames.
+
+The AI is now solving for the exact waiting position p. It must cover every possible opponent angle, so it will pick the paddle Y that minimizes the maximum shortfall across all return arrivals. Arrival Ys may fall outside the court bounds and must be clamped.
+
+The AI will prefer the center waiting position when several options cover every return angle. During the ball's return to the AI, it will track the intercept and aim directly.
+
+For scoring, the AI selects an offset o in [-1, 1] that places its paddle at ballY - o*40. It must stay within the 40–460 pixel bounds and reach that Y before the ball arrives. It also checks whether the opponent can reach the same spot so the hit is not acesable.
+
+The opponent can move during both the approach and return flights. Their starting position is only known at the moment of impact, so the AI must account for their entire movement window when deciding whether to attempt an ace.
+
+The AI now sees that aces are only possible when the total round-trip time is short enough for the opponent to not cover the return arrival. When the ball is far away, the opponent has too much time to reposition and no ace is viable. In those cases it should simply return safely and prepare for the next exchange.
+
+The ace check now uses the opponent's current Y as the starting point. They can still move for the full round-trip time after the hit, so the AI assumes optimal defense from that position. This is conservative; a suboptimal opponent would be even safer.
+
+The AI now sees two opponent models. An optimal opponent pre-positions for every possible return, so it may already be at the right spot when the ball arrives. A reactive opponent waits to see the angle before moving, giving it only the return flight time to reposition.
+
+The AI will target the opponent's best waiting position for optimal play, and their current position for reactive play. It expects other AIs to predict the ball and pre-position, so it must exploit suboptimal behavior while still beating optimal defense. At high speed, a gap exists in the return angles that one waiting position cannot cover.
+
+The AI now sees the opponent's exact Y every frame. It will not pre-calculate an abstract optimal waiting position. Instead it will aim at the arrival point farthest from the opponent's reachable set, using only the return flight time T_back.
+
+The AI now treats the opponent as reactive. It will aim at the Y that maximizes the gap between the opponent's current position and the hittable interval, minus five times the return flight time. This targets the most unreachable arrival point.
+
+When no ace is possible, the AI will hit to a corner at a sharp angle. This forces the opponent to the edge and limits their return geometry. It will also choose the shot that leaves them with the least margin or sets up a strong next exchange.
+
+The AI will maximize ball speed by not missing. Speed doubles every hit, so it will wait until the ball is fast enough to attempt an ace. It estimates that maximum speed is reached after roughly 29 total returns, or about 15 exchanges. Because games end at seven points, a match may finish before the ball ever reaches maximum velocity.
+
+Speed reaches 16 after about ten exchanges. Until then, the AI will simply avoid missing. Once speed is high enough, it will attempt aces. It also plans to exploit imperfect opponent prediction by targeting extreme angles and fast balls that other AIs may mispredict.
+
+The AI will score each candidate offset by how unreachable it is. A shot the opponent cannot reach gets a huge bonus. Otherwise it prefers shots that leave the opponent with the smallest reaction margin and that arrive at extreme Y positions. It also slightly favors keeping its own next defense easy.
+
+The AI will not pre-calculate the opponent's likely return aim. It will handle both serving and receiving deterministically because the ball state already contains the serve angle. A helper function will compute the paddle move from the current Y to a target Y using a fixed speed of five pixels per frame.
+
+The paddle must stay within 40 and 460 pixels. The AI will draw a target line showing its predicted meeting Y. Commentary will be short, specific, and change only when the plan changes. It will use discrete simulation for multi-bounce accuracy and add a slight centering bias when close to the center. If the ball hits the paddle this frame, the move must be returned before the frame resolves.
+
+The arena resolves the paddle move before updating the ball, so the AI must predict collisions using its new position after the move. The current frame is included in the remaining time.
+
+The AI will use a discrete simulation that mirrors the arena's wall collisions exactly, and it will add a last-moment centering safety: when only three frames remain before contact, it will nudge its aim offset toward zero to avoid missing from model error.
+
+The AI will compute the intercept Y under multiple physics models and use the median. If the models disagree strongly, it will shrink the aim offset to stay safer.
+
+The AI will test four wall-contact models: edge versus center, with and without the court inset. It will use the mean of these four results for a safe hit, but only trust a precise attack aim when the spread is small or the ball is close enough that all models agree. Large disagreement typically occurs when the ball is far from the wall.
+
+The AI will track a single primary physics model rather than averaging across four. It is now re-reading the arena specification to determine which wall-contact model is most likely.
+
+The arena physics are being mapped out in code. The ball updates position by dx and dy each frame, and walls reflect perfectly off the top and bottom edges. The left paddle collision triggers when the ball crosses from right to left and its previous x was already past the front face.
+
+The AI now believes the arena uses a single primary physics model. It assumes the ball contacts the paddle face when the ball edge reaches the front face, with walls inset by the ball radius. On collision it calculates an angle from the Y offset, caps speed at 24, and repositions the ball to the contact point to prevent re-hit.
+
+The AI is now writing a precise discrete stepper to simulate the ball's exact path. It advances position by dx and dy, then resolves wall collisions by reflecting off the top or bottom edges when the ball crosses the radius inset. Because the maximum speed is 24 pixels per frame and the court is only 500 pixels tall, at most one bounce can occur per step.
+
+The reflection formula for wall collisions is confirmed: the ball overshoots the boundary and bounces back off it. The AI will use this exact perfect-overshoot model rather than snapping to the edge. It is now drafting a `predictIntercept` function that computes the ball's Y position at a given target edge X.
+
+The `predictIntercept` function is being implemented. It initializes the ball state and a frame counter, then checks whether the ball is moving toward the target center before entering the simulation loop.
+
+The `predictIntercept` function now detects paddle contact by checking whether the ball crosses the target center between the previous and next frame. It returns the ball's end-of-frame position, velocity, and frame count. Interpolating the exact Y at the contact point is complicated by wall bounces, so the function will use the post-step position directly.
+
+The AI is refining the intercept calculation. It will compute both the interpolated Y at the paddle plane and the discrete end-of-frame Y, preferring the interpolated value when no wall bounce occurs in that frame. This better matches a continuous collision model where the ball repositions to the contact plane rather than snapping to the boundary.
+
+The AI will use interpolated impact as its primary model. It computes the exact fraction of the frame until the ball reaches the paddle face, then derives the precise Y position from that fraction. This matches continuous collision physics rather than discrete end-of-frame resolution.
+
+The AI is drafting a periodic wall-collision helper. It folds the ball's Y position into the court span and mirrors it at each boundary to simulate continuous bouncing.
+
+The `positionAtX` helper is being drafted. It computes the exact frame count to reach a target X, then derives the raw Y from that time. The ball's Y is folded into the court span and mirrored at each boundary, flipping the vertical velocity whenever the path crosses an odd number of walls.
+
+The `positionAtX` helper is being refined. The AI is abandoning the complex folded-coordinate math because it is error-prone, and will instead use an exact bounce loop or iterative small steps to compute the ball's position and velocity.
+
+The `fly` function is being drafted as an exact bounce loop. It computes the time to reach the target X, then iterates frame by frame, stepping the ball and resolving wall collisions by checking when it crosses the top and bottom boundaries.
+
+The exact continuous physics loop is now complete. It snaps the ball to the wall boundary on collision and reverses the vertical velocity. After a hit, speed is capped at 24 pixels per frame with a slight boost. The AI will sample 41 aim offsets from -1 to 1 in steps of 0.05.
+
+The AI is now evaluating each sampled aim offset by simulating the ball's flight to the opponent. It computes a reachability interval for the opponent's paddle center, clamping it to legal court bounds, and measures how far the opponent must travel to hit that interval.
+
+The reachability check now computes the distance between the opponent's paddle center and the hit interval, then compares it to how far the opponent can travel in the remaining frames. The AI is also clarifying the frame timing: because the opponent moves at the start of each frame before the ball advances, the number of moves available equals the total frames until collision.
+
+The AI is refining the opponent's move count. It considers whether to use Math.ceil(t) or Math.floor(t) for the frames until collision, since the opponent moves at the start of each frame. It prefers a conservative estimate to avoid overestimating their reachability.
+
+The AI will use `Math.ceil(t)` for the opponent's move count to avoid false aces. It can be optimistic about aces because a missed ace simply means the opponent returns the ball and the rally continues.
+
+The AI is refining the exact frame-counting rule for its own paddle. It notes that if the ball reaches the paddle face within one frame, the player gets exactly one move before the collision occurs. It also confirms that corner shots are acceptable.
+
+The AI settles on `Math.ceil(t - 1e-9)` for its own move count, ensuring a move is granted at the start of frame 2 when the ball arrives just after one full frame. It also caps each sampled aim offset to keep the paddle target within the legal court bounds.
+
+The AI will clamp each sampled aim offset to the legal court bounds and recompute the actual offset. It will rank offsets by guaranteed safety, then by how far the opponent is unreachable, with extreme placement as a tie-breaker.
+
+The AI is now considering a two-ply search. After choosing an aim, it will simulate the opponent's forced return and evaluate the resulting setup for its next intercept.
+
+A two-ply search is feasible in under one millisecond. The real goal is to be the first player to ace when ball speed finally rises high enough. At moderate speeds neither side can force a win, so the strategy must focus on creating the right setup for that moment.
+
+The forcing strategy is now defined. The AI will place the ball so the opponent must move to an extreme while staying centered, or moving to cover returns and set up the next ace. When an immediate ace is possible, it will take it; otherwise it will choose the aim that maximizes its minimum ace chance on the following ball, assuming the opponent tries to prevent it. The two-ply search formalizes this: after selecting an offset, the AI verifies it can reach the strike position, simulates the ball arriving at the opponent's paddle, and scores an immediate win if the opponent cannot reach it.
+
+The opponent will pick the return offset that hurts the AI most. After the opponent hits, the AI can move for the combined flight time of both balls. That gives it a wide recovery window unless the combined travel is very short.
+
+The AI realizes that at high speed it can only move about 300 pixels from its strike position during the opponent's return. This means lunging to extreme angles leaves it unable to cover returns on the opposite side. The attack must therefore be chosen so the AI can still reach its own paddle center before the ball returns.
+
+The two-ply search is being formalized. For each candidate aim offset, the AI first checks that it can reach the strike position in time and that the hit is valid. It then simulates the ball arriving at the opponent's paddle. If the opponent cannot reach that strike position within the combined time from now until the ball returns, the AI scores an immediate win. Otherwise it evaluates every possible return offset from the opponent to simulate the return flight back to its own paddle.
+
+The reachability check for the return flight is being simplified. The AI will mark an aim as dangerous if it cannot reach the ball before the opponent returns it, and may optionally add a third-ply evaluation to see if it can ace from the resulting position. A simpler Phase 1 strategy is also being considered: always aim to hit the ball reliably by tracking a controlled predicted Y with a fixed aim offset.
+
+Phase 2 will use a reactive ace check based on the opponent's current position and remaining time. Phase 3 will select aims that are reachable, allow safe recovery to cover returns, minimize opponent slack, and prefer extreme Y placements. A simplified recovery check is being drafted.
+
+The AI will prefer strike positions closer to the center when it cannot cover every possible return, unless an immediate ace is available. At low speed the round-trip time is long enough that any strike position works for defense, so the priority is simply pressuring the opponent. At high speed the AI should only strike if it can guarantee an ace or if it can cover the opponent's counters.
+
+The AI will target the opponent's weak side with maximum angle to reduce their slack. It will use a proportional move formula that clamps the paddle velocity to prevent oscillation and overshoot. When the ball is moving away, it will predict the opponent's intercept and position itself defensively, weighted toward where an optimal opponent would attack.
+
+The AI is now drafting the `bestDefense` function. It calculates the opponent's strike position and remaining frames until impact, then samples candidate Y positions reachable within that window to maximize coverage of possible returns.
+
+The `bestDefense` function samples return offsets from -1 to 1 in steps of 0.1. It then scans every reachable Y position from 40 to 460 in steps of 5, keeping only those reachable within the opponent's remaining frames. For each candidate position it computes the worst-case slack across all dangerous returns and selects the position that maximizes that slack.
+
+The defense formula now adds a 46-pixel hit-window buffer to the slack calculation. Sampling every 5 pixels across 85 positions and 21 return offsets totals about 1,800 operations, which is fast enough. The AI may also bias toward the center of the coverage interval for the fastest shots.
+
+The AI will treat a guaranteed ace as an immediate point win, then serve from the center. It will ignore endgame scoring and simply try to win each point. It is also drafting short, plan-driven commentary lines that change when strategy shifts.
+
+The AI is now drafting short, plan-driven commentary lines that change when strategy shifts.
+
+Commentary lines are finalized at 28 to 34 characters. They will only update when the plan ID changes. The target Y is the predicted intercept point while the ball approaches, and the defensive or predicted return position when it moves away.
+
+The AI will use a 46-pixel hit window for reachability. It will cap its own paddle offset at 40 pixels to preserve a six-pixel margin and keep the intended angle. The code will avoid all randomness and global state for strict determinism.
+
+Corner balls are naturally clamped in the search because extreme paddle offsets are impossible. The serve will use a ±30° angle at speed 6.
+
+The ball speed increases by 5% after every return, capped at 24 pixels per frame. The new velocity is computed from the existing angle with that scaled magnitude. Positive offsets are defined as downward angles, consistent for both players.
+
+The angle inversion logic is confirmed correct. The AI will trust the state's dx and dy components directly and initialize the serve at speed 6. It is now beginning to analyze how other AIs might behave in order to improve its own strategy.
+
+The AI is now considering an opponent that always centers on the ball. That would make returns horizontal and predictable, allowing the AI to pre-aim a winning shot on the next hit.
+
+The AI will track the opponent's hit offset by comparing ball Y to paddle Y whenever the ball changes direction. It will store a history of these offsets in its closure to detect whether the opponent centers on the ball or aims at the edges. Once it recognizes a pattern, it will pre-position for that return and plan a counter-ace.
+
+A center-hitting opponent leaves the ball returning horizontally at the same Y. The AI can then wait at that known Y and aim a winning shot to the opposite corner while the opponent remains stuck. The search already naturally avoids the opponent's current Y, so this exploitative pattern is built in without extra modeling.
+
+The AI will take extreme-angle shots even at low speed, since a tracking opponent will often be out of position. The search already prefers minimum slack, so extreme placements remain viable there. It also correctly accounts for the fact that extreme angles increase bounces and flight time, giving the opponent more slack; the actual slack calculation handles this.
+
+The AI is now drafting a two-ply safety check. It scores each candidate aim by adding a large penalty if the opponent cannot reach it, otherwise by subtracting their slack to prefer tighter returns. It will also heavily penalize any candidate that leaves an ace open against the opponent.
+
+The two-ply safety check is being refined into a three-ply search. It will evaluate every possible opponent aim, check if the AI can reach the return, and then simulate the following shot to see if it can ace. A guaranteed ace against the opponent will heavily penalize the candidate, while a successful counter-ace will add half its value to the score.
+
+The estimated workload is roughly 18,000 flight simulations, each taking about five to twenty iterations. That totals around 360,000 operations. The author is concerned this might exceed the one-millisecond target, since the frame limit is five milliseconds.
+
+The AI will abandon the multi-ply search entirely. A simpler strategy is better: predict the ball's arrival, hit it with a guaranteed ace when possible, and stay defensively positioned. Complex branching logic risks bugs, so the author prefers a clean, correct one-ply approach that never misses.
+
+The AI will split into two behaviors. When the ball is coming toward it, it will search for the best offensive aim and move to that paddle Y. When the ball is going away, it will predict the opponent's contact point and move to a defensive Y covering possible returns, slightly biased toward the side the opponent is not on so it can attack next. If the opponent cannot reach the ball, the AI will stay calm and centered. The contact point is set at x = 36, and if the ball is already past that line with negative horizontal velocity, the flight simulation begins immediately.
+
+The AI will sample paddle offsets from -20 to 20 in 0.05 increments. The `evaluateAim` function computes the strike Y by subtracting the offset scaled to half the paddle height, clamps it within the court bounds, and rejects any aim that misses the ball by more than 0.5 pixels. It then calculates how many frames the AI needs to reach that strike position.
+
+The `evaluateAim` function now rejects any aim that the AI cannot reach before the ball arrives. It then scales the current speed by 5% and caps it at 24, computes a launch angle from the pixel offset scaled to 55 degrees, and fires the ball toward the opponent's face at the new velocity.
+
+The scoring function now totals the AI's travel time plus the opponent's return time. Unreachable returns score higher to favor clear aces. Reachable returns are scored by subtracting the opponent's slack, with a slight bonus for extreme arrival positions and a penalty to keep the AI from lunging too far.
+
+The scoring function now penalizes extreme strike positions with a small cost to keep the AI ready. When the opponent can reach the ball, the code will sample ten possible return angles to find the worst-case margin and avoid acing itself.
+
+The code now samples ten possible return angles to find the worst-case margin. It computes each opponent strike position from the return Y and offset, clamps it within court bounds, and rejects any aim that misses the ball or is unreachable before contact. Valid candidates are then scored using the same angle and speed scaling.
+
+The worst-case margin is computed by simulating the opponent's return flight and checking whether the AI can reach the ball before it arrives. If the margin is negative, the candidate is heavily penalized to avoid being aced.
+
+When every aim risks an ace, the AI will select the candidate that minimizes its own margin of error. For defense, it will predict the opponent's contact point and choose a target Y that maximizes the minimum margin against possible returns while remaining reachable before contact.
+
+Safe defensive positions will be weighted toward the center or the side opposite the planned next attack. The minimax coverage position remains the default against smart opponents. The defense search is being optimized because the ball's arrival Y at the AI's side depends only on launch angle, not on small strike position differences.
+
+The opponent's return flight is fully determined by the ball's Y at contact, launch angle, and speed. Their paddle position only limits which angles are physically reachable. When the ball is near the center of the court, the opponent can achieve any offset within [-1, 1].
+
+The AI will only consider launch angles that the opponent can physically execute given their current paddle position. When the ball is moving away, it will still display a target line at the predicted Y where the ball will return, assuming a worst-case or neutral opponent hit.
+
+The target line will show the predicted Y where the ball returns if the opponent hits with a center offset. When the AI is shading, it will still display this expected meeting point rather than its actual defensive position.
+
+The target line will be stabilized by anchoring it to the predicted ball arrival for the opponent's hardest likely attack, rather than jumping between multiple possible intercepts.
+
+The AI will store its last plan in state to keep commentary consistent. Edge cases like a zero horizontal velocity ball or a reset after scoring are handled safely. The paddle face collision uses the front edge plus radius, and the wall boundaries are clamped to the ball radius.
+
+The author is weighing whether to model wall bounces using the ball radius or at the court edges. A simple edge-based reflection would shift the bounce point by about six pixels, and that error could accumulate across shallow-angle flights.
+
+The wall model will inset the bounce point by the ball radius to prevent overlap. Closed-loop correction from each resolved bounce will refine the remaining path, so any final error stays small enough to remain inside the 46-pixel hit window.
+
+Aim offsets will be limited to 0.75 by default, or tightened further if the ball is unlikely to bounce before reaching the paddle. The author notes that a straight-line flight path is independent of wall physics, so the only remaining source of prediction error is the horizontal contact position.
+
+The author is adding a `multiPredict` helper that tests both the raw court edge and the radius-inset wall models, plus both contact positions, to gauge prediction uncertainty. When the results diverge, the AI will reduce its aim offset to stay safe.
+
+The AI will use the primary wall model for all decisions. Its strike offset will be capped at 40 minus the prediction spread so the ball still lands under every model. A true ace requires the primary model to confirm it; a bonus is given if all models agree.
+
+The return format will be `{ move, say, target }`. The AI will clamp its move to [-1, 1] and truncate the commentary to 48 characters. A small early bias will be added to prevent late arrivals from rounding errors. The commentary voice will be confident and tactical.
+
+The AI will only update its commentary when the plan changes, using a string key to track the last plan and say. When holding position, it returns a small move or zero. If the paddle is within half a pixel of its target, it returns zero to prevent oscillation. The AI computes available moves as the ceiling of the continuous frame time, so five full frames allow twenty-five pixels of travel.
+
+The ball flight loop will cap wall bounces at one hundred to prevent infinite loops. A zero vertical velocity case is handled by moving straight. Slight numeric errors that push the ball outside the court edges are corrected. The commentary will also report the ball's speed.
+
+The AI will sample 41 aim offsets and 11 return angles to keep the search fast while still catching narrow ace windows. A hill-climb refinement on the best candidates is also under consideration.
+
+Exact corner-targeting offsets will be added as candidates to catch precise winners. Finer 0.02 steps are used instead of 0.05, yielding about 1100 flight simulations.
+
+The author confirmed that 81 aim offsets and 17 return angles yield about 1,377 flight simulations, which should finish well under the 0.2 ms budget. They also verified the opponent's reachable time is correctly calculated as the sum of the ball's approach time and the return flight time.
+
+The AI will treat any ace as a true victory only if the opponent could not have reached it even by starting to move immediately upon contact. This conservative definition prevents false positives from reactive opponents who cannot predict the ball's arrival.
+
+The author realized that a shot which only works against reactive opponents should not count as a true ace. They considered scoring two separate margins: one for a clairvoyant opponent who starts moving immediately upon contact, and one for a reactive opponent who waits until the ball arrives. However, they concluded that a smart opponent would actually reposition to the minimax defensive spot during the approach time rather than toward the specific predicted arrival point.
+
+The author settled on a simpler approximation for the opponent's defensive repositioning. Rather than simulating a full minimax wait-and-move strategy, the AI will assume the opponent moves toward the center of the possible arrival range during the approach time.
+
+The author realized that computing the opponent's optimal waiting position is circular: it depends on the AI's own aim, which is exactly what they are trying to choose. They will instead score aces against both smart and reactive opponents separately, then rank them by guaranteed victory, reactive ace, and pressure.
+
+The opponent's optimal waiting position p* must be computed once per frame independently of the AI's chosen aim. The author is now sketching the per-frame algorithm: predict contact ballY and tMe, generate all possible arrivals from reachable aims, then determine the opponent's best defensive spot reachable in tMe frames. They note that the opponent moves continuously and sees the ball coming, so they cannot wait until after contact to choose their target.
+
+The author refined the opponent model to a standard minimax waiting position that covers the most dangerous possible shots. They noted a subtle timing issue: if the opponent has not yet reached their optimal defensive spot by the time the ball arrives, their total reachable range is smaller than the sum of the approach and return flight times.
+
+The author realized the clairvoyant reachability model is a superset of any real opponent's actual capability, because an optimal opponent cannot predict the ball's arrival during the approach time. They are now checking whether any shots can truly outmaneuver optimal pre-positioning.
+
+The author is analyzing whether a single waiting position can cover every possible return. Fast straight shots arrive quickly and require a small reach radius, while angled shots take much longer and need a larger radius. This means the most dangerous shots are fast ones aimed at positions far from the defender's optimal wait spot.
+
+The author realized that arrival Y is not an independent variable; it is fixed by the chosen angle and the ball's starting height. Therefore the search must find angles whose arrivals fall outside the opponent's best pre-position coverage, rather than picking a target first and then checking reachability.
+
+The author formalized the minimax scoring: the opponent's waiting position is ranked by its worst-case slack across all possible shots. If that minimum slack is negative, no defensive spot can cover every return, so the AI should aim for an uncovered target. If the minimum slack is positive, the AI checks whether the opponent can actually reach that spot in time; if not, it aims to beat where the opponent will likely be.
+
+The AI will pick the shot with the most negative slack among uncovered targets, or the one that beats nearby positions if the opponent does not reach the exact minimax spot. If every shot is covered, it will select the aim with the smallest slack that still prevents an ace. The opponent's actual current position matters because p* must be reachable in tMe; when tMe is small, the defender cannot move much before contact and only has tBack to react, which creates the clearest ace windows.
+
+When the ball is far away and the opponent has time to reach any defensive spot, no ace is possible on this hit. The AI should instead choose an aim that sets up a favorable next exchange, avoids giving the opponent a clear return path, and ideally forces them into a position they cannot fully cover. After their return, the ball will be faster, so the goal is to receive a ball that can be redirected for an ace.
+
+The author realized that if the opponent can cover every return, they will be at the arrival point when the ball returns and have the full return flight time to reposition. The actual ace depends on who is geometrically out of position when the ball crosses the speed threshold. Both players will try to avoid that exact spot.
+
+The author noted that corner shots offer asymmetric reachability compared to center shots, but the ball's starting Y is fixed by the opponent's aim. They will implement the game-theoretic aim selection and a symmetric defensive wait position, then compute their optimal waiting spot against the opponent's feasible aims.
+
+The author will handle cases where the opponent cannot reach any hit position by playing freely or taunting. They will keep the code compact and readable, returning only plain JavaScript. To prevent consistent misses from hit-box errors, they will use conservative centering and a HIT_HALF safety margin. A sign error on the vertical offset would misdirect the aim but still make contact, so it is not a fatal bug.
+
+The author verified the vertical offset sign: a positive offset places the paddle above the ball, causing the ball to hit the lower edge and travel downward. They also noted that the AI must clamp targets to the court boundaries and guard against NaN returns.
+
+The author confirmed the shot-direction formulas work symmetrically for both sides. They will also track the opponent's recent hit offsets to exploit predictable patterns.
+
+The AI will detect the opponent's return by watching for a sign flip in ball.dx. It will record the resulting vertical offset and keep only the last eight values. When defending, it will bias its waiting position toward the opponent's typical return height rather than using pure minimax.
+
+The AI will compute the mean and variance of the opponent's observed hit offsets. If variance is below 0.05 with at least three samples, it treats the opponent as predictable and waits at the exact predicted arrival Y. Tracker bots that always return near the center will be exploited this way.
+
+The AI will assume opponents react slowly, giving a reactive bonus to its attack. Against unknown bots it will play solid initially, then exploit patterns. It will blend the minimax base with observed offset data: the minimax model handles complex bots that adapt their aim to the AI's position, while observed offsets sharpen predictions for predictable ones.
+
+The author realized the defense simulation requires a two-leg trajectory: first fly the ball to the opponent's contact point to get arrival height and time, then simulate their return flight back. Ball speed stays constant between hits because there is no friction.
+
+The author is now writing a `flyTo` helper to simulate ball trajectories. It advances the ball toward a target x-coordinate, clamps vertical position at the court edges, and bounces off walls by flipping the vertical velocity while preserving speed.
+
+The author finalized the `flyTo` helper to simulate ball trajectories with wall bounces. They set the primary constants: a 55-degree maximum angle, speed cap of 24, and speed multiplier of 1.05. The hit half is 46 pixels. To avoid miss errors, they will compute the ball's contact Y using both primary physics and an alternate model, then take the range as the final target.
+
+The author drafted a `predictBallY` helper that tests four trajectory models against the ball's contact point, using both the paddle face and a small inward offset to avoid wall collisions. They also began sketching a spread-based aim limit.
+
+The author derived the spread-based aim limit. It clamps the aim offset to 40 minus the predicted Y spread, ensuring the paddle still overlaps the ball even if the true contact point lands at the extreme of the prediction range.
+
+If the predicted Y spread exceeds 46 pixels, the AI will center its aim at the average of all models rather than trying to hit a single point. Early in the match the predictions are often scattered, so the paddle will move toward that average and refine its position as the ball gets closer and the spread shrinks.
+
+The AI will commit to its aim offset only late in the approach. It calculates how many pixels it can still correct based on remaining frames, clamps that correction against the safe offset limit, and always keeps the primary intercept reachable. The paddle will move directly toward the recomputed strike point each frame, which stays stable when physics is consistent.
+
+The AI will snap to the strike Y when only one frame remains before contact. It will take an immediate ace even if the target is at the court edge. Commentary labels are planned for aces, pressure, safety, defense, exploitation, and serves. The first-to-seven format and draw avoidance logic need no changes.
+
+The author rejected intentionally missing to manipulate the score. They confirmed the speed cap of 24 prevents the 1.05 multiplier from exceeding it, and that impact speed equals the ball's current velocity. They will use both clairvoyant and optimal-wait models for a more aggressive ace check. The `bestWait` function is being drafted to select the best defensive position from feasible returns.
+
+The `bestWait` function samples every four-pixel position within the paddle's reach. It discards any spot that is too far to reach before the ball arrives. For each valid position it computes the minimum slack across all possible returns, then selects the highest-scoring one. Ties are broken by favoring a spot closer to the center or the current paddle height.
+
+The `bestWait` tie-breaker now prefers the spot closest to the court center when slack scores are within half a frame. The `slackToHit` helper is being drafted to compute how many frames the paddle needs to reach a target Y, clamping that position to the hit half and returning -1e6 if the target is unreachable.
+
+The `slackToHit` helper now returns the difference between reachable distance and travel distance. The AI can move during the opponent's return flight, so it will call `bestWait` with its own feasible time before the opponent strikes. The defense simulation will generate every possible return angle for the opponent given their arrival height and remaining time.
+
+Seventeen uniform return angles are enough to cover the court. A two-pixel safety margin is unnecessary because bestWait already maximizes worst slack. The AI will recompute its optimal wait position every frame as the ball approaches.
+
+The AI will score each possible aim using three defensive metrics: the opponent's optimal wait position, their current reactive position, and a clairvoyant estimate of their future arrival. These scores are combined into a single value to pick the best defensive target.
+
+The author finalized the defensive scoring hierarchy. A clairvoyant ace is worth 500,000 points. An ace against the opponent's optimal wait is worth 300,000. An ace with a 20-pixel reactive margin is worth 150,000. All other aims are scored by how much slack the smart model has, with smaller slack giving higher scores.
+
+A reactive ace attempt is preferred over pressure, even though a smart opponent might return it. After the AI hits, it will check whether the opponent's return leaves enough slack for the AI to reach the ball before the return flight ends.
+
+Guaranteed aces skip the counter-ace check entirely. Reactive ace attempts are only taken if the AI can survive the opponent's return or if observed behavior suggests the opponent will not counter optimally. Predictable opponents with no offset can be targeted aggressively.
+
+The AI will track opponent offset samples to detect predictable habits. Once four samples show low variance, it assumes the opponent returns near their mean offset. Defense then shades toward that mean, and attack checks only counter-aces within a narrow band around it. Serve detection is reserved for commentary only. The design is now complete.
+
+The AI will set its target to the predicted ball intercept Y, not the paddle center. During defense this target becomes the expected return ball Y based on the opponent's habit or the most dangerous coverage spot.
+
+The AI will shade its aim to exploit predictable opponent habits. If the opponent returns near offset zero, a corner pressure shot can leave them at the corner for the next ball. The AI may then aim to the opposite side for an easy ace. Including next-shot value in the search is possible but likely too heavy.
+
+The AI will favor shots that force the ball far from center, since small slack already pushes targets toward the sides. A lightweight bonus for next-ball ace potential will be added when speed is high, assuming the opponent returns with offset zero or their habitual offset.
+
+The next-ball ace bonus is small and optional. It assumes the opponent returns near the center, which may mislead against smart players, but it cannot override the mandatory counter-ace check.
+
+The author decided to write the code now rather than refine tactics further. The frame structure is set: predict ball direction, then either build 81 feasible aims and score them against 17 counter simulations, or predict the opponent's contact when the ball is outgoing.
+
+The author estimates roughly 2,000 fly() calls per frame, totaling about 40,000 iterations. That workload should finish in under 0.5 ms in JavaScript.
+
+Edge cases are now handled: if the ball has already passed the paddle face, the AI returns zero or centers itself; if fly() produces a Y slightly outside the court bounds, it clamps to the valid range.
+
+A `createPlayer` factory will initialize the AI with state variables for ball direction, opponent habits, and commentary. A `setSay` helper will enforce the 48-character limit and only update the spoken line when the tactical plan changes. The author drafted several short, punchy commentaries for different match phases.
+
+To avoid false aces, the AI will use `Math.ceil(t - 1e-9) * speed` when calculating how far the opponent can travel before the ball arrives. This slightly overestimates their reach and prevents a 5-pixel movement error from incorrectly scoring an ace.
+
+The AI will apply the same `Math.ceil(t - 1e-9) * 5` reach formula to its own movement. It assumes the arena updates the ball after the paddle move, so a ball already past the plane at frame start was a miss last frame. If the ball is still within one frame of contact, the AI can execute its move before the ball updates.
+
+A fallback move will be computed directly from the ball's Y position when prediction fails, clamping the paddle to stay on screen. The right-side mirror is also being considered.
+
+The arena mirrors the right side automatically, so the AI only needs to handle the left court. It will use ball radius as the wall inset and compute aim spread across models to limit offset. Contact X variations also shift arrival time and Y even without bounces, so the spread must cover that.
+
+The AI will cap its aim spread at 92 pixels so the paddle can cover every predicted return. If the spread exceeds that, it falls back to the midpoint of all predictions and targets the center court. Offset shifts the covered range, but the 46-pixel half-width stays fixed.
+
+The AI will restrict its aim to the intersection of every model’s reachable Y range. If that intersection shrinks to a single point, it simply moves there for a guaranteed safe hit. When models agree, the full 92-pixel span is available, though angle and hit radius still cap the practical reach.
+
+Offensive aim offset is capped at 40 pixels to preserve full angle. The AI will pick the best strike within the intersection of its reachable Y range and the safe coverage interval. If that intersection is empty, it will move toward the closest point in the interval as fast as possible.
+
+The author realized that requiring coverage of every model could leave the AI stuck if one prediction is wildly off. For example, a Y=100 and a Y=400 prediction would make the safe interval empty and force a passive or missed shot. The better approach is to trust the primary model alone, using its radius-inset edge contact as the single source of truth.
+
+The AI will use a fixed 8-pixel safety margin on the hit window, capping aim offset at 38 pixels. It will track the ball in closed loop as it approaches to correct residual error. When the ball is far from contact and will bounce, the aim will blend toward center for robustness; when the final segment is predictable or no bounce occurs before contact, full aim freedom is restored.
+
+The AI will compute a dynamic aim limit that shrinks as the ball approaches. Contact X uncertainty of 6 pixels translates to Y error via the angle, and this is subtracted from the 40-pixel cap. If a bounce is predicted before contact, an extra 15-pixel safety margin is added, leaving roughly 25 pixels of aim. Once the ball has already bounced, that uncertainty vanishes and full aim freedom returns.
+
+The author refined the uncertainty formula to 38 minus the calculated error, capped at zero. They noted that a 38-pixel offset requires roughly eight frames to reach, so the ball must have already bounced within that window for full aim freedom to be available.
+
+The AI will commit to the latest primary-model aim every frame. It will not abort or shrink the offset based on remaining frames; instead, it will track the moving target and let closed-loop correction handle residual error.
+
+The author settled on a 42-pixel maximum aim offset to keep a 4-pixel safety margin. They also noted that prediction jumps after a resolved bounce are usually small near the end, so aggressive tracking of the primary model remains viable.
+
+The AI will use a 40-pixel maximum aim offset to preserve full angle, but it will prefer strikes with at least 4 pixels of margin unless the ball is within 5 frames and no bounce remains, in which case a killing ace is allowed. To match the arena's discrete frame-based physics, the primary prediction will be built from discrete sub-frame simulations rather than continuous integration.
+
+Continuous integration would introduce up to 20 pixels of error versus the arena's discrete frame updates. The author now favors discrete simulation and collision detection, where the ball advances by whole pixels each frame and the hit is checked after the full step.
+
+The discrete predictor advances the ball by whole pixels each frame and reflects off walls using `2*minY - y` and `2*maxY - y` to match the arena's post-step collision logic. It returns the Y coordinate at the exact moment of contact.
+
+The discrete predictor now detects contact by checking whether the ball crossed the paddle plane between frames. The author realized that if the arena interpolates Y mid-frame, the discrete simulation's Y could be off by nearly a full frame. They are now weighing which physics model to trust.
+
+The author realized that at maximum speed the ball can tunnel through the paddle face in a single frame, so collision detection must check whether the ball crossed the plane between frames rather than just its final position.
+
+The author concluded that the arena likely checks whether the ball crossed the paddle plane between frames, since a 24-pixel-per-frame jump can tunnel through a thin face. They will use either interpolated or end-of-frame position for collision detection. The overshoot error is at most one frame, so the Y difference is bounded by the ball's vertical speed.
+
+Centering the paddle tolerates roughly 46 pixels of error, but aiming is where the discrete-versus-continuous mismatch hurts most. If the true Y differs by about 20 pixels from the prediction, a 40-pixel aim offset becomes 60 pixels and causes a miss. The author now caps aim at 46 minus expected model error minus 4 pixels. With a 20-pixel model error, that leaves only about 22 pixels of aim, or roughly half the full angle.
+
+The author realized that on the final contact frame, the ball's true position is known exactly after one discrete step. The continuous interpolation differs from this by at most |dy|, which is under 20 pixels. They will target a position that satisfies both interpretations if possible, or fall back to whichever one is closer.
+
+The author realized that a centered paddle can cover both discrete and continuous contact positions whenever their difference is under 92 pixels. The remaining challenge is reaching that safe position in time: the paddle must be within 5 pixels of the target on the second-to-last frame, and within 10 pixels two frames out. The plan is to compute both discrete-end and continuous-interpolated Y values for the contact frame, then derive a safe paddle interval from the intersection of hit windows for all candidate Ys.
+
+The author settled on a simpler robust strategy: always move to cover the set of possible contact Ys. The center of the minimal covering paddle position becomes the defensive target, and the AI shifts within that slack for offense. The first candidate contact Y is the continuous interpolation at edge contact.
+
+The author enumerated four candidate contact Ys: continuous interpolation at edge contact, continuous at center contact, discrete end-of-frame at edge contact, and discrete at center contact. The maximum aim offset is now computed as 46 minus half the range of these four values minus one pixel. When models disagree by only a few pixels, the AI retains nearly full aim; when they disagree by dozens, it falls back to a narrow defensive target. This self-calibrates without guessing the arena's physics.
+
+The author realized the four candidate contact Ys do not necessarily converge as the ball approaches. Discrete and continuous predictions can remain separated by a full frame's overshoot, so the safe interval may not shrink to zero even near contact.
+
+The discrete-versus-continuous gap remains fixed at roughly 20 pixels even on the final contact frame. The AI must therefore cover both possible hit positions with its paddle on that last frame.
+
+The author calculated that a 20-pixel ball Y uncertainty leaves only about 36 pixels of aim slack, so the offset should be capped at roughly 36 instead of 40. They began drafting the JavaScript formula to compute the candidate contact Ys.
+
+The author derived the exact safe interval for the paddle center: it must sit between `yHi - 46` and `yLo + 46`, where `yLo` and `yHi` are the minimum and maximum of the four candidate contact Ys. Any paddle position inside this range will hit the ball under every candidate physics model. The AI will search only within this interval for its offensive aim, guaranteeing a hit regardless of which model the arena actually uses.
+
+The author confirmed the safe interval still allows nearly full aim, since its center sits near the ball's Y coordinate. They also noted that wall inset disagreement could widen the candidate Y spread beyond the initial 20-pixel estimate if the ball bounces multiple times.
+
+The author decided not to include both wall inset models in the cover constraint. They will use a single standard wall model with radius r, since the arena specification requires perfect reflection off the top and bottom walls. Only discrete versus continuous physics and contact X variants remain as ambiguous candidates for the safe interval.
+
+The author reversed their earlier decision. They will include both wall inset models in the candidate predictions, but only use them for the cover interval if the spread between them stays under 80 pixels. If the spread is too large, they will discard the wall-0 model and trust only the inset-r model. They concluded that covering contradictory models that are far apart is unsafe, so they will always rely on a single consistent physics model.
+
+The author settled on a single physical model: the ball's edge meets the paddle face, and both discrete end-of-frame and continuous interpolated collision responses are computed for safety. They began drafting the discrete simulation step-by-step, moving the ball first, then reflecting off walls, then checking for paddle collision.
+
+The discrete collision check uses the ball's edge crossing the paddle face, returning the post-step Y. Continuous contact is interpolated at the exact edge meeting point. Both Y values will be covered for safety. Future shots after a hit will be predicted with continuous flight.
+
+Continuous flight will guide strategic search and ace timing, while discrete physics plus both continuous and discrete collision responses will determine the actual paddle placement on the incoming ball. A subtlety in this hybrid approach is now being considered.
+
+The author realized that a 15-pixel difference between discrete and continuous contact Ys translates to roughly a 20-degree angle error in the predicted strike. To keep the aim accurate, the AI should only target an offensive angle when both models agree on the ball's Y position within about 8 pixels. When they disagree, it must fall back to a safe centered hit instead of trusting an imprecise angle.
+
+The author realized the ball cannot be delayed, so the only remaining way to handle model disagreement is to choose a paddle position that satisfies both physics models. For each candidate paddle position, they will compute the resulting contact Y under both discrete and continuous models, simulate the subsequent shots, and only commit to an offensive angle if both models produce a winning or safe hit.
+
+The author settled on a concrete search grid: sample 40 paddle positions across the safe interval, each with two physics models and one continuous flight simulation. The score for each candidate will be the worst outcome between the discrete and continuous predictions, ensuring the AI never overestimates its angle under any model.
+
+The author finalized the scoring rule: a candidate paddle position is only chosen if both physics models produce a winning shot. The search grid will sample 40 positions across the safe interval in 2-pixel steps, plus exact positions for each discrete and continuous contact Y. Reachability is checked by ensuring the paddle can reach its target within the available movement budget.
+
+The AI will use the earliest contact frame across both physics models as its movement budget, ensuring it reaches the ball before either prediction. It will also add a third wall-at-0 contact Y only if that value falls within 30 pixels of the primary predictions, keeping the cover set to at most two Ys.
+
+Opponent habit tracking will be added. A slight early offset will build ball speed before targeting corners once a threshold is reached. Aces will require an 8-pixel margin to avoid false positives from simulation error.
+
+When no ace is possible, the AI will choose the paddle position that presses hardest while still allowing a counter-ace. The simulation stepper resolves wall collisions before paddle checks to avoid a small frame-ordering error. The code will be written in a compact, elegant style.
+
+The author will also record the ball's Y position before wall reflection as a third candidate contact point, in case the ball crosses both a wall and the paddle in the same frame. The movement budget will be set by whichever of the two predicted contact times is earlier.
+
+The AI will generate specific, entertaining commentary that includes approximate ball speed and side. A `sideWord` helper maps the ball's Y position to "high", "low", or "middle" using screen coordinates where small y is high. The code will be written in a compact style while keeping character counts in mind. To ensure accuracy, the AI will not cache any state across frames except opponent habits, the last horizontal delta, and the previous comment; everything else will be recalculated from scratch each frame.
+
+The opponent habit tracker records the normalized vertical offset whenever the ball changes direction from their side to mine, while ignoring serves and own hits. A helper function will compute mean and variance from the last ten recorded offsets.
+
+The habit tracker will use a variance threshold of 0.03 with at least four recorded offsets to flag predictable opponents. When predictable, the AI will move to the predicted return Y if reachable, otherwise fall back to minimax defense. An attacking offset for the next hit will be chosen during the aim search once the ball returns.
+
+The AI will switch between defense and attack based on the ball's direction. When the ball is moving away, it waits in a defensive position; when the ball returns toward the AI, it switches to an attacking strike. The aim search runs continuously while the ball is coming toward the AI, so no extra pre-offset is needed during the opponent's return flight.
+
+The commentary will focus on the action and strategy rather than just the score. Kill-shot comments will include the ball's side. Serve alternation is irrelevant.
+
+All helper functions will be defined inside `createPlayer` to keep the global namespace clean. A `clampMove` utility will enforce the required [-1, 1] range and reject non-numeric or NaN inputs with a zero fallback.
+
+The author is now structuring the final `createPlayer` function. It will use a 55-degree maximum angle limit, and define local helpers for clamping, discrete stepping, continuous flight, and incoming ball prediction.
+
+The author is now drafting the `move` function body. It will branch on ball direction: when the ball approaches, it predicts contact, builds candidate strikes, evaluates them, and moves to the best target; when the ball is moving away, it predicts the opponent's return, builds possible returns, and waits at the best defensive position. Two new helpers, `reachSlack` and `setPlan`, are being added to manage movement timing and commentary. The `predictIncoming` helper is also being refined.
+
+The `predictIncoming` helper now evaluates four contact scenarios: continuous flight to the paddle edge and center, plus discrete stepping to both. It gathers all four resulting Y positions into a single array for downstream evaluation.
+
+The author decided to use the continuous edge contact as the primary angle reference for simulation consistency. When the four predicted Y positions diverge by more than 50 pixels, the AI will narrow its defensive coverage to a ±10 band around that primary prediction instead of covering the full spread. This prevents paralysis when the two physics models disagree sharply.
+
+The author abandoned the ±10 defensive band idea to avoid misclassifying a truly divergent model as predictable. Instead, the AI will rely on a single primary physics model and a fixed safety margin. It is still deciding whether to use continuous plane crossing or discrete stepping as that primary model.
+
+The author is now drafting the arena's ball physics engine. It uses a continuous wall-bounce loop with a tight guard limit to resolve collisions within each frame.
+
+The arena physics engine now resolves wall and paddle collisions by comparing exact time-of-flight across all possible hits, selecting the earliest one to advance the ball state.
+
+The arena physics engine now advances the ball by the earliest collision time, then applies wall bounces with a small nudge to keep the ball inside the court boundaries. When a paddle is hit, it clamps the vertical offset to a 40-pixel half-paddle span and converts that offset into a 55-degree angle for the reflection.
+
+The arena physics engine now caps ball speed at 24 pixels per frame and scales it by 1.05. After a paddle hit, the ball's new velocity is derived from the reflection angle and this clamped speed. If the ball misses the paddle, the remaining frame time is zeroed out.
+
+The author has settled on the continuous sub-frame physics model. It defines exact contact thresholds: the ball center must reach x = 36 for the left paddle and x = 764 for the right, with a 46-pixel hit window. The reflection angle is clamped to ±55 degrees, and ball speed is capped at 24 pixels per frame after a 1.05 multiplier.
+
+The AI will use an 8-pixel safety margin around the 46-pixel hit window. This leaves a 38-pixel target zone for most shots, yielding a reflection angle near the maximum of 55 degrees. Tight aces with predictions under two frames may use the full 46-pixel window.
+
+The opponent's hit window is assumed to be the full 46 pixels. An ace margin of -6 pixels prevents false ace commitments caused by simulation errors. A discrete model will serve as a secondary check for the AI's own paddle coverage, using the same wall and contact thresholds but accounting for fractional frame overshoot.
+
+The AI will evaluate both continuous and discrete physics models for every candidate Y position. A target must satisfy the 40-pixel continuous contact window and the 44-pixel discrete contact window simultaneously. If the two models disagree by more than 18 pixels, a candidate that is 38 pixels from the continuous prediction could be 56 pixels from the discrete one, causing a miss under discrete rules. Therefore every candidate Y must be within 44 pixels of both predictions.
+
+The author is now drafting the `evaluate P` function. It will score each candidate Y position by checking whether it satisfies the 44-pixel safety margin against every possible contact point, then simulate the resulting shot to determine the worst-case outcome.
+
+The author finalized the `evaluate P` function. It returns whether every candidate Y position hits, whether every shot is an ace, and the worst and best scores across all outcomes. The search will use only the face-plus-radius contact point and compare continuous versus discrete physics at that same X; the two resulting Y positions typically differ by less than 20 pixels, keeping aim control tight.
+
+The author is switching to a simpler attack-search strategy. Instead of sampling every possible paddle position, it will sample reflection offsets from -1 to 1 in steps of 0.05 and derive the corresponding paddle Y from the reference contact point. It will also clamp each candidate to the intersection of all models' hit windows.
+
+The author added a reachability check to the attack-search logic. It clamps the safe Y band by the maximum distance the paddle can travel in the remaining frames, and if that leaves no valid spot, it falls back to the closest safe position. They also began drafting `simulateMyShot`, which converts the ball-to-paddle offset into a reflection angle.
+
+The `simulateMyShot` helper now computes the new ball velocity from the reflection angle and clamped speed, then calls `fly` to trace the shot leg. It returns the leg result together with the offset, speed, and two slack metrics: one for the full frame and one for the reaction time. The optimal paddle position will be derived from the best leg in this batch. A counter-safety check is also being added.
+
+The `theyCanAce` helper now samples reflection offsets from -1 to 1 in steps of 0.1. It converts each offset into a velocity vector and computes the opponent's required paddle position. It discards any position that falls outside the legal court bounds.
+
+The `theyCanAce` helper now traces the opponent's return shot and computes the worst-case slack. It returns a negative value if the opponent can ace. The author also realized that extreme offsets might leave the opponent unable to reach their required paddle position, so a reachability check against their target is needed.
+
+The counter-safety check will use a clairvoyant reachability model for the opponent. This assumes they know the ball's future position and can move there in the time it takes the ball to reach them. It is conservative so the AI does not underestimate their ability to return an ace.
+
+The author added a reachability guard to the counter-safety check. It discards any opponent offset that requires a paddle movement beyond the available frames plus a 46-pixel safety margin.
+
+If the worst-case slack is negative, the shot allows a counter-ace. That option is penalized unless the AI's own slack is more than six pixels negative, guaranteeing an ace.
+
+The scoring function now rewards guaranteed aces with 1e6 plus the slack value, and near-miss aces with 5e5 plus the slack value.
+
+The scoring function now adds a 2e5 bonus for predictable habits when reaction slack is below -12. Every shot is penalized by its worst-case slackSmart to create pressure. A counter-ace threat removes 1e6 points, while a positive counter value adds up to 100. The AI also slightly prefers staying near the court center when scores are tied. For each candidate paddle position, it takes the minimum score across all Y-model variants, then selects the position with the highest worst-case score.
+
+Defense mode will reuse the same physics engine. It samples every possible return offset from the opponent's paddle, traces each back shot with `fly`, and selects the best wait position using `bestWait` based on the predicted arrival time. The AI then moves toward that wait position.
+
+If the opponent cannot reach the ball in time, the AI will hold its position and claim the point. The `bestWait` function will sample every reachable paddle position in steps of four pixels, clamping each candidate to the exact point the AI can reach toward the optimal spot. Ties are broken by choosing the position closest to the AI's current paddle height to minimize wasted motion.
+
+A small threshold will prevent jitter when tie-breaking between equal-scoring paddle positions. The AI will also blend its defense wait position toward the predicted arrival point of a habitual opponent, weighted at 65 percent, but only if that habit's variance is low; otherwise it stays in the worst-case coverage position.
+
+When the opponent is predictable, the AI will trust their habitual arrival point more than minimax. It blends that predicted Y with the worst-case wait position at a 75/25 ratio. The paddle will move by dividing the height difference by its speed and clamping to [-1, 1]. The commentary line will show the predicted ball contact Y.
+
+The author added ball speed to the closure for commentary. A bug was flagged where reachability can shrink the safe Y band below zero; in that case the AI should move full speed toward the unconstrained court center.
+
+The author is drafting a `bestOppWait` helper to compute the opponent's best waiting position across every feasible shot. It will use the opponent's starting Y, the time before the ball reaches them, and each shot's arrival Y plus back-time to find where they can wait and still reach the ball.
+
+The `bestOppWait` helper is now fully defined: it maps each shot's arrival Y and back-time into the wait function. SlackSmart is computed as slack against the opponent's best wait position `p*`. The author confirmed this avoids circular logic by generating feasible shots first, then deriving `p*`, then scoring. Exact-offset shots will also be added to the candidate list so `p*` evaluates them.
+
+The author aims to keep the code under 250 lines. They expect many opponent AIs to mirror ball Y or center their paddle, but the habit tracker will counter predictable returns after three hits. In early games the AI will pressure corners and avoid misses; once ball speed rises, it will hunt for aces in the attack search.
+
+The author checked whether an early ace is possible when the opponent is cornered. At speed 10 the opponent can move only about 365 pixels in the time it takes the ball to reach them, so they cannot cover the full court. At speed 14 their coverage radius reaches roughly 306 pixels, which is still smaller than the distance from center to a corner. Therefore no early ace is possible.
+
+The author realized that straight aces from center are only possible near maximum speed. However, forcing the opponent wide and hitting behind them can work at moderate speeds if they cannot return to center in time. This creates a new strategic angle: pressure the opponent to the edge, then exploit their slower recovery.
+
+The author calculated that at speed 12, an opponent can cross the entire court in about 61 frames. This means they can return from a corner to the opposite side and recover before the next shot arrives. Therefore, cornering the opponent and hitting behind them does not guarantee an ace at moderate speeds.
+
+At speed 20, an opponent can cross the court in about 73 frames. From the top corner, they can only reach roughly y=405, leaving a gap near the bottom of the court where a ball might slip through.
+
+At speed 20 the opponent can only cover 365 pixels from a corner, leaving a 43-pixel gap to the opposite side. The AI will hit flat shots to corners to minimize recovery time and exploit this window. The attack search uses clairvoyant slack, which factors in the opponent's already-recovering position when the ball returns.
+
+The search does not need special-case logic for cornered aces. Clairvoyant slack already uses the opponent's current Y each frame, so the AI naturally adapts to their recovery path.
+
+To catch narrow ace windows, the AI will sample every possible return offset in one-pixel steps across the paddle.
+
+The author will run counter-ace checks on only the top few feasible paddle positions to save time. A full brute-force search would require roughly 1,600 flight simulations, but the AI will instead score every candidate first, keep the best six, and then test counter threats against those candidates alone. For the bulk of positions, it will use coarser opponent offset sampling to keep the total under 720 calls.
+
+The author estimated the worst-case workload: roughly 900 flight simulations and 13,500 operations in attack mode, which stays well under the one-millisecond limit. Defense mode needs only about 17 flight calls plus a wait loop with no simulation. The full design is now complete.
+
+The author added a guard for near-zero ball horizontal velocity to prevent division by zero, though the physics of the game makes this case practically impossible. They will now write the code, keeping comments minimal.
+
+The author resolved the hit-condition ambiguity: the allowed vertical offset is half the 80-pixel paddle span plus the ball radius, giving a 46-pixel tolerance. The AI will use a slightly tighter threshold of 44 pixels for its own shots.
+
+The AI will add commentary whenever ball speed changes bands. It will use each model's actual contact Y as the flight start position, since different models hit at different heights. The worst-case score already accounts for this variation. For the opponent's best wait position, only the primary model's intended shots will be used.
+
+The author decided to ignore the ball's residual motion after a hit, since it would only shift the trajectory start by a fraction of a frame. The return flight will begin exactly at the contact point with the new velocity. Any resulting prediction error is small enough to be absorbed by the existing six-pixel ace margin.
+
+The AI will sample both the left face and the ball radius offset as alternate contact X positions. This prevents misses when the true contact point differs from the assumed face position, since long flights with bounces can shift the ball's vertical path by tens of pixels.
+
+The author refined the contact-point sampling rule: only the center contact Y is added to the candidate set when the difference from the edge contact Y is under 36 pixels. Otherwise only the edge contact is used, with ±8 pixel uncertainty. They are now writing the `discreteCross` function.
+
+The `discreteCross` function now simulates ball flight frame by frame. It checks that the ball moves toward the target and bounces off the top and bottom walls. It returns the ball's Y position, travel time, and velocity when the ball crosses the target X.
+
+The author finished the `discreteCross` function and confirmed it handles edge cases like the ball landing exactly on the target. They will not add extra lead time when defending. A `describe` helper is being written to generate commentary based on shot type, ball height, speed, and offset.
+
+The author finalized the commentary strings for aces and other shot types, keeping each line under 38 characters to fit within the display limit.
+
+The author finalized the commentary strings, using only high and low directions since left and right are not visible from the left side. They will occasionally mention the current speed when switching to an attack plan. The final output will be plain JavaScript code without markdown formatting.
+
+The author considered a snap strategy to hide the true aim until the last moment. By wobbling the paddle early and then snapping to the strike offset, the AI could exploit reactive opponents who pre-position based on its current paddle. Against optimal minimax players this would not matter, but it could catch bots that assume little further movement.
+
+The snap strategy is now defined precisely. The AI will stay at a deceptive center position until the last moment, then snap to the true attack offset. It only keeps the deception active while the remaining frames allow both the paddle and the ball to reach their targets in time.
+
+The snap logic now checks whether the remaining frames allow both the paddle and the ball to reach their targets. If so, the AI moves toward a cover center to look like a normal return; otherwise it commits immediately to the attack offset. Faking a return toward the opposite side is only safe when that distance can be covered in time, making this a strong exploit against paddle-reading opponents.
+
+The AI will fake a return toward the opposite side of the court. It will move to the far edge of its reachable snap range while still being able to return to the true attack offset in time. This makes the paddle look like it is heading for a center hit, which tricks reactive opponents into pre-positioning incorrectly.
+
+The author added a three-frame correction margin to the snap strategy. The AI will commit to the true attack offset at least three frames before the ball arrives, leaving a safety window to correct any physics error.
+
+The decoy target is set 20 pixels toward the opposite side of the attack, clamped to the safe hit interval. This keeps the paddle looking like a normal return while still being reachable from the current position and within the snap range.
+
+The author realized that early commitment telegraphs the shot and gives the opponent extra reaction time during the paddle's approach. Deception is therefore most valuable for reactive aces, where the opponent watches the paddle and assumes a center hit. For guaranteed clairvoyant aces, early commitment is safer than deception.
+
+<summary goes here>
+
+The reactive slack calculation now includes the AI's own telegraph time. Because the paddle stays at a decoy for up to three frames before snapping, the opponent gains extra reaction time equal to that delay plus the back-reaction time. The search will therefore use tBack + telegraph when evaluating how much slack the opponent has.
+
+The AI will re-evaluate its planned shot every frame as the ball approaches. The telegraph window shrinks with distance, so only shots that remain aces even with that small advance notice are kept. A conservative estimate of three frames of paddle notice is used for the search. For scoring reactive aces, the author chose a middle-ground model using tBack plus two frames rather than the optimistic tBack alone.
+
+The target line and commentary are only visible to the video audience, not to opponent AIs. Opponents receive only the game state, so displaying the true target during disguise will not telegraph the shot. The author is now ready to write the final code.
+
+The author is now writing the `missDistance` and `slack` helpers to compute how far the paddle must travel to intercept the ball. They will review the code for bugs after writing.
+
+The author verified the slack formula for both clairvoyant and smart opponent models. Clairvoyant opponents start at their current position with total travel time tMe plus tBack. Smart opponents start at their optimal position p* with only tBack, or at the closest reachable point if p* is unreachable in tMe. The bestWait logic already ensures p* is reachable within tMe, so the slack calculation remains correct.
+
+The author noted that p* is computed from primary model arrivals, so a smart opponent's actual optimal position may differ slightly. They confirmed that opponent velocity is unavailable and direction can change instantly each frame, so the momentum-free model remains valid. To hedge against opponent uncertainty, they will require smart aces to have negative slack of at least -15 pixels, while still accepting any shot with negative slack down to -6 pixels.
+
+The author refined the shot-scoring logic. When no ace is available, the AI will prefer shots that land far from center and leave a wide counter-safety margin. The score formula `10000 - slackSmart` naturally favors these pressure shots. A bonus is added for counter margin up to 100 pixels. Lunge shots with thin margins are avoided.
+
+The author added edge-case guards for ball states. If the ball is already past, the AI returns to center silently. They also spotted a bug where a serve reset could falsely trigger a habit record if the previous frame’s ball direction contradicts the new serve.
+
+The author fixed the serve-reset bug by requiring the ball to be near the opponent's side before recording a habit sample. Habits persist across points in the match.
+
+The author added a fast path for when the safe hit interval collapses to a single point: the AI will simply move directly to that target. They also fixed a numeric stability bug in the `fly()` simulation where a ball exactly on the court boundary could enter an infinite loop; the function now clamps boundary collisions to prevent this.
+
+The author confirmed the 80-iteration bounce guard is more than enough to prevent infinite loops in the ball simulation. They also verified that negative angles correctly produce negative vertical velocity. The decoy strategy will be handled in the movement logic rather than inside the shot search.
+
+The movement logic now sets a four-frame commit margin before snapping to the true attack offset. While more frames remain, the AI moves toward a decoy centered on the ball; if the opposite-side decoy is also reachable in time, it may switch to that instead.
+
+The opposite-side decoy is only used when the attack offset exceeds 12 pixels. The AI must verify the decoy is reachable or commit early enough to snap back before the ball arrives, since a missed decoy would leave it stranded outside the safe interval.
+
+The AI will prioritize the opposite-side decoy only if it also falls within the safe hit interval. Otherwise it falls back to the center decoy, or to the true attack offset if neither is reachable. When the safe interval is tight, the center decoy may be the only viable option. Snapping from center to an edge target requires roughly eight frames.
+
+The author realized the decoy condition is flawed: it assumes the paddle is already at the decoy target, but the AI may still be moving toward it. This means the reachability check for the opposite-side decoy could be wrong while the paddle is still in transit.
+
+The author abandoned the flawed decoy reachability check that assumed the paddle was already at the decoy target. Instead, a simpler rule is proposed: default to the true attack target, but only move toward a decoy if the AI can still reach the attack target after that move. This prevents wasting frames on a decoy that would otherwise leave the paddle stranded.
+
+The author finalized the `chooseDest` helper. It moves one frame toward the decoy only if the attack target remains reachable in the remaining frames. Otherwise it commits to the attack target immediately.
+
+The author confirmed the `chooseDest` logic is correct and will be used. They also defined `framesLeft` as the minimum discrete and continuous frames remaining before contact, ensuring the AI commits to its target before the earliest predicted arrival.
+
+The author confirmed that `framesLeft` correctly handles fractional contact times. They also verified that the shot search uses the full remaining frame budget for reachability checks, while decoy movement is purely a presentation style. Finally, they added a playful audience commentary line: "Paddle says centre. It lies."
+
+The author enumerated the AI's strategic plans: ace-high, ace-low, ace-mid, pressure-high, pressure-low, pressure-mid, safe, defend, and defend-read. They identified a flicker problem where the plan would oscillate between disguise and ace as frames decrease, causing commentary to stutter. To fix this, plan labels will reflect only the underlying strategic intent rather than the disguise micro-state, so the audience comment stays stable until the actual strategy changes.
+
+The plan-change key will include the side but not speed, so commentary stays stable while speed varies. A final edge-case review is planned before writing the code. The opponent hit window for ace calculations is fixed at 46 pixels, and the safe hit window is set to 44 pixels to cover model error.
+
+The AI will start at the center before the ball state is meaningful. It will mention match point only when a winning ace occurs at 6-0. The strategy does not change based on score.
+
+The author is exploring a fast counter-ace loop using continuous fly. They noted that opponent return arrivals depend on the AI's ball position and speed, which are fixed across all angles, but their contact Y varies per shot. This means opponent returns could be precomputed for a grid of offsets once per frame.
+
+The author abandoned the idea of fully precomputing opponent return trajectories, since each shot's arrival Y differs. They will instead simulate roughly 720 ball flights per frame. They confirmed that incoming speed and post-hit speed cap at 24 regardless of angle. They also added wall boundary parameters to the fly simulation.
+
+The author will bias pressure shots toward the side opposite the opponent when scores are tied. They also noted that uniform 1-pixel sampling across the safe interval is coarse enough to miss the true optimal offset by roughly 22 pixels at typical distances, which could hurt tight aces.
+
+The author abandoned the coarse 1-pixel sampling approach. Instead, they will use an analytical `angleForArrival` solver with unfolded coordinates to land the ball exactly at the opponent's unreachable boundary. This avoids the 22-pixel arrival error that uniform sampling can introduce.
+
+The author abandoned the analytical angle solver. They will instead use a two-pass search: first a coarse 2-pixel scan across the safe interval, then a fine ±4-pixel refinement around the best candidate. This keeps the total ball flights low while still avoiding the 22-pixel arrival error of uniform sampling.
+
+The search will use exactly nine coarse offsets: -1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, and 1. The fine refinement will scan ±6 pixels in steps of one with full evaluation, adding roughly 216 flights for a total near 400. A `setPlan` helper will enforce the 48-character limit and only update the audience comment when the strategic intent actually changes. The AI will also initialize its plan on the first frame to prevent a blank opening line.
+
+The author drafted a set of specific, entertaining audience commentary lines for the AI. The voice is deliberately cocky and precise, like a veteran paddle reading angles rather than hoping. Lines cover serving, blocking, sliding under high returns, lifting over low ones, closing lanes, taking time, holding the middle, waiting for a return, and pacing the match.
+
+Serve detection will use a simple frame-based check: the ball is near the centre with low speed and low velocity. The AI will always return an object with a numeric target and commentary text, never just a number.
+
+When defending, the AI will predict the meeting Y from the most dangerous return—the one with the smallest slack from its wait position—rather than a habitual arrival. This makes the prediction more dynamic and interesting for viewers.
+
+The author will use the primary predicted incoming Y for attacking and the opponent's most likely shot arrival Y for defending. They decided not to smooth the display target since raw values are sufficient and smoothing would cost accuracy. All parameters will be read from the state object except for hardcoded physics constants from the spec.
+
+The author finalized the hardcoded physics constants: maximum speed 24, speed multiplier 1.05, and maximum deflection angle 55 degrees. They derived the hit-half offset from the state's paddle height and ball radius, and verified that the paddle will be clamped to stay within the court boundaries. Everything is now set for writing the final code and performing a mental dry run.
+
+A dry run with a ball coming from the right at speed 6 confirms the AI can reach any point in the safe interval. Because the incoming speed is too slow for an ace, it will choose a pressure shot to a corner away from the opponent. When both corners are equally distant, it will consistently pick the low corner for deterministic behavior.
+
+The AI will decoy to the court centre when a counter-ace is possible but the frames left are too few for a late snap. A dry run with the ball only 50 pixels away and one frame remaining confirms the AI cannot reach it in time, so it must track earlier.
+
+The author confirmed the AI will still move full speed toward a ball that is too close to reach. Defense dry runs look solid: it predicts the opponent's contact, computes returns, and waits at the best lane, saying "Covering the return lanes." If the opponent has a low variance habit offset, it targets a horizontal return and says "I know this return. Waiting." They also flagged two edge cases to handle: when the ball is already past the target so framesLeft becomes zero, and when negative slack might overflow in score calculations.
+
+The author will bucket the plan key by coarse y ranges to prevent boundary-flip bugs. They also noted that array spread syntax should be avoided for older JavaScript compatibility.
+
+A fallback tracker will move the paddle toward the ball's current Y if all predictions fail. The AI will avoid reactive aces that look reachable but are actually covered and counter-aced by a smart opponent. The counter check already handles death from such shots.
+
+The AI will only announce an "Ace" when the opponent cannot cover it. If the shot is merely reactive, it will say "Trying the late knife." The scoring function already prioritizes smart aces, then safe pressure shots with the best counter margin, and only risky reactive aces if the counter margin is safe.
+
+The author spotted a flaw in the scoring logic. A reactive ace can outrank a real pressure shot when the opponent is already near the target, even if that ace is not actually reachable. The AI might therefore waste time on an over-valued reactive shot instead of taking a safer pressure option.
+
+The author refined the reactive ace scoring rule. A reactive ace bonus will now only apply when the opponent is genuinely stuck near their predicted contact point or when the AI has fewer than four frames to preposition. If the opponent has enough time to reach that point, the bonus is removed so the AI does not waste effort on an unreachable shot.
+
+The author finalized the scoring hierarchy. A clairvoyant ace is worth 1e6 minus slackClair. A smart ace is worth 5e5 minus slackSmart. A reactive ace is worth 2e5 minus slackReact, but only when the opponent is predictable and their slack is below -12. Otherwise the AI defaults to a safe pressure shot with 10000 minus slackSmart. This prioritizes perfect coverage over risky reactive shots.
+
+The AI will treat an opponent as predictable only when their offset variance is below 0.05 and at least three samples have been collected. Until then it defaults to minimax, which is safe even if the opponent bugs out. It can also detect a habit of always centering within two samples.
+
+The author decided against tracking the opponent's typical position error to keep the code simple. When an opponent is predictable, the AI will only test counter-shots within a narrow band around their habit offset rather than sampling every possible position. This prevents overestimating the opponent's reach and keeps the AI from playing too defensively.
+
+A quick mental test of a ball bouncing off the top and bottom walls confirmed the reflection math is correct. The author also wants to verify that the disguise logic does not cause a miss when framesLeft is computed from continuous time but contact occurs one frame earlier.
+
+The AI will commit four frames early before moving to its decoy target, so the continuous-time estimate stays safe against discrete contact. If all predicted return lanes overlap and the safe interval collapses, it will switch to emergency mode and head straight for the primary predicted Y at full speed. With typical opponent positions within about fifty pixels of each other, the safe interval should remain wide enough that this fallback is rarely needed.
+
+The author will add a speed indicator to the commentary whenever the AI switches to an ace strategy. The final code will be wrapped in a single `createPlayer` function that returns nothing but the move selector, keeping all state local and avoiding any global variables.
+
+The author added a deterministic tie-breaker for equal-scoring moves. When two predicted positions have the same score, the AI will pick the one closer to its current paddle Y to minimize unnecessary movement. This prevents oscillation and keeps the paddle from drifting back and forth when multiple shots look equally good.
+
+The author added a "two-bounce knife" shot type to the search, which will be found if it exists within the prediction window. The commentary logic will only update when the AI's plan changes, keeping the audience entertained without constant noise. The final code is expected to be around three hundred lines.
+
+The author noted that some opponent AIs may miss steep shots due to desync or angle bugs, so the AI's preference for extreme pressure angles should exploit this. They also plan to add a center-court fallback when prediction fails while the ball is heading away.
+
+The AI will keep its paddle near the return lane even when the ball is almost at the opponent, since it should already be there from earlier frames. It will also track its last intended attack to prevent commentary flicker between ace and pressure modes caused by small numerical noise.
+
+The author added a 12-frame lock to the commentary system. When the AI switches to an ace plan, it holds that announcement for at least 12 frames and ignores any pressure plan that follows within that window. This prevents the audience from hearing "Ace!" and "Pressure!" back-to-back when numerical noise causes a brief flicker between the two strategies.
+
+The author abandoned the 12-frame lock idea. It would suppress a correct "Ace" announcement if the plan aborts early. Instead, the AI will allow ace plans to interrupt immediately, but other plan changes must wait at least 20 frames. This prevents commentary flicker without risking a stale "Ace!" call.
+
+The author confirmed the hit condition: the ball centre must lie within the paddle's 80-pixel span plus the ball radius. Paddle movement will be clamped to keep the centre inside the court bounds. The fly() function uses substeps to predict the exact contact Y, matching the arena's continuous physics.
+
+The author verified that the arena applies paddle and ball moves in an order where the paddle position is updated before collision. The AI accounts for this by including the current frame in its framesLeft estimate, so the destination is calculated as if all moves are already applied. On the contact frame, when framesLeft drops to one, the AI commits to the actual attack point rather than the decoy target.
+
+The author traced the decoy logic with a concrete example. When the attack target is forty pixels away and the AI is at the decoy, it correctly switches to the attack point at framesLeft=8 because seven remaining frames can cover thirty-five pixels. This confirms the early-commit rule prevents the AI from staying on the decoy too long.
+
+The author refined the decoy logic to use a three-frame commit margin. The AI will switch to the attack target only when framesLeft is at or below three, and it will only decoy if the remaining travel distance can be covered with at least three frames to spare after arrival.
+
+The AI will skip decoying when the attack target is within eight pixels of its current Y, since a center hit needs no disguise. It also realized that decoying first could block the search from reaching an edge-of-reachability point, so it must be careful about how the commit margin interacts with the reachable search.
+
+The author confirmed the decoy logic is safe: if the attack target is too far away, the AI aborts the disguise and moves straight to the target immediately. The search's reachability check remains the hard constraint, so no extra margin shrinkage is needed. The strategy is finalized and ready to be written.
+
+The author decided to keep the opposite-side decoy heuristic rather than trying to maximize opponent misread. The new `pickDest` function computes the decoy as the mirror of the attack target around the ball's Y position, clamped to safe bounds, and commits to the attack target when framesLeft drops to three or fewer.
+
+The `pickDest` function now evaluates three candidate destinations in order: the mirrored decoy, the ball’s Y position, and the attack target. It returns the first one that can be reached within the remaining frames after the three-frame commit margin. If none are reachable, it defaults to the attack target.
+
+The author verified that the AI's reaction timing is sufficient for both return angles and serve receives. No strategic holes remain.
+
+The author checked whether integer pixel truncation could misplace the paddle, but a one-pixel error is covered by the safety margin. They also confirmed the return angle is absolute, offset 55 degrees from horizontal based on the hit position, not relative to the incoming ball angle.
+
+The author added a strict one-millisecond safety cap to every loop and a NaN guard at the start of the move function. They also widened the opponent's hit half to 46 pixels with an 8-pixel slack margin to avoid false aces, and are weighing whether to use a 46-pixel recovery margin for their own paddle or keep it at 40.
+
+The author chose a conservative asymmetric hit margin. The AI will require its own paddle to be within 40 pixels of the ball to attempt a save, while treating the opponent's save window as 46 pixels. This prevents the AI from attempting shots it cannot reliably return, even if the opponent might actually save them.
+
+The author settled on a 42-pixel hit margin for their own paddle. This balances aggressive shot selection against the risk of missing easy saves and getting aced.

@@ -1,0 +1,31 @@
+{
+ "model": "anthropic/claude-opus-5.5",
+ "attempt": 1,
+ "seconds": 38.309,
+ "firstTokenMs": 4192,
+ "usage": {
+  "prompt_tokens": 890,
+  "completion_tokens": 3787,
+  "total_tokens": 4677,
+  "cost": 0.0793,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.0793,
+   "upstream_inference_prompt_cost": 0.00356,
+   "upstream_inference_completions_cost": 0.07574
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 2442,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "reasoningChars": 2670,
+ "at": "2026-10-21T07:20:54.071Z"
+}

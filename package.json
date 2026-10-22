@@ -1,0 +1,15 @@
+{
+  "name": "ai-pong-league",
+  "version": "1.0.0",
+  "description": "15 AI-written Pong players, a deterministic arena, and the browser site from the AI Cited episode.",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "league": "node league/run-league.mjs",
+    "build": "node tools/build-site.mjs",
+    "league:arena": "node league/run-league.mjs --engine=arena",
+    "serve": "node tools/serve.mjs"
+  },
+  "engines": { "node": ">=18" }
+}

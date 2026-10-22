@@ -1,0 +1,14 @@
+I need to design a strong Pong AI that predicts where the ball will intersect the paddle's x-position, accounting for the paddle's max speed of 5px/frame versus the ball's speed up to 24px/frame across the court, then plans an aiming strategy to place shots beyond the opponent's reach.
+
+My approach: simulate different hit offsets to compute the resulting ball trajectory and arrival point at the opponent's side, estimate how many frames the opponent needs to reach that point versus how many frames they have, and pick the offset that maximizes this deficit. I also need to ensure the offset keeps the paddle center within valid clamp bounds and reachable in time for my own paddle to make the hit.
+
+When the ball's moving away, I should drift toward a safe waiting spot rather than commit to a specific intercept since the opponent's return angle is unpredictable—center position seems safest. I'm computing movement with clamped speed to avoid overshoot, and picking the best reachable paddle target based on how many frames remain until intercept.
+
+If nothing's reachable since I'm late, I just head straight to the intercept point with zero offset, clamped to the paddle's valid range. I need to add margin requirements to avoid picking targets with barely-reachable distances, and account for wall clamping so the offset calculation reflects the paddle's actual achievable center near the edges.
+
+For evaluating the opponent's return, I compute how far short their reach falls given their travel speed and the time until my hit lands, using the gap between required distance and their max movement, factoring in both current position and an assumed centered fallback if they're playing optimally.
+
+For commentary, I want my status messages to stay stable across frames rather than flickering with changing numbers, so I'll use fixed categories like waiting, aiming for a corner shot, or scrambling. I'm also writing a helper that folds a position back into the valid range to simulate wall bounces for intercept calculations.
+
+Now I'm computing where the ball will intersect the opponent's paddle line by projecting forward using its velocity components, then folding that result for wall bounces. I'm sampling paddle offset candidates, clamping the paddle's target center position, and enforcing a safety margin so the catch point stays within reach given the time available to move.
+

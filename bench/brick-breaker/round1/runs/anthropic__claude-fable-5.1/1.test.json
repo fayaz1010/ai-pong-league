@@ -1,0 +1,73 @@
+{
+ "file": "runs/anthropic__claude-fable-5.1/1.html",
+ "passed": 13,
+ "total": 13,
+ "results": [
+  {
+   "name": "01 loads with no console errors",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "02 canvas #game is 800x600",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "03 window.game has the test interface",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "04 starts ready: 50 bricks, 3 lives, score 0",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "05 arrow keys move the paddle",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "06 mouse moves the paddle",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "07 Space launches the ball",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "08 paddle stays inside the canvas",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "09 hitting a brick removes it and scores 10",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "10 missing the ball costs a life",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "11 P pauses and resumes",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "12 game over at 0 lives, Space restarts",
+   "pass": true,
+   "note": ""
+  },
+  {
+   "name": "13 runs at 50+ frames per second",
+   "pass": true,
+   "note": ""
+  }
+ ],
+ "errors": []
+}

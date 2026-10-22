@@ -1,0 +1,12159 @@
+{
+ "rows": [
+  {
+   "team": "GPT-6 Astra #1",
+   "model": "GPT-6 Astra",
+   "P": 44,
+   "W": 36,
+   "D": 8,
+   "L": 0,
+   "F": 252,
+   "A": 0,
+   "Pts": 116,
+   "errors": 0,
+   "slow": 1,
+   "msPerCall": 0.1249,
+   "calls": 866567,
+   "GD": 252
+  },
+  {
+   "team": "GPT-6 Astra #2",
+   "model": "GPT-6 Astra",
+   "P": 44,
+   "W": 36,
+   "D": 8,
+   "L": 0,
+   "F": 252,
+   "A": 0,
+   "Pts": 116,
+   "errors": 0,
+   "slow": 3,
+   "msPerCall": 0.102,
+   "calls": 848275,
+   "GD": 252
+  },
+  {
+   "team": "GPT-6 Astra #3",
+   "model": "GPT-6 Astra",
+   "P": 44,
+   "W": 36,
+   "D": 8,
+   "L": 0,
+   "F": 252,
+   "A": 0,
+   "Pts": 116,
+   "errors": 0,
+   "slow": 3,
+   "msPerCall": 0.0838,
+   "calls": 849279,
+   "GD": 252
+  },
+  {
+   "team": "Fable 5.1 #2",
+   "model": "Fable 5.1",
+   "P": 44,
+   "W": 28,
+   "D": 2,
+   "L": 14,
+   "F": 188,
+   "A": 115,
+   "Pts": 86,
+   "errors": 0,
+   "slow": 7,
+   "msPerCall": 0.2055,
+   "calls": 854144,
+   "GD": 73
+  },
+  {
+   "team": "Fable 5.1 #1",
+   "model": "Fable 5.1",
+   "P": 44,
+   "W": 27,
+   "D": 2,
+   "L": 15,
+   "F": 200,
+   "A": 131,
+   "Pts": 83,
+   "errors": 0,
+   "slow": 4,
+   "msPerCall": 0.177,
+   "calls": 844291,
+   "GD": 69
+  },
+  {
+   "team": "Fable 5.1 #3",
+   "model": "Fable 5.1",
+   "P": 44,
+   "W": 25,
+   "D": 0,
+   "L": 19,
+   "F": 203,
+   "A": 163,
+   "Pts": 75,
+   "errors": 0,
+   "slow": 0,
+   "msPerCall": 0.0737,
+   "calls": 851081,
+   "GD": 40
+  },
+  {
+   "team": "Opus 5.5 #2",
+   "model": "Opus 5.5",
+   "P": 44,
+   "W": 22,
+   "D": 0,
+   "L": 22,
+   "F": 167,
+   "A": 158,
+   "Pts": 66,
+   "errors": 0,
+   "slow": 3,
+   "msPerCall": 0.0504,
+   "calls": 812495,
+   "GD": 9
+  },
+  {
+   "team": "Opus 5.5 #3",
+   "model": "Opus 5.5",
+   "P": 44,
+   "W": 15,
+   "D": 0,
+   "L": 29,
+   "F": 122,
+   "A": 231,
+   "Pts": 45,
+   "errors": 0,
+   "slow": 1,
+   "msPerCall": 0.0634,
+   "calls": 767864,
+   "GD": -109
+  },
+  {
+   "team": "Opus 5.5 #1",
+   "model": "Opus 5.5",
+   "P": 44,
+   "W": 13,
+   "D": 0,
+   "L": 31,
+   "F": 116,
+   "A": 222,
+   "Pts": 39,
+   "errors": 0,
+   "slow": 2,
+   "msPerCall": 0.0492,
+   "calls": 720080,
+   "GD": -106
+  },
+  {
+   "team": "Gemini #3",
+   "model": "Gemini",
+   "P": 44,
+   "W": 8,
+   "D": 0,
+   "L": 36,
+   "F": 66,
+   "A": 285,
+   "Pts": 24,
+   "errors": 0,
+   "slow": 9,
+   "msPerCall": 0.0624,
+   "calls": 799425,
+   "GD": -219
+  },
+  {
+   "team": "Gemini #2",
+   "model": "Gemini",
+   "P": 44,
+   "W": 3,
+   "D": 0,
+   "L": 41,
+   "F": 47,
+   "A": 302,
+   "Pts": 9,
+   "errors": 0,
+   "slow": 2,
+   "msPerCall": 0.0653,
+   "calls": 726596,
+   "GD": -255
+  },
+  {
+   "team": "Gemini #1",
+   "model": "Gemini",
+   "P": 44,
+   "W": 1,
+   "D": 0,
+   "L": 43,
+   "F": 48,
+   "A": 306,
+   "Pts": 3,
+   "errors": 0,
+   "slow": 1,
+   "msPerCall": 0.0673,
+   "calls": 752401,
+   "GD": -258
+  }
+ ],
+ "byModel": [
+  {
+   "model": "GPT-6 Astra",
+   "W": 108,
+   "D": 24,
+   "L": 0,
+   "Pts": 348,
+   "GD": 756
+  },
+  {
+   "model": "Fable 5.1",
+   "W": 80,
+   "D": 4,
+   "L": 48,
+   "Pts": 244,
+   "GD": 182
+  },
+  {
+   "model": "Opus 5.5",
+   "W": 50,
+   "D": 0,
+   "L": 82,
+   "Pts": 150,
+   "GD": -206
+  },
+  {
+   "model": "Gemini",
+   "W": 12,
+   "D": 0,
+   "L": 120,
+   "Pts": 36,
+   "GD": -732
+  }
+ ],
+ "games": [
+  {
+   "home": "Gemini #1",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "6-7",
+   "frames": 26598,
+   "points": [
+    {
+     "frame": 2198,
+     "to": "R",
+     "rally": 33
+    },
+    {
+     "frame": 4160,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6335,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 8289,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10271,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12099,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14021,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 16326,
+     "to": "R",
+     "rally": 36
+    },
+    {
+     "frame": 18393,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 20524,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 22760,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 24707,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 26597,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "4-7",
+   "frames": 22975,
+   "points": [
+    {
+     "frame": 1905,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 3755,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 5686,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 7863,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 9861,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 11876,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 13986,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 16421,
+     "to": "R",
+     "rally": 38
+    },
+    {
+     "frame": 18557,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 20858,
+     "to": "R",
+     "rally": 36
+    },
+    {
+     "frame": 22974,
+     "to": "R",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "5-7",
+   "frames": 25344,
+   "points": [
+    {
+     "frame": 1998,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4169,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6282,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8363,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10658,
+     "to": "R",
+     "rally": 33
+    },
+    {
+     "frame": 12853,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 14857,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16954,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 19238,
+     "to": "R",
+     "rally": 33
+    },
+    {
+     "frame": 21417,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 23346,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 25343,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "5-7",
+   "frames": 25221,
+   "points": [
+    {
+     "frame": 2186,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 4127,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6129,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8225,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10402,
+     "to": "R",
+     "rally": 31
+    },
+    {
+     "frame": 12425,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14521,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 16919,
+     "to": "R",
+     "rally": 36
+    },
+    {
+     "frame": 19044,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 21238,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 23300,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 25220,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15792,
+   "points": [
+    {
+     "frame": 2217,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4578,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6798,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9068,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11287,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13566,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15791,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15664,
+   "points": [
+    {
+     "frame": 2208,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4483,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6699,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8969,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11193,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13439,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15663,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15625,
+   "points": [
+    {
+     "frame": 2198,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4419,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6646,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8889,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11115,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13408,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15624,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15538,
+   "points": [
+    {
+     "frame": 2196,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4425,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6644,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8865,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11082,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13300,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15537,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15594,
+   "points": [
+    {
+     "frame": 2198,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4450,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6680,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8975,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11203,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13360,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15593,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15553,
+   "points": [
+    {
+     "frame": 2204,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4440,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6656,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8853,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11071,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13310,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15552,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14459,
+   "points": [
+    {
+     "frame": 1929,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 3989,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6246,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8391,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10428,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12418,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14458,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14523,
+   "points": [
+    {
+     "frame": 2006,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4033,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6066,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8257,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10340,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12448,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14522,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14236,
+   "points": [
+    {
+     "frame": 2084,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4161,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6179,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8231,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10254,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12264,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14235,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14673,
+   "points": [
+    {
+     "frame": 2119,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4220,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6334,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8426,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10459,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12523,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14672,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14784,
+   "points": [
+    {
+     "frame": 2027,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4191,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6243,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8409,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10510,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12638,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 14783,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "1-7",
+   "frames": 16798,
+   "points": [
+    {
+     "frame": 2118,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4185,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6209,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8309,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10346,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12472,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14726,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 16797,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 16663,
+   "points": [
+    {
+     "frame": 2125,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4175,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6251,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8440,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10540,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12595,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14612,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16662,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14680,
+   "points": [
+    {
+     "frame": 2088,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4178,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6294,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8373,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10565,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 12623,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14679,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 12559,
+   "points": [
+    {
+     "frame": 2075,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 2145,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4221,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 6410,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 8455,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 10497,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 12558,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14508,
+   "points": [
+    {
+     "frame": 2031,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4129,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6321,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8377,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10427,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12473,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14507,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16283,
+   "points": [
+    {
+     "frame": 2287,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4638,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6863,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9192,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11542,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13893,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16282,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #1",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16120,
+   "points": [
+    {
+     "frame": 2256,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4563,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6831,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9202,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11528,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13875,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16119,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "5-7",
+   "frames": 24720,
+   "points": [
+    {
+     "frame": 1959,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4199,
+     "to": "L",
+     "rally": 33
+    },
+    {
+     "frame": 6294,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8328,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10401,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12237,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14273,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 16366,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 18242,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 20607,
+     "to": "L",
+     "rally": 35
+    },
+    {
+     "frame": 22608,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 24719,
+     "to": "R",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-5",
+   "frames": 24738,
+   "points": [
+    {
+     "frame": 1924,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 3995,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6019,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7938,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10018,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 11939,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14075,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 16380,
+     "to": "R",
+     "rally": 34
+    },
+    {
+     "frame": 18405,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 20380,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 22706,
+     "to": "L",
+     "rally": 36
+    },
+    {
+     "frame": 24737,
+     "to": "L",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "5-7",
+   "frames": 25167,
+   "points": [
+    {
+     "frame": 1927,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 3974,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6149,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8251,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10622,
+     "to": "L",
+     "rally": 34
+    },
+    {
+     "frame": 12786,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 14737,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 16818,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 18969,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 20940,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 23106,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 25166,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "6-7",
+   "frames": 28106,
+   "points": [
+    {
+     "frame": 2009,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4185,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6234,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8477,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 10667,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 12771,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 14851,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 17061,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 19080,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 21194,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 23326,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 25799,
+     "to": "L",
+     "rally": 37
+    },
+    {
+     "frame": 28105,
+     "to": "R",
+     "rally": 33
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14733,
+   "points": [
+    {
+     "frame": 2140,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4213,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6273,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 8346,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10526,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12536,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14732,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14794,
+   "points": [
+    {
+     "frame": 2161,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4225,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6490,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8539,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10559,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 12670,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14793,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14778,
+   "points": [
+    {
+     "frame": 2313,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4352,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6348,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 8361,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10475,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12559,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14777,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14000,
+   "points": [
+    {
+     "frame": 1987,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 4021,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6015,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 8021,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10015,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 12003,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 13999,
+     "to": "R",
+     "rally": 21
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 12155,
+   "points": [
+    {
+     "frame": 1994,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 2064,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4059,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 6074,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 8073,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 10160,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 12154,
+     "to": "R",
+     "rally": 21
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14238,
+   "points": [
+    {
+     "frame": 1988,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 4017,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6011,
+     "to": "R",
+     "rally": 21
+    },
+    {
+     "frame": 8031,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10247,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12240,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14237,
+     "to": "R",
+     "rally": 21
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14555,
+   "points": [
+    {
+     "frame": 1922,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 3907,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 5921,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8093,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10244,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12411,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 14554,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14808,
+   "points": [
+    {
+     "frame": 1963,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4206,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6306,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8483,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10529,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12749,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 14807,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14495,
+   "points": [
+    {
+     "frame": 2072,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4163,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6232,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8175,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10238,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12416,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14494,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14498,
+   "points": [
+    {
+     "frame": 1961,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4144,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6315,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8319,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10372,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12421,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14497,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 16229,
+   "points": [
+    {
+     "frame": 2085,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4218,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6190,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8113,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10158,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12144,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14102,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 16228,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14430,
+   "points": [
+    {
+     "frame": 2092,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4179,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6263,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8195,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 10217,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12313,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14429,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14596,
+   "points": [
+    {
+     "frame": 2074,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4158,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6227,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8253,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10316,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12455,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14595,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14438,
+   "points": [
+    {
+     "frame": 2086,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4074,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6171,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8256,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10309,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12462,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14437,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14381,
+   "points": [
+    {
+     "frame": 2044,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4053,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6122,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8157,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10300,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12268,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14380,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14224,
+   "points": [
+    {
+     "frame": 1949,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 3975,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 5972,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8042,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10095,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12248,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14223,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15646,
+   "points": [
+    {
+     "frame": 2145,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4427,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6558,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8915,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11080,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13337,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15645,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #2",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15549,
+   "points": [
+    {
+     "frame": 2155,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4237,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 6506,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8836,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10997,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13225,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15548,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-6",
+   "frames": 26711,
+   "points": [
+    {
+     "frame": 1955,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4098,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6148,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8296,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 10482,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 12502,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14685,
+     "to": "R",
+     "rally": 31
+    },
+    {
+     "frame": 16559,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 18522,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 20679,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 22677,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 24622,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 26710,
+     "to": "L",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 16813,
+   "points": [
+    {
+     "frame": 2071,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4254,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 6434,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 8448,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10434,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12602,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 14680,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 16812,
+     "to": "L",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-6",
+   "frames": 27579,
+   "points": [
+    {
+     "frame": 2315,
+     "to": "R",
+     "rally": 33
+    },
+    {
+     "frame": 4822,
+     "to": "R",
+     "rally": 36
+    },
+    {
+     "frame": 6858,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8920,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10775,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12649,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14673,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16745,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 18741,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 20985,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 23117,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 25257,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 27578,
+     "to": "L",
+     "rally": 32
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-3",
+   "frames": 21120,
+   "points": [
+    {
+     "frame": 2093,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4336,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 6491,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8669,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10856,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 12690,
+     "to": "R",
+     "rally": 22
+    },
+    {
+     "frame": 14865,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 17032,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 19025,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 21119,
+     "to": "L",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16357,
+   "points": [
+    {
+     "frame": 2324,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4912,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 7204,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9505,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11779,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14023,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16356,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16539,
+   "points": [
+    {
+     "frame": 2245,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4751,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 7042,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9350,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11682,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14233,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 16538,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15974,
+   "points": [
+    {
+     "frame": 2316,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4645,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6970,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9285,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11678,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13778,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15973,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16038,
+   "points": [
+    {
+     "frame": 2394,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4617,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6744,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9094,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11415,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13639,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16037,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14199,
+   "points": [
+    {
+     "frame": 2419,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4741,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 7196,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7266,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 9688,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 11789,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14198,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16257,
+   "points": [
+    {
+     "frame": 2401,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4623,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6944,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9107,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11514,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13751,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16256,
+     "to": "R",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15105,
+   "points": [
+    {
+     "frame": 2043,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4317,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6396,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8636,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10820,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12950,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 15104,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15395,
+   "points": [
+    {
+     "frame": 2192,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4406,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6575,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8642,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10848,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13183,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 15394,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "1-3",
+   "frames": 36000,
+   "points": [
+    {
+     "frame": 2224,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4363,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6473,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8571,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "1-7",
+   "frames": 17363,
+   "points": [
+    {
+     "frame": 2213,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4304,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6520,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 8628,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10828,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13232,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 15254,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17362,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "3-7",
+   "frames": 21526,
+   "points": [
+    {
+     "frame": 2129,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4406,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6489,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8631,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10880,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 13026,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 15116,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17190,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 19227,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 21525,
+     "to": "R",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15657,
+   "points": [
+    {
+     "frame": 2262,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4318,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6511,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8727,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10929,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 13477,
+     "to": "R",
+     "rally": 36
+    },
+    {
+     "frame": 15656,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14828,
+   "points": [
+    {
+     "frame": 2190,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4446,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6453,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8559,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10688,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12708,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14827,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15149,
+   "points": [
+    {
+     "frame": 2083,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4227,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6335,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8567,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10687,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12833,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15148,
+     "to": "R",
+     "rally": 31
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15448,
+   "points": [
+    {
+     "frame": 2214,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4374,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6564,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8837,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11023,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13223,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 15447,
+     "to": "R",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15257,
+   "points": [
+    {
+     "frame": 2219,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4394,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6504,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8733,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10936,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13077,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15256,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16849,
+   "points": [
+    {
+     "frame": 2485,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4908,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7301,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 9613,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11863,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 14484,
+     "to": "R",
+     "rally": 34
+    },
+    {
+     "frame": 16848,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Gemini #3",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16244,
+   "points": [
+    {
+     "frame": 2450,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4765,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7023,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9330,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11500,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13825,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16243,
+     "to": "R",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15738,
+   "points": [
+    {
+     "frame": 2268,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4485,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6757,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8984,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11254,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13470,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15737,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15711,
+   "points": [
+    {
+     "frame": 2243,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4459,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6738,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8953,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11217,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13442,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15710,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15030,
+   "points": [
+    {
+     "frame": 2061,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4436,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6454,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8493,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 10658,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12977,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15029,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14603,
+   "points": [
+    {
+     "frame": 2099,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4222,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6275,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8400,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10473,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12560,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 14602,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16414,
+   "points": [
+    {
+     "frame": 2220,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4579,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7108,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 9416,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11728,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14019,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16413,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16854,
+   "points": [
+    {
+     "frame": 2346,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4636,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7110,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 9424,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11947,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 14293,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16853,
+     "to": "L",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15649,
+   "points": [
+    {
+     "frame": 2320,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4422,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6793,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8895,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11220,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13326,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 15648,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15583,
+   "points": [
+    {
+     "frame": 2320,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4417,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6738,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8837,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11160,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13258,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 15582,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16406,
+   "points": [
+    {
+     "frame": 2415,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4705,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7118,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9408,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11790,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14071,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16405,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16356,
+   "points": [
+    {
+     "frame": 2412,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4697,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7058,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9345,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11720,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14001,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16355,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16147,
+   "points": [
+    {
+     "frame": 2311,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4622,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6934,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9227,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11627,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13897,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16146,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15976,
+   "points": [
+    {
+     "frame": 2285,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4553,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6819,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9083,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11379,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13646,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 15975,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16660,
+   "points": [
+    {
+     "frame": 2419,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4760,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7156,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9517,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11941,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14259,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16659,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16635,
+   "points": [
+    {
+     "frame": 2423,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4739,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7143,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9490,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11901,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14236,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16634,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16954,
+   "points": [
+    {
+     "frame": 2413,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4862,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7265,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9714,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12120,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14546,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16953,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16866,
+   "points": [
+    {
+     "frame": 2368,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4792,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7203,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9622,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12038,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14461,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16865,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 17356,
+   "points": [
+    {
+     "frame": 2579,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4993,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7457,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9871,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12432,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14842,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 17355,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #1",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 17392,
+   "points": [
+    {
+     "frame": 2563,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4972,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7539,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9950,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12462,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14872,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 17391,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15606,
+   "points": [
+    {
+     "frame": 2240,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4460,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6713,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8928,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11165,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13365,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15605,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15694,
+   "points": [
+    {
+     "frame": 2243,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4460,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6718,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8939,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11178,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13393,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15693,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14687,
+   "points": [
+    {
+     "frame": 2010,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4301,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6308,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8523,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10581,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12669,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14686,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14700,
+   "points": [
+    {
+     "frame": 2009,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4221,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6236,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8433,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10466,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12683,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14699,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16106,
+   "points": [
+    {
+     "frame": 2197,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4632,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6986,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9300,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11496,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13802,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16105,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15868,
+   "points": [
+    {
+     "frame": 2247,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4464,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6522,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8757,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11132,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13536,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15867,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14952,
+   "points": [
+    {
+     "frame": 2135,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4222,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6412,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8496,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10727,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12810,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14951,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14795,
+   "points": [
+    {
+     "frame": 2133,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4215,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6356,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8425,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10568,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12650,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14794,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16421,
+   "points": [
+    {
+     "frame": 2344,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4657,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7057,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9370,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11770,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14103,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16420,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16307,
+   "points": [
+    {
+     "frame": 2315,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4623,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6968,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9277,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11624,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13957,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16306,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16286,
+   "points": [
+    {
+     "frame": 2345,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4699,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6959,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9313,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11661,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 14019,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16285,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16203,
+   "points": [
+    {
+     "frame": 2343,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4692,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 7027,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9379,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11729,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 14079,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16202,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14007,
+   "points": [
+    {
+     "frame": 2344,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4645,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7026,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9320,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 9389,
+     "to": "L",
+     "rally": 0
+    },
+    {
+     "frame": 11687,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14006,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16356,
+   "points": [
+    {
+     "frame": 2377,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4665,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7003,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9273,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11683,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13978,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16355,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16954,
+   "points": [
+    {
+     "frame": 2336,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4759,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7233,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9641,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12152,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14564,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16953,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 17013,
+   "points": [
+    {
+     "frame": 2434,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4844,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7265,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9658,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12133,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14537,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 17012,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16414,
+   "points": [
+    {
+     "frame": 2402,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4731,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7065,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9395,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11755,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14046,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16413,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #2",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16491,
+   "points": [
+    {
+     "frame": 2414,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4736,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7147,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9473,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11854,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14123,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16490,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15586,
+   "points": [
+    {
+     "frame": 2237,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4457,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6709,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8933,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11155,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13354,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15585,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15631,
+   "points": [
+    {
+     "frame": 2237,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4459,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6692,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8914,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11145,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13367,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15630,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14043,
+   "points": [
+    {
+     "frame": 2017,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4015,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 6028,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8026,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 10032,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12027,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 14042,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14264,
+   "points": [
+    {
+     "frame": 2011,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 4006,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 6025,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 8005,
+     "to": "L",
+     "rally": 21
+    },
+    {
+     "frame": 10034,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12249,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14263,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16357,
+   "points": [
+    {
+     "frame": 2197,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4704,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6995,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9405,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11734,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 14143,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16356,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16074,
+   "points": [
+    {
+     "frame": 2210,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4615,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6791,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9250,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11438,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13843,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16073,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14930,
+   "points": [
+    {
+     "frame": 2143,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4245,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6437,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8539,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10687,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12785,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14929,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14939,
+   "points": [
+    {
+     "frame": 2142,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4239,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6383,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8467,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10693,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12791,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14938,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16383,
+   "points": [
+    {
+     "frame": 2336,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4673,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7064,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9401,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11741,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14074,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16382,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16199,
+   "points": [
+    {
+     "frame": 2306,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4638,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6933,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9242,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11526,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13859,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16198,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16356,
+   "points": [
+    {
+     "frame": 2380,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4734,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6994,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9348,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11731,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 14089,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16355,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16242,
+   "points": [
+    {
+     "frame": 2343,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4692,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 7026,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 9378,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11763,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 14118,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16241,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16328,
+   "points": [
+    {
+     "frame": 2316,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4629,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6997,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9307,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11714,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14043,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16327,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16337,
+   "points": [
+    {
+     "frame": 2360,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4665,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6982,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9290,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11661,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13972,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16336,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16504,
+   "points": [
+    {
+     "frame": 2287,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4697,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7071,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9456,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11833,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14214,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16503,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16529,
+   "points": [
+    {
+     "frame": 2334,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4721,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7042,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9400,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11804,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14185,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16528,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16444,
+   "points": [
+    {
+     "frame": 2416,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4702,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7055,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9326,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11687,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14094,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16443,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "GPT-6 Astra #3",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16466,
+   "points": [
+    {
+     "frame": 2433,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4701,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 7112,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9420,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11802,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14084,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16465,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14993,
+   "points": [
+    {
+     "frame": 2145,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4418,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6596,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8785,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10821,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12967,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 14992,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15024,
+   "points": [
+    {
+     "frame": 2106,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4288,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6257,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8317,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10496,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12821,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 15023,
+     "to": "L",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14747,
+   "points": [
+    {
+     "frame": 2075,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4241,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6229,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8368,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10418,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12558,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14746,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14501,
+   "points": [
+    {
+     "frame": 2044,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4101,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6093,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8155,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10026,
+     "to": "L",
+     "rally": 22
+    },
+    {
+     "frame": 12289,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 14500,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-1",
+   "frames": 17355,
+   "points": [
+    {
+     "frame": 2211,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4423,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6523,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8641,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10736,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12950,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 15247,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 17354,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 17119,
+   "points": [
+    {
+     "frame": 2085,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4265,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6528,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8686,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10703,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12840,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15018,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 17118,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15464,
+   "points": [
+    {
+     "frame": 2092,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4467,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6566,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8943,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11044,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13365,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 15463,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15455,
+   "points": [
+    {
+     "frame": 2106,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4468,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6566,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8935,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11034,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13355,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 15454,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 12742,
+   "points": [
+    {
+     "frame": 2082,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4277,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6361,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 6431,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 8517,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 10658,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 12741,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14825,
+   "points": [
+    {
+     "frame": 2075,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4257,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6340,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8516,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10599,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12740,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14824,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 12736,
+   "points": [
+    {
+     "frame": 2097,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 2167,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4266,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 6392,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 8493,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 10637,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 12735,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14883,
+   "points": [
+    {
+     "frame": 2090,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4258,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6356,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 8540,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10639,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12783,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14882,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 16873,
+   "points": [
+    {
+     "frame": 2069,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4188,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6307,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8335,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10449,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12678,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 14850,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 16872,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "1-7",
+   "frames": 17411,
+   "points": [
+    {
+     "frame": 2244,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4472,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6572,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8712,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10860,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13030,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15275,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17410,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "5-7",
+   "frames": 25716,
+   "points": [
+    {
+     "frame": 2226,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4477,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6520,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8684,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10860,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 13014,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15033,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 17089,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 19276,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 21448,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 23503,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 25715,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "3-7",
+   "frames": 21616,
+   "points": [
+    {
+     "frame": 2044,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4352,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6584,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8811,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10976,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13056,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15158,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17349,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 19422,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 21615,
+     "to": "R",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14381,
+   "points": [
+    {
+     "frame": 2010,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4161,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6175,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8261,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10266,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12308,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14380,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14728,
+   "points": [
+    {
+     "frame": 2099,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4199,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6308,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8482,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10556,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12565,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14727,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 12542,
+   "points": [
+    {
+     "frame": 2036,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 2106,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4164,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 6330,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 8426,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 10485,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 12541,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14495,
+   "points": [
+    {
+     "frame": 2055,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4147,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6168,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8271,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10258,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 12401,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14494,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16657,
+   "points": [
+    {
+     "frame": 2442,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4901,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7121,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9543,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11939,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14286,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16656,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #1",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16600,
+   "points": [
+    {
+     "frame": 2389,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4866,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7316,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 9560,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11919,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14353,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16599,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14326,
+   "points": [
+    {
+     "frame": 2103,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4210,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6267,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8258,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10295,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12334,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14325,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 16706,
+   "points": [
+    {
+     "frame": 2035,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4241,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6333,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8434,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10597,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12612,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14682,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16705,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14720,
+   "points": [
+    {
+     "frame": 2144,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4289,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6379,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8451,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10546,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12605,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14719,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14587,
+   "points": [
+    {
+     "frame": 1992,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4160,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6257,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8314,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10387,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12511,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14586,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14909,
+   "points": [
+    {
+     "frame": 2154,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4384,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6474,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8671,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10787,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12835,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14908,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14914,
+   "points": [
+    {
+     "frame": 2251,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 4543,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6679,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8719,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10741,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12859,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14913,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16371,
+   "points": [
+    {
+     "frame": 2280,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4723,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7011,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9412,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11701,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14089,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16370,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16112,
+   "points": [
+    {
+     "frame": 2280,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4594,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6880,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9181,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11468,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13824,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16111,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16456,
+   "points": [
+    {
+     "frame": 2308,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4730,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7040,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9441,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11777,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14122,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16455,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16399,
+   "points": [
+    {
+     "frame": 2331,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4728,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7061,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9408,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11718,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14064,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16398,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16419,
+   "points": [
+    {
+     "frame": 2332,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4754,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7088,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9413,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11749,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14085,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16418,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16371,
+   "points": [
+    {
+     "frame": 2307,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4695,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7028,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9366,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11700,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14036,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16370,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14782,
+   "points": [
+    {
+     "frame": 1988,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4129,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6269,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8544,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10631,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12640,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14781,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14692,
+   "points": [
+    {
+     "frame": 2235,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4290,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6359,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8520,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10631,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12641,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14691,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15096,
+   "points": [
+    {
+     "frame": 2225,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4428,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6443,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8656,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10867,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12966,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15095,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 17186,
+   "points": [
+    {
+     "frame": 2070,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4432,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6458,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8555,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10726,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12913,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15061,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 17185,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 18391,
+   "points": [
+    {
+     "frame": 2213,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4571,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 6789,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 9155,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 11357,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13644,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 15949,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 18390,
+     "to": "R",
+     "rally": 32
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "5-7",
+   "frames": 27483,
+   "points": [
+    {
+     "frame": 2551,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 4688,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6852,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9181,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 11527,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13962,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 16179,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 18354,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 20657,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 22953,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 25123,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 27482,
+     "to": "R",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 17815,
+   "points": [
+    {
+     "frame": 2070,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4310,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6478,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8629,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11020,
+     "to": "R",
+     "rally": 31
+    },
+    {
+     "frame": 13467,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 15584,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17814,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16386,
+   "points": [
+    {
+     "frame": 2265,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4718,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 6812,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9342,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 11731,
+     "to": "R",
+     "rally": 31
+    },
+    {
+     "frame": 14178,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 16385,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "4-7",
+   "frames": 25264,
+   "points": [
+    {
+     "frame": 2357,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4650,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6833,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9102,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11470,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13853,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16085,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 18278,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 20465,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 22925,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 25263,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #2",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "7-2",
+   "frames": 21014,
+   "points": [
+    {
+     "frame": 2472,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 4664,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6994,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9240,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11534,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13770,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16110,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18530,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 21013,
+     "to": "L",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-6",
+   "frames": 24775,
+   "points": [
+    {
+     "frame": 1944,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 2014,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4007,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 6210,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 8240,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 10381,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 12558,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14558,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16626,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 18619,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 20677,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 22702,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 24774,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14374,
+   "points": [
+    {
+     "frame": 1974,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4018,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6107,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8189,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10232,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12255,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14373,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14251,
+   "points": [
+    {
+     "frame": 2051,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4203,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6248,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8196,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10289,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12241,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 14250,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14339,
+   "points": [
+    {
+     "frame": 2107,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4171,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6199,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8164,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10216,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12322,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14338,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 19269,
+   "points": [
+    {
+     "frame": 2178,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4285,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6379,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8542,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10557,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12846,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 14989,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17162,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 19268,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 17676,
+   "points": [
+    {
+     "frame": 2107,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4303,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6462,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8832,
+     "to": "L",
+     "rally": 31
+    },
+    {
+     "frame": 11036,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13188,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 15528,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 17675,
+     "to": "L",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16152,
+   "points": [
+    {
+     "frame": 2287,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4594,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6858,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9259,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11552,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13863,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16151,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 15980,
+   "points": [
+    {
+     "frame": 2291,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4520,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6790,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9102,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11380,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13695,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15979,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16532,
+   "points": [
+    {
+     "frame": 2354,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4660,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 7012,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9483,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11836,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 14181,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16531,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16376,
+   "points": [
+    {
+     "frame": 2335,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4608,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6966,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9312,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11678,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 14024,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16375,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14326,
+   "points": [
+    {
+     "frame": 2349,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 2419,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4771,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 7242,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 9595,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 11975,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14325,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16459,
+   "points": [
+    {
+     "frame": 2348,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4621,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6979,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9360,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11726,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 14107,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 16458,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "3-7",
+   "frames": 21122,
+   "points": [
+    {
+     "frame": 1994,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4090,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6191,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8276,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10469,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12442,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14683,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 16802,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 18951,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 21121,
+     "to": "R",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-6",
+   "frames": 27494,
+   "points": [
+    {
+     "frame": 2087,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4100,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6230,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8347,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10561,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12655,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14817,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16827,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 18898,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 20924,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 23018,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 25332,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 27493,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 17100,
+   "points": [
+    {
+     "frame": 2156,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4373,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6606,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8638,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10758,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12921,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15044,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17099,
+     "to": "R",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "1-7",
+   "frames": 17055,
+   "points": [
+    {
+     "frame": 2216,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4240,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6481,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 8562,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10687,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12743,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14845,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17054,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "2-7",
+   "frames": 19371,
+   "points": [
+    {
+     "frame": 2174,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4408,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6518,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8744,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 10794,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12934,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15208,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 17265,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 19370,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 14642,
+   "points": [
+    {
+     "frame": 2042,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4322,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6402,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8468,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 10566,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 12564,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 14641,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 15307,
+   "points": [
+    {
+     "frame": 2137,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4604,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7032,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9083,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11168,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13223,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15306,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "1-7",
+   "frames": 17386,
+   "points": [
+    {
+     "frame": 2217,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4298,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 6341,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8562,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10921,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13130,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 15210,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 17385,
+     "to": "R",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "1-7",
+   "frames": 17865,
+   "points": [
+    {
+     "frame": 2204,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4498,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6604,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 9017,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11305,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13528,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15712,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 17864,
+     "to": "R",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Opus 5.5 #3",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "2-7",
+   "frames": 19968,
+   "points": [
+    {
+     "frame": 2216,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 4515,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6773,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 8938,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 11110,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 13469,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15640,
+     "to": "R",
+     "rally": 23
+    },
+    {
+     "frame": 17778,
+     "to": "R",
+     "rally": 24
+    },
+    {
+     "frame": 19967,
+     "to": "R",
+     "rally": 23
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14674,
+   "points": [
+    {
+     "frame": 2089,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4148,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6317,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8335,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10553,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12630,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14673,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14513,
+   "points": [
+    {
+     "frame": 2077,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4173,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6172,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8259,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10336,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12418,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14512,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14487,
+   "points": [
+    {
+     "frame": 2098,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4088,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6095,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8304,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10283,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12358,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14486,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14016,
+   "points": [
+    {
+     "frame": 1985,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4092,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6105,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8050,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10050,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12102,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14015,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15019,
+   "points": [
+    {
+     "frame": 2156,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4244,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6388,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8467,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10761,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12872,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15018,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15087,
+   "points": [
+    {
+     "frame": 2065,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4291,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6343,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8618,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 10762,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12933,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15086,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14278,
+   "points": [
+    {
+     "frame": 2334,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 2404,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4751,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7177,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 9538,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 11942,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 14277,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16511,
+   "points": [
+    {
+     "frame": 2338,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4739,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7057,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9454,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11800,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14199,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16510,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 11654,
+   "points": [
+    {
+     "frame": 2278,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 2348,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4639,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4709,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 7029,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9363,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11653,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16315,
+   "points": [
+    {
+     "frame": 2285,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4658,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6956,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9332,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11638,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14024,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16314,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 13994,
+   "points": [
+    {
+     "frame": 2310,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 2380,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4688,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7061,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 9370,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 11687,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 13993,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16339,
+   "points": [
+    {
+     "frame": 2304,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4664,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6970,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9340,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11662,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14031,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16338,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 18944,
+   "points": [
+    {
+     "frame": 1988,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4202,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6337,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8493,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10725,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 12728,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14800,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 16885,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 18943,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-3",
+   "frames": 20973,
+   "points": [
+    {
+     "frame": 2086,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4174,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6289,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8451,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10607,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12644,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14753,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 16799,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 18947,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 20972,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 20370,
+   "points": [
+    {
+     "frame": 2171,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4420,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6741,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9015,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11223,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13498,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15791,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18050,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 20369,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 17975,
+   "points": [
+    {
+     "frame": 2169,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4451,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6722,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9053,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11293,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13392,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15715,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 17974,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 19328,
+   "points": [
+    {
+     "frame": 2050,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4197,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6326,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8522,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 10592,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12671,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14832,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 17048,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 19327,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 16809,
+   "points": [
+    {
+     "frame": 2028,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4145,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6214,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8544,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 10585,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12705,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14749,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 16808,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "5-0",
+   "frames": 36000,
+   "points": [
+    {
+     "frame": 2254,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4516,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6837,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 9099,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 33862,
+     "to": "L",
+     "rally": 620
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "6-7",
+   "frames": 30219,
+   "points": [
+    {
+     "frame": 2671,
+     "to": "L",
+     "rally": 36
+    },
+    {
+     "frame": 4963,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7214,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9530,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11907,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 14226,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16526,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18719,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 20963,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 23255,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 25594,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 27895,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 30218,
+     "to": "R",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #1",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "4-7",
+   "frames": 25808,
+   "points": [
+    {
+     "frame": 2332,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4524,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6886,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 9364,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 11739,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 14019,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16293,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18571,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 21208,
+     "to": "R",
+     "rally": 35
+    },
+    {
+     "frame": 23498,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 25807,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14608,
+   "points": [
+    {
+     "frame": 2093,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4164,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6296,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8411,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10522,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 12551,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14607,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14694,
+   "points": [
+    {
+     "frame": 2209,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4305,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6336,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8425,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10463,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12603,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14693,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 14688,
+   "points": [
+    {
+     "frame": 2175,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4271,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6436,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8402,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10475,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 12524,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14687,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 14410,
+   "points": [
+    {
+     "frame": 2065,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4263,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6276,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8333,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10406,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12496,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 14409,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15464,
+   "points": [
+    {
+     "frame": 2303,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 4467,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6589,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8782,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10941,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13327,
+     "to": "L",
+     "rally": 33
+    },
+    {
+     "frame": 15463,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15420,
+   "points": [
+    {
+     "frame": 2319,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 4430,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6622,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8819,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 11016,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13276,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 15419,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14623,
+   "points": [
+    {
+     "frame": 2408,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 2478,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4897,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7339,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 9788,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12199,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14622,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16893,
+   "points": [
+    {
+     "frame": 2412,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4820,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7246,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9650,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 12084,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14473,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16892,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14565,
+   "points": [
+    {
+     "frame": 2344,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 2414,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4819,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 7332,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 9739,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12160,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 14564,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16982,
+   "points": [
+    {
+     "frame": 2341,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4812,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7224,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9698,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 12103,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14576,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16981,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16578,
+   "points": [
+    {
+     "frame": 2356,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4732,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7114,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9491,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11875,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14196,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16577,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16615,
+   "points": [
+    {
+     "frame": 2351,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4722,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7103,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9477,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11859,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14232,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16614,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-1",
+   "frames": 17004,
+   "points": [
+    {
+     "frame": 2142,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4217,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6325,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8501,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 10672,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 12778,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 14863,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 17003,
+     "to": "L",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 17081,
+   "points": [
+    {
+     "frame": 2250,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4390,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6634,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8747,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10863,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 12958,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15035,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 17080,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "2-0",
+   "frames": 36000,
+   "points": [
+    {
+     "frame": 2300,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4470,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "2-0",
+   "frames": 36000,
+   "points": [
+    {
+     "frame": 2246,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4445,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15315,
+   "points": [
+    {
+     "frame": 2024,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4129,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6307,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8470,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 10876,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13175,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15314,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15805,
+   "points": [
+    {
+     "frame": 2230,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4557,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6663,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 8972,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11081,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 13473,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15804,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "2-4",
+   "frames": 36000,
+   "points": [
+    {
+     "frame": 2317,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4569,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6845,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 9475,
+     "to": "L",
+     "rally": 37
+    },
+    {
+     "frame": 11704,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 33896,
+     "to": "R",
+     "rally": 554
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "0-0",
+   "frames": 36000,
+   "points": []
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Fable 5.1 #3",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 20753,
+   "points": [
+    {
+     "frame": 2238,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4482,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6778,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9133,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11545,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13922,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 16267,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18460,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 20752,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #2",
+   "away": "Fable 5.1 #3",
+   "seed": 2,
+   "score": "7-6",
+   "frames": 30023,
+   "points": [
+    {
+     "frame": 2390,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4582,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6908,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9240,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 11454,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13698,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15981,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18272,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 20645,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 23050,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 25391,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 27722,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 30022,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #1",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16559,
+   "points": [
+    {
+     "frame": 2229,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4687,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7219,
+     "to": "L",
+     "rally": 32
+    },
+    {
+     "frame": 9459,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11812,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14212,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16558,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #1",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16017,
+   "points": [
+    {
+     "frame": 2417,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4643,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7070,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9284,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11489,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13779,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16016,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #2",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 15658,
+   "points": [
+    {
+     "frame": 2209,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4383,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6706,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 8807,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 11084,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 13374,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 15657,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #2",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15315,
+   "points": [
+    {
+     "frame": 2301,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4387,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 6567,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 8681,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 10961,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13215,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 15314,
+     "to": "L",
+     "rally": 22
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #3",
+   "seed": 1,
+   "score": "7-0",
+   "frames": 16607,
+   "points": [
+    {
+     "frame": 2311,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4785,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 7187,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9641,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 12013,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14219,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16606,
+     "to": "L",
+     "rally": 30
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Gemini #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 16667,
+   "points": [
+    {
+     "frame": 2292,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4541,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6898,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9419,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 11820,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 14362,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16666,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 17195,
+   "points": [
+    {
+     "frame": 2402,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4934,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7345,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9855,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 12268,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14784,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 17194,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #1",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 17324,
+   "points": [
+    {
+     "frame": 2404,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4941,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 7351,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9922,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 12333,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 14912,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 17323,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 14113,
+   "points": [
+    {
+     "frame": 2322,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 2392,
+     "to": "R",
+     "rally": 0
+    },
+    {
+     "frame": 4718,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 7112,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 9474,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 11821,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 14112,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #2",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16503,
+   "points": [
+    {
+     "frame": 2304,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4638,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6929,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9427,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11753,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14192,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16502,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 1,
+   "score": "0-7",
+   "frames": 16555,
+   "points": [
+    {
+     "frame": 2423,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4825,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 7214,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9577,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11862,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14248,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16554,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "GPT-6 Astra #3",
+   "seed": 2,
+   "score": "0-7",
+   "frames": 16396,
+   "points": [
+    {
+     "frame": 2323,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 4677,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 6970,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9405,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 11688,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14125,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16395,
+     "to": "R",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #1",
+   "seed": 1,
+   "score": "7-1",
+   "frames": 18991,
+   "points": [
+    {
+     "frame": 2380,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4842,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7197,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9696,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 11997,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 14405,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 16761,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18990,
+     "to": "L",
+     "rally": 25
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #1",
+   "seed": 2,
+   "score": "7-1",
+   "frames": 18441,
+   "points": [
+    {
+     "frame": 2172,
+     "to": "L",
+     "rally": 24
+    },
+    {
+     "frame": 4494,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6731,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9076,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 11396,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13816,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 16096,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18440,
+     "to": "L",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #2",
+   "seed": 1,
+   "score": "7-3",
+   "frames": 22724,
+   "points": [
+    {
+     "frame": 2257,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4465,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6856,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 9145,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11314,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13511,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 15778,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18021,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 20392,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 22723,
+     "to": "L",
+     "rally": 29
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #2",
+   "seed": 2,
+   "score": "4-7",
+   "frames": 25251,
+   "points": [
+    {
+     "frame": 2384,
+     "to": "L",
+     "rally": 30
+    },
+    {
+     "frame": 4684,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6876,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9244,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11443,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13936,
+     "to": "R",
+     "rally": 30
+    },
+    {
+     "frame": 16179,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18537,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 20782,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 23009,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 25250,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #3",
+   "seed": 1,
+   "score": "7-2",
+   "frames": 20633,
+   "points": [
+    {
+     "frame": 2277,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4618,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6919,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9193,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11538,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13746,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 16117,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 18442,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 20632,
+     "to": "L",
+     "rally": 24
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Opus 5.5 #3",
+   "seed": 2,
+   "score": "7-0",
+   "frames": 15907,
+   "points": [
+    {
+     "frame": 2296,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 4544,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 6777,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 9056,
+     "to": "L",
+     "rally": 25
+    },
+    {
+     "frame": 11338,
+     "to": "L",
+     "rally": 26
+    },
+    {
+     "frame": 13570,
+     "to": "L",
+     "rally": 23
+    },
+    {
+     "frame": 15906,
+     "to": "L",
+     "rally": 26
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Fable 5.1 #1",
+   "seed": 1,
+   "score": "7-6",
+   "frames": 31141,
+   "points": [
+    {
+     "frame": 2252,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4517,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 6807,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 9647,
+     "to": "L",
+     "rally": 37
+    },
+    {
+     "frame": 12032,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 14412,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16664,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 19078,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 21366,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 24192,
+     "to": "L",
+     "rally": 37
+    },
+    {
+     "frame": 26471,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 28850,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 31140,
+     "to": "L",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Fable 5.1 #1",
+   "seed": 2,
+   "score": "4-7",
+   "frames": 26164,
+   "points": [
+    {
+     "frame": 2277,
+     "to": "R",
+     "rally": 27
+    },
+    {
+     "frame": 4609,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 6801,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9185,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11384,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13829,
+     "to": "L",
+     "rally": 29
+    },
+    {
+     "frame": 16316,
+     "to": "R",
+     "rally": 33
+    },
+    {
+     "frame": 18940,
+     "to": "L",
+     "rally": 35
+    },
+    {
+     "frame": 21302,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 23909,
+     "to": "L",
+     "rally": 35
+    },
+    {
+     "frame": 26163,
+     "to": "R",
+     "rally": 27
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Fable 5.1 #2",
+   "seed": 1,
+   "score": "5-7",
+   "frames": 27446,
+   "points": [
+    {
+     "frame": 2451,
+     "to": "R",
+     "rally": 29
+    },
+    {
+     "frame": 4725,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 7027,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 9312,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 11481,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 13702,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 15959,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18309,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 20549,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 22761,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 25053,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 27445,
+     "to": "R",
+     "rally": 28
+    }
+   ]
+  },
+  {
+   "home": "Fable 5.1 #3",
+   "away": "Fable 5.1 #2",
+   "seed": 2,
+   "score": "5-7",
+   "frames": 28049,
+   "points": [
+    {
+     "frame": 2412,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 4708,
+     "to": "R",
+     "rally": 28
+    },
+    {
+     "frame": 6900,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 9446,
+     "to": "R",
+     "rally": 32
+    },
+    {
+     "frame": 11645,
+     "to": "R",
+     "rally": 25
+    },
+    {
+     "frame": 14007,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 16265,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 18504,
+     "to": "R",
+     "rally": 26
+    },
+    {
+     "frame": 20843,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 23303,
+     "to": "L",
+     "rally": 27
+    },
+    {
+     "frame": 25559,
+     "to": "L",
+     "rally": 28
+    },
+    {
+     "frame": 28048,
+     "to": "R",
+     "rally": 30
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Brick Breaker</title>
+<style>
+  html, body {
+    margin: 0; height: 100%; background: #111;
+    display: flex; align-items: center; justify-content: center;
+    font-family: Arial, Helvetica, sans-serif; color: #ddd;
+  }
+  canvas#game { background: #000; display: block; box-shadow: 0 0 24px #000; cursor: none; }
+</style>
+</head>
+<body>
+<canvas id="game" width="800" height="600"></canvas>
+<script>
+(function () {
+  'use strict';
+
+  var W = 800, H = 600;
+  var canvas = document.getElementById('game');
+  var ctx = canvas.getContext('2d');
+
+  var BALL_R = 8;
+  var PADDLE_W = 100, PADDLE_H = 14, PADDLE_Y = 570;
+  var PADDLE_SPEED = 8, AP_SPEED = 14;
+  var MAXDX_F = 0.75;
+  var BRICK_W = 74, BRICK_H = 22, BRICK_GAP = 4, BRICK_X0 = 12, BRICK_Y0 = 60;
+  var LEVEL_SPEED = [0, 5, 5.5, 6];
+  var ROW_COLORS = ['#f1c40f', '#2ecc71', '#1abc9c', '#3498db', '#9b59b6', '#e84393', '#fd79a8'];
+
+  // ---------- deterministic RNG (mulberry32) ----------
+  var rngState = (Date.now() >>> 0);
+  function rng() {
+    rngState = (rngState + 0x6D2B79F5) >>> 0;
+    var t = rngState;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+
+  // ---------- state ----------
+  var score = 0, lives = 3, level = 1;
+  var state = 'ready', pausedFrom = 'ready';
+  var balls = [], bricks = [], powerups = [];
+  var paddle = { x: (W - PADDLE_W) / 2, y: PADDLE_Y, w: PADDLE_W, h: PADDLE_H };
+  var wideTimer = 0;
+  var autopilot = false;
+  var speed = LEVEL_SPEED[1];
+  var keys = {};
+  var high = 0;
+  try { high = parseInt(localStorage.getItem('bb_highscore'), 10) || 0; } catch (e) { high = 0; }
+
+  function saveHigh() {
+    try { localStorage.setItem('bb_highscore', String(high)); } catch (e) {}
+  }
+
+  function setState(s) {
+    if (state === 'paused') pausedFrom = s; else state = s;
+  }
+
+  function newBall() {
+    return { x: W / 2, y: PADDLE_Y - BALL_R, dx: 0, dy: 0, r: BALL_R, rel: null };
+  }
+
+  function clampPaddle() {
+    if (paddle.x < 0) paddle.x = 0;
+    if (paddle.x > W - paddle.w) paddle.x = W - paddle.w;
+  }
+
+  function positionReadyBalls() {
+    for (var i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      b.x = paddle.x + paddle.w / 2;
+      b.y = paddle.y - b.r;
+      b.dx = 0; b.dy = 0; b.rel = null;
+    }
+  }
+
+  function makeBrick(r, c, hits) {
+    return {
+      x: BRICK_X0 + c * (BRICK_W + BRICK_GAP),
+      y: BRICK_Y0 + r * (BRICK_H + BRICK_GAP),
+      w: BRICK_W, h: BRICK_H, hits: hits, maxHits: hits, row: r
+    };
+  }
+
+  function loadLevel(n) {
+    bricks = [];
+    var r, c;
+    if (n === 1) {
+      for (r = 0; r < 5; r++) for (c = 0; c < 10; c++) bricks.push(makeBrick(r, c, 1));
+    } else if (n === 2) {
+      for (r = 0; r < 6; r++) for (c = 0; c < 10; c++) bricks.push(makeBrick(r, c, r < 2 ? 2 : 1));
+    } else {
+      for (r = 0; r < 7; r++) for (c = 0; c < 10; c++) {
+        if ((r + c) % 4 === 0) continue;
+        bricks.push(makeBrick(r, c, r < 3 ? 2 : 1));
+      }
+    }
+    speed = LEVEL_SPEED[n] || 6;
+  }
+
+  function restart() {
+    score = 0; lives = 3; level = 1;
+    loadLevel(1);
+    paddle.w = PADDLE_W; wideTimer = 0;
+    paddle.x = (W - paddle.w) / 2;
+    balls = [newBall()];
+    positionReadyBalls();
+    powerups = [];
+    state = 'ready'; pausedFrom = 'ready';
+  }
+
+  function launch() {
+    var maxdx = MAXDX_F * speed;
+    for (var i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      var dx = (rng() - 0.5) * speed * 0.8;
+      if (i > 0) dx += (i % 2 ? 1 : -1) * 1.5 * ((i + 1) >> 1);
+      if (dx > maxdx) dx = maxdx; if (dx < -maxdx) dx = -maxdx;
+      b.dx = dx;
+      b.dy = -Math.sqrt(speed * speed - dx * dx);
+      b.rel = null;
+    }
+    setState('playing');
+  }
+
+  function togglePause() {
+    if (state === 'paused') { state = pausedFrom; }
+    else if (state === 'playing' || state === 'ready') { pausedFrom = state; state = 'paused'; }
+  }
+
+  // ---------- power-ups ----------
+  function applyWide() {
+    var c = paddle.x + paddle.w / 2;
+    paddle.w = PADDLE_W * 2;
+    paddle.x = c - paddle.w / 2;
+    clampPaddle();
+    wideTimer = 600;
+  }
+
+  function applyMulti() {
+    var src = balls.length ? balls[0] : null;
+    if (!src) { src = newBall(); balls.push(src); positionReadyBalls(); }
+    var maxdx = MAXDX_F * speed;
+    var ready = (state === 'ready') || (state === 'paused' && pausedFrom === 'ready');
+    for (var k = 0; k < 2; k++) {
+      var nb = { x: src.x, y: src.y, dx: 0, dy: 0, r: BALL_R, rel: null };
+      if (!ready) {
+        var dx = src.dx + (k === 0 ? -2.5 : 2.5);
+        if (dx > maxdx) dx = maxdx; if (dx < -maxdx) dx = -maxdx;
+        var sp = Math.hypot(src.dx, src.dy) || speed;
+        if (Math.abs(dx) > sp * 0.95) dx = Math.sign(dx) * sp * 0.95;
+        nb.dx = dx;
+        nb.dy = -Math.sqrt(Math.max(1, sp * sp - dx * dx));
+      }
+      balls.push(nb);
+    }
+  }
+
+  function updateWide() {
+    if (wideTimer > 0) {
+      wideTimer--;
+      if (wideTimer === 0) {
+        var c = paddle.x + paddle.w / 2;
+        paddle.w = PADDLE_W;
+        paddle.x = c - paddle.w / 2;
+        clampPaddle();
+      }
+    }
+  }
+
+  function updatePowerups() {
+    for (var i = powerups.length - 1; i >= 0; i--) {
+      var p = powerups[i];
+      p.y += p.vy;
+      var caught = p.y + p.h / 2 >= paddle.y && p.y - p.h / 2 <= paddle.y + paddle.h &&
+                   p.x + p.w / 2 >= paddle.x && p.x - p.w / 2 <= paddle.x + paddle.w;
+      if (caught) {
+        if (p.type === 'wide') applyWide();
+        else if (p.type === 'multi') applyMulti();
+        powerups.splice(i, 1);
+      } else if (p.y - p.h > H) {
+        powerups.splice(i, 1);
+      }
+    }
+  }
+
+  // ---------- ball physics (shared by game and autopilot prediction) ----------
+  function hitBrickReal(i) {
+    var k = bricks[i];
+    k.hits--;
+    score += 10;
+    if (score > high) { high = score; saveHigh(); }
+    if (k.hits <= 0) {
+      bricks.splice(i, 1);
+      if (rng() < 0.1) {
+        var type = rng() < 0.5 ? 'wide' : 'multi';
+        powerups.push({ type: type, x: k.x + k.w / 2, y: k.y + k.h / 2, w: 30, h: 16, vy: 2.5 });
+      }
+    }
+  }
+
+  function stepBall(b, real) {
+    var sp = Math.hypot(b.dx, b.dy);
+    var n = Math.max(1, Math.ceil(sp / 4));
+    var hitBrick = false;
+    for (var s = 0; s < n; s++) {
+      b.x += b.dx / n;
+      b.y += b.dy / n;
+      // walls
+      if (b.x < b.r) { b.x = b.r; b.dx = Math.abs(b.dx); }
+      else if (b.x > W - b.r) { b.x = W - b.r; b.dx = -Math.abs(b.dx); }
+      if (b.y < b.r) { b.y = b.r; b.dy = Math.abs(b.dy); }
+      // bricks
+      for (var i = 0; i < bricks.length; i++) {
+        var k = bricks[i];
+        if (b.x + b.r <= k.x || b.x - b.r >= k.x + k.w || b.y + b.r <= k.y || b.y - b.r >= k.y + k.h) continue;
+        var cx = Math.max(k.x, Math.min(b.x, k.x + k.w));
+        var cy = Math.max(k.y, Math.min(b.y, k.y + k.h));
+        var ddx = b.x - cx, ddy = b.y - cy;
+        if (ddx * ddx + ddy * ddy >= b.r * b.r) continue;
+        var kcx = k.x + k.w / 2, kcy = k.y + k.h / 2;
+        var ox = (k.w / 2 + b.r) - Math.abs(b.x - kcx);
+        var oy = (k.h / 2 + b.r) - Math.abs(b.y - kcy);
+        if (ox < oy) {
+          if (b.x < kcx) { b.dx = -Math.abs(b.dx); b.x = k.x - b.r; }
+          else { b.dx = Math.abs(b.dx); b.x = k.x + k.w + b.r; }
+        } else {
+          if (b.y < kcy) { b.dy = -Math.abs(b.dy); b.y = k.y - b.r; }
+          else { b.dy = Math.abs(b.dy); b.y = k.y + k.h + b.r; }
+        }
+        hitBrick = true;
+        if (real) hitBrickReal(i);
+        break;
+      }
+      // paddle
+      if (real && b.dy > 0 && b.y + b.r >= paddle.y && b.y < paddle.y + paddle.h &&
+          b.x + b.r >= paddle.x && b.x - b.r <= paddle.x + paddle.w) {
+        var rel = (b.x - (paddle.x + paddle.w / 2)) / (paddle.w / 2);
+        if (rel > 1) rel = 1; if (rel < -1) rel = -1;
+        b.dx = rel * MAXDX_F * speed;
+        b.dy = -Math.sqrt(speed * speed - b.dx * b.dx);
+        b.y = paddle.y - b.r;
+        b.rel = null;
+      }
+    }
+    return hitBrick;
+  }
+
+  // ---------- autopilot ----------
+  function landingX(b) {
+    var t = (paddle.y - b.r - b.y) / b.dy;
+    var x = b.x + b.dx * t;
+    var lo = b.r, span = W - 2 * b.r, period = 2 * span;
+    var u = ((x - lo) % period + period) % period;
+    if (u > span) u = period - u;
+    return lo + u;
+  }
+
+  function planRel(b, land) {
+    var maxdx = MAXDX_F * speed;
+    var bestDx = 0, bestSteps = Infinity;
+    for (var i = -6; i <= 6; i++) {
+      var dx = (i / 6) * maxdx * 0.95;
+      var c = { x: land, y: paddle.y - b.r, dx: dx, dy: -Math.sqrt(speed * speed - dx * dx), r: b.r };
+      var steps = 0, hit = false;
+      while (steps < 400) {
+        steps++;
+        if (stepBall(c, false)) { hit = true; break; }
+        if (c.dy > 0 && c.y + c.r >= paddle.y) break;
+      }
+      if (hit && steps < bestSteps) { bestSteps = steps; bestDx = dx; }
+    }
+    return bestDx / maxdx;
+  }
+
+  function autopilotControl(eff) {
+    if (eff === 'ready') { launch(); eff = 'playing'; }
+    if (eff !== 'playing') return;
+    var brickBottom = 0;
+    for (var j = 0; j < bricks.length; j++) {
+      var bb = bricks[j].y + bricks[j].h;
+      if (bb > brickBottom) brickBottom = bb;
+    }
+    var cur = paddle.x + paddle.w / 2;
+    var cands = [], lowest = null;
+    for (var i = 0; i < balls.length; i++) {
+      var b = balls[i];
+      if (b.y + b.r > paddle.y + paddle.h) continue; // already lost
+      if (!lowest || b.y > lowest.y) lowest = b;
+      if (b.dy > 0 && b.y - b.r > brickBottom) {
+        cands.push({ b: b, t: (paddle.y - b.r - b.y) / b.dy });
+      }
+    }
+    cands.sort(function (p, q) { return p.t - q.t; });
+    var chosen = null;
+    for (var c = 0; c < cands.length; c++) {
+      var land = landingX(cands[c].b);
+      if (Math.abs(land - cur) <= cands[c].t * AP_SPEED + paddle.w / 2 - cands[c].b.r) {
+        chosen = cands[c]; chosen.land = land; break;
+      }
+    }
+    if (!chosen && cands.length) { chosen = cands[0]; chosen.land = landingX(chosen.b); }
+    var target;
+    if (chosen) {
+      var cb = chosen.b;
+      if (cb.rel === null) cb.rel = planRel(cb, chosen.land);
+      target = chosen.land - cb.rel * (paddle.w / 2);
+    } else if (lowest) {
+      target = lowest.x;
+    } else {
+      target = W / 2;
+    }
+    var d = target - cur;
+    paddle.x += Math.max(-AP_SPEED, Math.min(AP_SPEED, d));
+  }
+
+  // ---------- game transitions ----------
+  function loseLife() {
+    lives--;
+    powerups = [];
+    if (lives <= 0) {
+      lives = 0;
+      balls = [];
+      setState('over');
+    } else {
+      balls = [newBall()];
+      positionReadyBalls();
+      setState('ready');
+    }
+  }
+
+  function nextLevel() {
+    level++;
+    powerups = [];
+    if (level > 3) {
+      level = 3;
+      balls = [];
+      setState('won');
+    } else {
+      loadLevel(level);
+      balls = [newBall()];
+      positionReadyBalls();
+      setState('ready');
+    }
+  }
+
+  // ---------- main step ----------
+  function step(force) {
+    var eff = state === 'paused' ? (force ? pausedFrom : null) : state;
+    if (eff === null) return;
+
+    if (autopilot) {
+      autopilotControl(eff);
+      eff = state === 'paused' ? pausedFrom : state;
+    } else {
+      if (keys.ArrowLeft) paddle.x -= PADDLE_SPEED;
+      if (keys.ArrowRight) paddle.x += PADDLE_SPEED;
+    }
+    clampPaddle();
+
+    if (eff !== 'ready' && eff !== 'playing') return;
+
+    updateWide();
+    updatePowerups();
+
+    if (eff === 'ready') { positionReadyBalls(); return; }
+
+    for (var i = balls.length - 1; i >= 0; i--) {
+      var b = balls[i];
+      stepBall(b, true);
+      if (b.y - b.r > H) balls.splice(i, 1);
+    }
+
+    if (balls.length === 0) { loseLife(); return; }
+    if (bricks.length === 0) { nextLevel(); }
+  }
+
+  // ---------- drawing ----------
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function brickColor(k) {
+    if (k.maxHits >= 2 && k.hits >= 2) return '#c0392b';
+    if (k.maxHits >= 2 && k.hits === 1) return '#e67e22';
+    return ROW_COLORS[k.row % ROW_COLORS.length];
+  }
+
+  function centerText(txt, y, size, color) {
+    ctx.font = 'bold ' + size + 'px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillText(txt, W / 2 + 3, y + 3);
+    ctx.fillStyle = color;
+    ctx.fillText(txt, W / 2, y);
+  }
+
+  function draw() {
+    var g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#0b1020');
+    g.addColorStop(1, '#141a2e');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+
+    // bricks
+    for (var i = 0; i < bricks.length; i++) {
+      var k = bricks[i];
+      ctx.fillStyle = brickColor(k);
+      ctx.fillRect(k.x, k.y, k.w, k.h);
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      ctx.fillRect(k.x, k.y, k.w, 4);
+      ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(k.x + 0.5, k.y + 0.5, k.w - 1, k.h - 1);
+      if (k.maxHits >= 2 && k.hits === 1) {
+        ctx.strokeStyle = 'rgba(0,0,0,0.6)';
+        ctx.beginPath();
+        ctx.moveTo(k.x + k.w * 0.3, k.y + 2);
+        ctx.lineTo(k.x + k.w * 0.5, k.y + k.h * 0.5);
+        ctx.lineTo(k.x + k.w * 0.4, k.y + k.h - 2);
+        ctx.stroke();
+      }
+    }
+
+    // paddle
+    ctx.fillStyle = wideTimer > 0 ? '#4caf50' : '#3fa7ff';
+    roundRect(paddle.x, paddle.y, paddle.w, paddle.h, 6);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    roundRect(paddle.x + 3, paddle.y + 2, paddle.w - 6, 4, 2);
+    ctx.fill();
+
+    // balls
+    for (var b = 0; b < balls.length; b++) {
+      var ball = balls[b];
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(ball.x - 2.5, ball.y - 2.5, ball.r * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fill();
+    }
+
+    // power-ups
+    for (var p = 0; p < powerups.length; p++) {
+      var pu = powerups[p];
+      ctx.fillStyle = pu.type === 'wide' ? '#2ecc71' : '#9b59b6';
+      roundRect(pu.x - pu.w / 2, pu.y - pu.h / 2, pu.w, pu.h, 4);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 12px Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(pu.type === 'wide' ? 'WIDE' : 'MULTI', pu.x, pu.y + 1);
+    }
+
+    // HUD
+    ctx.font = 'bold 18px Arial, sans-serif';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = '#eee';
+    ctx.textAlign = 'left';
+    ctx.fillText('Score: ' + score, 12, 24);
+    ctx.fillText('Lives: ' + lives, 180, 24);
+    ctx.fillText('Level: ' + level, 310, 24);
+    ctx.textAlign = 'right';
+    ctx.fillText('High: ' + high, W - 12, 24);
+    ctx.textAlign = 'center';
+    ctx.fillStyle = autopilot ? '#2ecc71' : '#888';
+    ctx.fillText('Autopilot: ' + (autopilot ? 'ON' : 'OFF'), 560, 24);
+
+    ctx.font = '12px Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.55)';
+    ctx.textAlign = 'center';
+    ctx.fillText('\u2190 / \u2192 or mouse: move   \u00b7   Space: launch   \u00b7   P: pause   \u00b7   A: autopilot', W / 2, 594);
+
+    // messages
+    if (state === 'ready') {
+      centerText('Press SPACE to launch', 330, 26, '#ffffff');
+    } else if (state === 'paused') {
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(0, 0, W, H);
+      centerText('PAUSED', 300, 48, '#ffffff');
+      centerText('Press P to resume', 350, 20, '#dddddd');
+    } else if (state === 'over') {
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(0, 0, W, H);
+      centerText('GAME OVER', 290, 56, '#ff4d4d');
+      centerText('Press SPACE to restart', 350, 22, '#ffffff');
+    } else if (state === 'won') {
+      ctx.fillStyle = 'rgba(0,0,0,0.45)';
+      ctx.fillRect(0, 0, W, H);
+      centerText('YOU WIN', 290, 56, '#ffd84d');
+      centerText('Score: ' + score + '   \u00b7   Press SPACE to play again', 350, 22, '#ffffff');
+    }
+  }
+
+  // ---------- input ----------
+  window.addEventListener('keydown', function (e) {
+    var code = e.code || e.key;
+    if (code === 'ArrowLeft' || code === 'ArrowRight') {
+      keys[code] = true;
+      e.preventDefault();
+    } else if (code === 'Space' || e.key === ' ') {
+      e.preventDefault();
+      if (state === 'ready') launch();
+      else if (state === 'over' || state === 'won') restart();
+    } else if (code === 'KeyA' || e.key === 'a' || e.key === 'A') {
+      autopilot = !autopilot;
+    } else if (code === 'KeyP' || e.key === 'p' || e.key === 'P') {
+      togglePause();
+    }
+  });
+  window.addEventListener('keyup', function (e) {
+    var code = e.code || e.key;
+    if (code === 'ArrowLeft' || code === 'ArrowRight') keys[code] = false;
+  });
+  canvas.addEventListener('mousemove', function (e) {
+    if (autopilot) return;
+    var rect = canvas.getBoundingClientRect();
+    if (!rect.width) return;
+    var mx = (e.clientX - rect.left) * (W / rect.width);
+    paddle.x = mx - paddle.w / 2;
+    clampPaddle();
+    if (state === 'ready') positionReadyBalls();
+  });
+
+  // ---------- test interface ----------
+  window.game = {
+    get score() { return score; },
+    get lives() { return lives; },
+    get level() { return level; },
+    get state() { return state; },
+    get balls() { return balls; },
+    get paddle() { return paddle; },
+    get bricks() { return bricks; },
+    get bricksLeft() { return bricks.length; },
+    get autopilot() { return autopilot; },
+    set autopilot(v) { autopilot = !!v; },
+    tick: function (n) {
+      n = Math.max(0, Math.floor(Number(n) || 0));
+      for (var i = 0; i < n; i++) step(true);
+    },
+    seed: function (n) {
+      rngState = (Math.floor(Number(n) || 0) >>> 0);
+    },
+    setBall: function (x, y, dx, dy) {
+      balls = [{ x: Number(x), y: Number(y), dx: Number(dx), dy: Number(dy), r: BALL_R, rel: null }];
+      state = 'playing';
+      pausedFrom = 'playing';
+    },
+    spawnPowerUp: function (type, x, y) {
+      powerups.push({ type: type === 'multi' ? 'multi' : 'wide', x: Number(x), y: Number(y), w: 30, h: 16, vy: 2.5 });
+    }
+  };
+
+  // ---------- init & loop ----------
+  loadLevel(1);
+  balls = [newBall()];
+  positionReadyBalls();
+
+  function frame() {
+    step(false);
+    draw();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

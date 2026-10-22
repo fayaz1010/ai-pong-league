@@ -1,0 +1,26 @@
+I need to design a solid Pong AI that predicts the ball's intercept point accounting for wall bounces, then picks a paddle offset to aim the return where the opponent can't reach it, while recentering when the ball moves away. I'm working out the physics details—ball radius, wall bounds, and where the paddle face sits—to calculate the intercept accurately.
+
+Given the hit offset determines angle (up to ±55°), and speeds up to 24 px/frame versus paddle speed of 5 px/frame, I'm simulating the outgoing shot to find an offset that maximizes how far the opponent must travel relative to the time they have, scoring candidates by how much extra distance they'd need to cover versus their available frames, while avoiding extreme edge offsets for robustness.
+
+I should simulate the ball trajectory frame-by-frame with reflections off walls to get an accurate intercept point rather than relying on a simplified formula, since collision timing against the paddle face has some uncertainty, though the ~10px slack in the hit window means small errors are tolerable. Then I'll compute the paddle's movement as clamped proportional steps toward the predicted target.
+
+I also need to account for reachability: given frames remaining until the ball arrives, the paddle can only move a limited distance, so I should pick an offset angle whose resulting target position is both within reach and within the paddle's clamped range, falling back to the closest feasible option otherwise, and recomputing each frame while accepting some instability in the choice as the prediction updates.
+
+For the opponent's position, I'll model their total reachable range as their max speed times total frames (ours plus the outgoing travel time), since they can't predict our exact aim until we hit. I'll score candidate shots by how far the predicted landing point is from the opponent's plausible reach, favoring shots that land outside their coverage.
+
+When the ball is moving away from me, I don't know the opponent's return angle, so I should idle near the center of their possible intercept positions rather than committing to one spot.
+
+For prediction, I'll use closed-form physics instead of frame-by-frame simulation — computing time to reach a target x, unfolding the y position, then reflecting it back into bounds — since that's far cheaper than iterating.
+
+For commentary, I want messages to update only when the shot plan actually changes, keeping a stable string per incoming ball rather than flickering every frame. Movement stays smooth via a simple clamped proportional step toward the target y, and I'll just track the ball directly if it's already behind our paddle moving away.
+
+Now starting the player creation function...
+
+Still writing player logic...
+
+I'm worried the discrete frame-stepping could introduce real position error at high speeds, since the ball can jump up to 20-24 px per frame, meaning the actual collision y-coordinate the arena uses might diverge noticeably from my analytic prediction. If no valid offset passes the checks, I fall back to just targeting the clamped ball y directly as the safest default.
+
+I'll simulate frame-by-frame until the ball's edge crosses the paddle's x-threshold, accounting for wall bounces that flip the y-velocity, and add margin for uncertainty in movement order between paddle and ball updates. I'm also planning to scale down the max allowed offset when ball speed is high, to stay safer at higher speeds.
+
+For idle positioning, I'll predict the opponent's return across a range of offsets, take the reachable min/max, and target the midpoint as our resting spot. For commentary, I'll update the displayed message only when the ball's direction or the predicted outcome category changes, rather than every frame, so it reads naturally instead of flickering.
+

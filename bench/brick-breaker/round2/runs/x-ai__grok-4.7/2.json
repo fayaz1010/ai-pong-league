@@ -1,0 +1,31 @@
+{
+ "model": "x-ai/grok-4.7",
+ "attempt": 2,
+ "seconds": 490.476,
+ "usage": {
+  "prompt_tokens": 1889,
+  "completion_tokens": 59337,
+  "total_tokens": 61226,
+  "cost": 0.358072,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 1152,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.358072,
+   "upstream_inference_prompt_cost": 0.00205,
+   "upstream_inference_completions_cost": 0.356022
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 53485,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "provider": "xAI",
+ "id": "gen-1792574323-Yysrq6eCWmCMjFvhCcVu",
+ "at": "2026-10-21T09:26:53.734Z"
+}

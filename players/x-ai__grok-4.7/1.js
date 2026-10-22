@@ -1,0 +1,464 @@
+function createPlayer() {
+  var prevDx = 0;
+  var habit = [];
+  var plan = "";
+  var say = "Eyes up. Make them earn the point.";
+  var sayFrame = -100;
+  var MAX_ANG = 55 * Math.PI / 180;
+  var MAX_SPD = 24;
+  var SPD_MUL = 1.05;
+
+  function clamp(v, a, b) {
+    return v < a ? a : v > b ? b : v;
+  }
+
+  function hypot(x, y) {
+    return Math.sqrt(x * x + y * y);
+  }
+
+  function fly(x, y, dx, dy, targetX, minY, maxY) {
+    if (Math.abs(dx) < 1e-12) return null;
+    var t = (targetX - x) / dx;
+    if (t < -1e-8) return null;
+    var cy = y;
+    var cdy = dy;
+    var left = t;
+    var n, bound, tw;
+    for (n = 0; n < 80 && left > 1e-8; n++) {
+      if (cy < minY) cy = minY;
+      if (cy > maxY) cy = maxY;
+      if (Math.abs(cdy) < 1e-12) break;
+      bound = cdy > 0 ? maxY : minY;
+      tw = (bound - cy) / cdy;
+      if (tw < 1e-10) {
+        cdy = -cdy;
+        continue;
+      }
+      if (tw >= left) {
+        cy += cdy * left;
+        left = 0;
+        break;
+      }
+      cy = bound;
+      cdy = -cdy;
+      left -= tw;
+    }
+    if (cy < minY) cy = minY;
+    if (cy > maxY) cy = maxY;
+    return { t: t < 0 ? 0 : t, y: cy, dy: cdy, dx: dx };
+  }
+
+  function discreteCross(bx, by, dx, dy, targetX, minY, maxY) {
+    var x = bx;
+    var y = by;
+    var f, prevX, k;
+    if ((targetX - x) * dx < -1e-8) return null;
+    for (f = 1; f <= 2000; f++) {
+      prevX = x;
+      x += dx;
+      y += dy;
+      for (k = 0; k < 4; k++) {
+        if (y < minY) {
+          y = 2 * minY - y;
+          dy = -dy;
+        } else if (y > maxY) {
+          y = 2 * maxY - y;
+          dy = -dy;
+        } else break;
+      }
+      if ((dx < 0 && prevX > targetX && x <= targetX) ||
+          (dx > 0 && prevX < targetX && x >= targetX)) {
+        return { y: y, frames: f, dy: dy, dx: dx };
+      }
+    }
+    return null;
+  }
+
+  function missDist(paddleY, ballY, hitHalf, minC, maxC) {
+    var lo = ballY - hitHalf;
+    var hi = ballY + hitHalf;
+    if (lo < minC) lo = minC;
+    if (hi > maxC) hi = maxC;
+    if (lo > hi) return 1e6;
+    if (paddleY < lo) return lo - paddleY;
+    if (paddleY > hi) return paddleY - hi;
+    return 0;
+  }
+
+  function slack(paddleY, ballY, t, speed, hitHalf, minC, maxC) {
+    var moves = t <= 1e-9 ? 0 : Math.ceil(t - 1e-9);
+    return moves * speed - missDist(paddleY, ballY, hitHalf, minC, maxC);
+  }
+
+  function habitStats() {
+    var n = habit.length;
+    if (n < 3) return null;
+    var i, m = 0, v = 0;
+    for (i = 0; i < n; i++) m += habit[i];
+    m /= n;
+    for (i = 0; i < n; i++) v += (habit[i] - m) * (habit[i] - m);
+    v /= n;
+    return { mean: m, v: v, n: n };
+  }
+
+  function setPlan(key, text, frame) {
+    if (key === plan) return;
+    if (frame - sayFrame < 18 && key.indexOf("ace") !== 0 && plan.indexOf("ace") === 0) return;
+    plan = key;
+    say = String(text).slice(0, 48);
+    sayFrame = frame;
+  }
+
+  function sideName(y, H) {
+    if (y < H * 0.34) return "high";
+    if (y > H * 0.66) return "low";
+    return "mid";
+  }
+
+  return function move(s) {
+    var ball = s.ball;
+    var me = s.me;
+    var opp = s.opp;
+    var court = s.court;
+    var pad = s.paddle;
+    var H = court.h;
+    var r = ball.r;
+    var minC = pad.h / 2;
+    var maxC = H - pad.h / 2;
+    var half = pad.h / 2;
+    var spdP = pad.speed;
+    var minY = r;
+    var maxY = H - r;
+    var myX = pad.faceX + r;
+    var oppX = pad.oppFaceX - r;
+    var hitMe = half + r - 5;
+    var hitOpp = half + r;
+    var hitSave = half + r - 1;
+
+    if (prevDx > 0 && ball.dx < 0 && ball.x > 680) {
+      habit.push(clamp((ball.y - opp.y) / half, -1, 1));
+      if (habit.length > 12) habit.shift();
+    }
+    prevDx = ball.dx;
+
+    var stats = habitStats();
+    var predictable = stats && stats.n >= 3 && stats.v < 0.045;
+    var speed = hypot(ball.dx, ball.dy);
+    var targetY = ball.y;
+    var dest = me.y;
+
+    function out(m, tgt) {
+      if (typeof m !== "number" || m !== m) m = 0;
+      m = clamp(m, -1, 1);
+      if (typeof tgt !== "number" || tgt !== tgt) tgt = me.y;
+      return { move: m, say: say, target: tgt };
+    }
+
+    if (Math.abs(ball.dx) < 1e-8) {
+      setPlan("hold", "Ball's lazy. I hold the centre.", s.frame);
+      dest = clamp(H / 2, minC, maxC);
+      return out((dest - me.y) / spdP, dest);
+    }
+
+    var coming = ball.dx < 0;
+
+    if (!coming) {
+      var toOpp = fly(ball.x, ball.y, ball.dx, ball.dy, oppX, minY, maxY);
+      if (!toOpp) {
+        dest = clamp(H / 2, minC, maxC);
+        setPlan("reset", "Reset. Centre court, clean paddle.", s.frame);
+        return out((dest - me.y) / spdP, dest);
+      }
+      var spd1 = Math.min(MAX_SPD, speed * SPD_MUL);
+      var returns = [];
+      var oi, off, th, rdx, rdy, back, theirP;
+      var samples = [];
+      if (predictable) {
+        samples.push(stats.mean);
+        samples.push(clamp(stats.mean - 0.35, -1, 1));
+        samples.push(clamp(stats.mean + 0.35, -1, 1));
+        samples.push(0);
+      }
+      for (oi = -8; oi <= 8; oi++) samples.push(oi / 8);
+      var seen = {};
+      for (oi = 0; oi < samples.length; oi++) {
+        off = samples[oi];
+        if (seen[(off * 100) | 0]) continue;
+        seen[(off * 100) | 0] = 1;
+        theirP = toOpp.y - off * half;
+        if (theirP < minC - 0.1 || theirP > maxC + 0.1) continue;
+        if (Math.abs(toOpp.y - theirP) > hitOpp + 0.1) continue;
+        if (Math.abs(theirP - opp.y) > Math.ceil(toOpp.t - 1e-9) * spdP + 0.1) continue;
+        th = clamp(off, -1, 1) * MAX_ANG;
+        rdx = -Math.cos(th) * spd1;
+        rdy = Math.sin(th) * spd1;
+        back = fly(oppX, toOpp.y, rdx, rdy, myX, minY, maxY);
+        if (!back) continue;
+        returns.push({ y: back.y, t: back.t, off: off });
+      }
+      if (!returns.length) {
+        var flat = fly(oppX, toOpp.y, -spd1, 0, myX, minY, maxY);
+        if (flat) returns.push({ y: flat.y, t: flat.t, off: 0 });
+      }
+
+      var bestW = clamp(me.y, minC, maxC);
+      var bestSl = -1e15;
+      var p, si, sl, minSl, reachT;
+      reachT = toOpp.t;
+      for (p = minC; p <= maxC; p += 4) {
+        if (Math.abs(p - me.y) > Math.ceil(reachT - 1e-9) * spdP + 0.5) continue;
+        minSl = 1e15;
+        for (si = 0; si < returns.length; si++) {
+          sl = slack(p, returns[si].y, returns[si].t, spdP, hitSave, minC, maxC);
+          if (sl < minSl) minSl = sl;
+        }
+        if (minSl > bestSl + 1 ||
+            (minSl > bestSl - 1 && Math.abs(p - me.y) < Math.abs(bestW - me.y))) {
+          bestSl = minSl;
+          bestW = p;
+        }
+      }
+
+      dest = bestW;
+      var expectY = toOpp.y;
+      if (predictable) {
+        th = clamp(stats.mean, -1, 1) * MAX_ANG;
+        back = fly(oppX, toOpp.y, -Math.cos(th) * spd1, Math.sin(th) * spd1, myX, minY, maxY);
+        if (back) {
+          expectY = back.y;
+          dest = bestW * 0.28 + back.y * 0.72;
+          dest = clamp(dest, minC, maxC);
+        }
+        setPlan("read", "I know this return. Waiting on it.", s.frame);
+      } else if (bestSl < 8) {
+        setPlan("thin", "Thin cover. Shading the danger.", s.frame);
+      } else {
+        setPlan("cover", "Covering the lanes. No free ace.", s.frame);
+      }
+      var danger = expectY;
+      var worst = 1e15;
+      for (si = 0; si < returns.length; si++) {
+        sl = slack(dest, returns[si].y, returns[si].t, spdP, hitSave, minC, maxC);
+        if (sl < worst) {
+          worst = sl;
+          danger = returns[si].y;
+        }
+      }
+      targetY = predictable ? expectY : danger;
+      if (slack(opp.y, toOpp.y, toOpp.t, spdP, hitOpp, minC, maxC) < -2) {
+        setPlan("theirs-miss", "They're short. This point is mine.", s.frame);
+        targetY = toOpp.y;
+      }
+      return out((dest - me.y) / spdP, targetY);
+    }
+
+    var cont = fly(ball.x, ball.y, ball.dx, ball.dy, myX, minY, maxY);
+    var disc = discreteCross(ball.x, ball.y, ball.dx, ball.dy, myX, minY, maxY);
+    var contFace = fly(ball.x, ball.y, ball.dx, ball.dy, pad.faceX, minY, maxY);
+    if (!cont && !disc) {
+      dest = clamp(ball.y, minC, maxC);
+      setPlan("scramble", "Late read. Scrambling onto it.", s.frame);
+      return out((dest - me.y) / spdP, ball.y);
+    }
+    var primary = cont || disc;
+    var ys = [primary.y];
+    if (disc && Math.abs(disc.y - primary.y) > 0.5 && Math.abs(disc.y - primary.y) < 28) ys.push(disc.y);
+    if (cont && primary !== cont && Math.abs(cont.y - primary.y) < 28) ys.push(cont.y);
+    if (contFace && Math.abs(contFace.y - primary.y) < 22) ys.push(contFace.y);
+
+    var yLo = ys[0], yHi = ys[0], yi;
+    for (yi = 1; yi < ys.length; yi++) {
+      if (ys[yi] < yLo) yLo = ys[yi];
+      if (ys[yi] > yHi) yHi = ys[yi];
+    }
+    var yRef = primary.y;
+    targetY = yRef;
+    var tMe = cont ? cont.t : disc.frames;
+    var framesLeft = 999;
+    if (disc) framesLeft = disc.frames;
+    if (cont) {
+      var cf = Math.max(1, Math.ceil(cont.t - 1e-9));
+      if (cf < framesLeft) framesLeft = cf;
+    }
+    if (framesLeft < 1) framesLeft = 1;
+    if (tMe < 0) tMe = 0;
+
+    var safeLo = minC;
+    var safeHi = maxC;
+    for (yi = 0; yi < ys.length; yi++) {
+      if (ys[yi] - hitMe > safeLo) safeLo = ys[yi] - hitMe;
+      if (ys[yi] + hitMe < safeHi) safeHi = ys[yi] + hitMe;
+    }
+    if (safeLo < minC) safeLo = minC;
+    if (safeHi > maxC) safeHi = maxC;
+    if (safeLo > safeHi) {
+      dest = clamp(yRef, minC, maxC);
+      setPlan("scramble", "Models disagree. Chasing the ball.", s.frame);
+      return out((dest - me.y) / spdP, yRef);
+    }
+
+    var reach = framesLeft * spdP;
+    var zoneLo = Math.max(safeLo, me.y - reach);
+    var zoneHi = Math.min(safeHi, me.y + reach);
+    if (zoneLo > zoneHi) {
+      dest = clamp(yRef, safeLo, safeHi);
+      setPlan("stretch", "Stretching. This one is a full sprint.", s.frame);
+      return out((dest - me.y) / spdP, yRef);
+    }
+
+    var spdOut = Math.min(MAX_SPD, speed * SPD_MUL);
+    var shots = [];
+    var P, step;
+    step = (zoneHi - zoneLo) > 70 ? 2 : 1;
+    for (P = zoneLo; P <= zoneHi + 0.01; P += step) {
+      var y0 = yRef;
+      var offPx = y0 - P;
+      var offN = clamp(offPx / half, -1, 1);
+      th = offN * MAX_ANG;
+      var ndx = Math.cos(th) * spdOut;
+      var ndy = Math.sin(th) * spdOut;
+      var leg = fly(myX, y0, ndx, ndy, oppX, minY, maxY);
+      if (!leg) continue;
+      shots.push({ P: P, y: y0, off: offN, arr: leg.y, tBack: leg.t, spd: spdOut });
+    }
+    if (!shots.length) {
+      dest = clamp(yRef, zoneLo, zoneHi);
+      setPlan("block", "Just a block. No donation.", s.frame);
+      return out((dest - me.y) / spdP, yRef);
+    }
+
+    var waitMoves = Math.ceil(tMe - 1e-9) * spdP;
+    var bestStar = clamp(opp.y, minC, maxC);
+    var starScore = -1e15;
+    for (p = minC; p <= maxC; p += 5) {
+      if (Math.abs(p - opp.y) > waitMoves + 0.5) continue;
+      minSl = 1e15;
+      for (si = 0; si < shots.length; si++) {
+        sl = slack(p, shots[si].arr, shots[si].tBack, spdP, hitOpp, minC, maxC);
+        if (sl < minSl) minSl = sl;
+      }
+      if (minSl > starScore) {
+        starScore = minSl;
+        bestStar = p;
+      }
+    }
+
+    function counterSlack(shot) {
+      var worst = 1e15;
+      var list = [];
+      var k;
+      if (predictable) {
+        list.push(stats.mean, clamp(stats.mean - 0.25, -1, 1), clamp(stats.mean + 0.25, -1, 1), 0);
+      } else {
+        for (k = -8; k <= 8; k++) list.push(k / 8);
+      }
+      var spd2 = Math.min(MAX_SPD, shot.spd * SPD_MUL);
+      var tGet = tMe + shot.tBack;
+      for (k = 0; k < list.length; k++) {
+        var o2 = list[k];
+        var tp = shot.arr - o2 * half;
+        if (tp < minC || tp > maxC) continue;
+        if (Math.abs(tp - shot.arr) > hitOpp) continue;
+        if (Math.abs(tp - opp.y) > Math.ceil(tGet - 1e-9) * spdP + 0.2) continue;
+        var th2 = clamp(o2, -1, 1) * MAX_ANG;
+        var bx = fly(oppX, shot.arr, -Math.cos(th2) * spd2, Math.sin(th2) * spd2, myX, minY, maxY);
+        if (!bx) continue;
+        var slm = slack(shot.P, bx.y, shot.tBack + bx.t, spdP, hitSave, minC, maxC);
+        if (slm < worst) worst = slm;
+      }
+      return worst;
+    }
+
+    var bestP = shots[0].P;
+    var bestScore = -1e15;
+    var bestShot = shots[0];
+    var bestKind = "safe";
+    for (si = 0; si < shots.length; si++) {
+      var sh = shots[si];
+      var slC = slack(opp.y, sh.arr, tMe + sh.tBack, spdP, hitOpp, minC, maxC);
+      var slS = slack(bestStar, sh.arr, sh.tBack, spdP, hitOpp, minC, maxC);
+      var slR = slack(opp.y, sh.arr, sh.tBack, spdP, hitOpp, minC, maxC);
+      var allHit = true;
+      for (yi = 0; yi < ys.length; yi++) {
+        if (Math.abs(ys[yi] - sh.P) > hitMe + 0.2) allHit = false;
+      }
+      if (!allHit) continue;
+      var sc, kind;
+      if (slC < -8) {
+        sc = 1000000 - slC;
+        kind = "ace";
+      } else if (slS < -8) {
+        sc = 500000 - slS;
+        kind = "ace";
+      } else if (predictable && slR < -14) {
+        sc = 200000 - slR;
+        kind = "ace";
+      } else {
+        sc = 10000 - slS;
+        kind = "press";
+        sc += Math.abs(sh.arr - H / 2) * 0.02;
+      }
+      var cs = counterSlack(sh);
+      if (kind !== "ace" && cs < 0) sc -= 800000 - cs;
+      else sc += Math.min(cs, 120) * 0.35;
+      sc -= Math.abs(sh.P - me.y) * 0.002;
+      if (sc > bestScore) {
+        bestScore = sc;
+        bestP = sh.P;
+        bestShot = sh;
+        bestKind = kind;
+      }
+    }
+
+    var attackP = clamp(bestP, minC, maxC);
+    dest = attackP;
+    var margin = 3;
+    if (framesLeft > margin + 1 && Math.abs(attackP - yRef) > 10) {
+      var mirror = clamp(2 * yRef - attackP, safeLo, safeHi);
+      var center = clamp(yRef, safeLo, safeHi);
+      var cands = [mirror, center];
+      var ci;
+      for (ci = 0; ci < cands.length; ci++) {
+        var d = cands[ci];
+        var dir = d === me.y ? 0 : (d > me.y ? 1 : -1);
+        var stepM = dir * Math.min(spdP, Math.abs(d - me.y));
+        var nextY = me.y + stepM;
+        var usable = framesLeft - 1 - margin;
+        if (usable >= 0 && Math.abs(attackP - nextY) <= usable * spdP) {
+          dest = d;
+          break;
+        }
+      }
+    }
+
+    var place = sideName(bestShot.arr, H);
+    var spdShow = (Math.round(spdOut * 10) / 10);
+    if (bestKind === "ace") {
+      if (s.score.me === 6) {
+        setPlan("ace-mp-" + place, "Match point. Putting it away.", s.frame);
+      } else if (place === "high") {
+        setPlan("ace-high", "Ace up top. They can't climb.", s.frame);
+      } else if (place === "low") {
+        setPlan("ace-low", "Ace on the floor. Too late.", s.frame);
+      } else {
+        setPlan("ace-mid", "Ace through the gap. Point.", s.frame);
+      }
+    } else if (Math.abs(bestShot.off) > 0.45) {
+      if (place === "high") setPlan("press-high", "Forcing them high. Clock's shrinking.", s.frame);
+      else if (place === "low") setPlan("press-low", "Forcing them low to open the court.", s.frame);
+      else setPlan("press-mid", "Taking time off their paddle.", s.frame);
+    } else if (Math.abs(ball.x - 400) < 30 && speed < 7.2) {
+      setPlan("serve", "Serve. I read the angle, not hope.", s.frame);
+    } else if (spdOut > 16) {
+      setPlan("ripe", "Pace is cruel now. Waiting a crack.", s.frame);
+    } else {
+      setPlan("safe", "Safe hands. I do not donate points.", s.frame);
+    }
+
+    if (dest !== attackP && bestKind === "ace" && framesLeft > 6) {
+      setPlan("fake-" + place, "Paddle says centre. It lies.", s.frame);
+    }
+
+    return out((dest - me.y) / spdP, yRef);
+  };
+}

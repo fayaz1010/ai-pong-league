@@ -1,0 +1,45 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Reference Brick Breaker (suite check only, not a contestant)</title>
+<style>body{margin:0;background:#111;display:flex;justify-content:center;align-items:center;height:100vh}canvas{background:#000}</style></head>
+<body><canvas id="game" width="800" height="600"></canvas>
+<script>
+const c = document.getElementById('game'), x = c.getContext('2d');
+const R = 5, C = 10, BW = 72, BH = 22, GAP = 6, TOP = 60, LEFT = (800 - (C * BW + (C - 1) * GAP)) / 2;
+const keys = {};
+const game = window.game = {score: 0, lives: 3, bricksLeft: 50, state: 'ready', ball: {x: 400, y: 0, dx: 0, dy: 0}, paddle: {x: 350, y: 570, w: 100}, bricks: [],
+  setBall(bx, by, dx, dy) { Object.assign(game.ball, {x: bx, y: by, dx, dy}); game.state = 'playing'; }};
+function reset() { game.score = 0; game.lives = 3; game.bricks = []; for (let r = 0; r < R; r++) for (let k = 0; k < C; k++) game.bricks.push({x: LEFT + k * (BW + GAP), y: TOP + r * (BH + GAP), alive: true});
+  game.bricksLeft = 50; onPaddle(); }
+function onPaddle() { game.state = 'ready'; Object.assign(game.ball, {x: game.paddle.x + game.paddle.w / 2, y: game.paddle.y - 9, dx: 0, dy: 0}); }
+addEventListener('keydown', (e) => { keys[e.code] = true;
+  if (e.code === 'Space') { e.preventDefault(); if (game.state === 'ready') game.setBall(game.ball.x, game.ball.y, 3, -5); else if (game.state === 'over' || game.state === 'won') reset(); }
+  if (e.code === 'KeyP') game.state = game.state === 'paused' ? 'playing' : game.state === 'playing' ? 'paused' : game.state; });
+addEventListener('keyup', (e) => { keys[e.code] = false; });
+c.addEventListener('mousemove', (e) => { const r = c.getBoundingClientRect(); game.paddle.x = (e.clientX - r.left) * (800 / r.width) - game.paddle.w / 2; clampPaddle(); });
+function clampPaddle() { game.paddle.x = Math.max(0, Math.min(800 - game.paddle.w, game.paddle.x)); }
+function step() {
+  if (game.state === 'paused') return;
+  if (keys.ArrowLeft) game.paddle.x -= 8; if (keys.ArrowRight) game.paddle.x += 8; clampPaddle();
+  const b = game.ball;
+  if (game.state === 'ready') { b.x = game.paddle.x + game.paddle.w / 2; b.y = game.paddle.y - 9; return; }
+  if (game.state !== 'playing') return;
+  b.x += b.dx; b.y += b.dy;
+  if (b.x < 8) { b.x = 8; b.dx = Math.abs(b.dx); } if (b.x > 792) { b.x = 792; b.dx = -Math.abs(b.dx); } if (b.y < 8) { b.y = 8; b.dy = Math.abs(b.dy); }
+  const p = game.paddle;
+  if (b.dy > 0 && b.y + 8 >= p.y && b.y + 8 <= p.y + 14 && b.x >= p.x && b.x <= p.x + p.w) { b.dy = -Math.abs(b.dy); b.dx = ((b.x - (p.x + p.w / 2)) / (p.w / 2)) * 5; }
+  for (const k of game.bricks) if (k.alive && b.x + 8 > k.x && b.x - 8 < k.x + BW && b.y + 8 > k.y && b.y - 8 < k.y + BH) { k.alive = false; game.bricksLeft--; game.score += 10; b.dy = -b.dy; break; }
+  if (game.bricksLeft === 0) game.state = 'won';
+  if (b.y > 610) { game.lives--; if (game.lives <= 0) { game.lives = 0; game.state = 'over'; } else onPaddle(); }
+}
+function draw() {
+  x.fillStyle = '#000'; x.fillRect(0, 0, 800, 600);
+  game.bricks.forEach((k, i) => { if (k.alive) { x.fillStyle = `hsl(${(i / C | 0) * 50},80%,55%)`; x.fillRect(k.x, k.y, BW, BH); } });
+  x.fillStyle = '#fff'; x.fillRect(game.paddle.x, game.paddle.y, game.paddle.w, 12);
+  x.beginPath(); x.arc(game.ball.x, game.ball.y, 8, 0, 7); x.fill();
+  x.font = '20px sans-serif'; x.fillText('Score ' + game.score, 12, 28); x.fillText('Lives ' + game.lives, 700, 28);
+  x.font = '48px sans-serif'; x.textAlign = 'center';
+  if (game.state === 'over') x.fillText('GAME OVER', 400, 360); if (game.state === 'won') x.fillText('YOU WIN', 400, 360); if (game.state === 'paused') x.fillText('PAUSED', 400, 360); x.textAlign = 'left';
+}
+function loop() { step(); draw(); requestAnimationFrame(loop); }
+reset(); loop();
+</script></body></html>

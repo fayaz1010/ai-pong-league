@@ -1,0 +1,94 @@
+I'm working out the court dimensions, paddle size and speed, and the ball physics—serve speed, angle calculations, and how hitting the ball at different offsets affects return angle and speed scaling.
+
+My strategy is to predict the ball's arrival point at my paddle including wall bounces, then choose a return angle that maximizes the distance the opponent must travel versus what their 5px/frame speed allows them to cover in the available time, accounting for their hit tolerance too.
+
+Since arrival y folds with wall bounces, I can scan a range of hit offsets to compute the resulting arrival y and travel time, then pick the offset that maximizes opponent reachability difficulty while keeping my own paddle able to reach the required position in time, treating the ball as reflecting when it hits the top/bottom boundaries adjusted for radius.
+
+Rather than trusting an assumed bounce boundary exactly, I could adaptively track the minimum/maximum observed ball y during play to infer the true wall margin at runtime, correcting my prediction model if reality diverges from my initial assumption.
+
+There's also ambiguity around the exact paddle collision point—whether the ball bounces when its edge or its center reaches the paddle face at x=30—which could throw my timing off by a frame or so.
+
+I'll just keep it simple: predict to plane x = faceX + r and compute the fractional arrival time from there, since at steep angles (like 55°) even a single frame of error can shift the paddle offset enough to cause a noticeable angle error of around 12°, which matters for aiming precision.
+
+If I arrive early with my paddle stationary, the offset just depends on ball y at collision time, which I can predict with small uncertainty—good enough. Trying to back-solve the exact collision plane from post-hit velocity is too ambiguous since I can't pin down how far into the collision step the position was captured, so I'll just go with the paddle-face-plus-ball-radius assumption and move on.
+
+Not worth the extra complexity for the opponent's side either, so I'll skip that.
+
+For the main loop: when the ball is heading my way, I predict its arrival position and time at my paddle's plane, then search for a good offset to aim with, clamping the target position and ensuring it's reachable within the paddle's speed limit, falling back to just reaching the arrival y if a desired offset isn't achievable in time.
+
+When the ball is heading away from me toward the opponent, I don't know how they'll return it, so rather than trying to predict their exact shot, I think it's better to just retreat toward the center of the court so I can cover a reasonable range of possible return angles, accepting that I can't guarantee coverage against a fast, well-placed return.
+
+I could instead approximate this statistically: sample a range of possible offsets for the opponent's hit, compute where each resulting return would land on my plane, and pick a defensive position that covers the most likely arrival points given limited reaction time.
+
+I'll sample q across a range of candidate positions against all possible offsets, since evaluating ~900 combinations is trivial cost. I should weight extreme offsets more heavily since opponents tend to aim for them and they're harder to cover, and I can make this adaptive by tracking a histogram of the opponent's actual offset history to bias the weighting toward their real tendencies.
+
+I need to project where the ball lands at the opponent's plane and estimate whether they can reach it, accounting for uncertainty in how they'll reposition while my shot is still traveling toward them — since they likely drift toward center during my return window, I should be conservative about marking a shot as unreachable for them.
+
+I should score shots by the margin between the predicted end position and the opponent's estimated position, minus a buffer and travel time penalty, trying to maximize that margin. Since the plan gets re-evaluated constantly, what really matters is getting it right in the final stretch before I have to commit, and I want to favor shots that stay effective even as my position estimate narrows.
+
+For the opponent estimate, I'll project their position forward using recent velocity capped over a short time window and clamp it to the playable range, then break ties in scoring by favoring steeper angles since those reduce reaction time further.
+
+But hitting with large offsets is risky since prediction errors at steep angles could cause a miss—so I'll cap the offset lower during fast or steep returns and use an uncertainty estimate to scale that cap dynamically.
+
+I need to clamp the paddle center within bounds, checking edge cases like top-wall arrivals causing steep returns, and handle when the ball is moving away behind the paddle by just holding center. Then I'm sketching a prediction function that computes arrival time and position at a given x-plane using the ball's velocity.
+
+I'm writing a fold function to reflect the predicted y-position within the valid bounce range, handling the modulo wrap-around correctly. For movement, I'm using a proportional control that divides the distance to target by the max speed, clamped to [-1,1], ensuring exact arrival without overshoot or oscillation.
+
+I also need to account for mirroring when I'm on the right side, track the opponent's hit offsets by detecting direction reversals to build a histogram of their tendencies, and handle serve scenarios differently depending on which side the ball is served toward.
+
+When no shot gives positive margin, I should pick the one that maximizes opponent displacement to set up the next exchange. Since rally speed increases 1.05x each hit up to a cap of 24, I'm working out the geometry of how wide-angle shots become truly unreachable only once the rally has sped up enough.
+
+Even against a perfect centre-returning tracker at max speed, the math shows there's still a margin of safety where the shot angle keeps arrival time below what the opponent needs to cover full displacement, so winning shots do exist with the right vertical aim.
+
+Now I want to make the conservative assumption explicit: treat trackers as perfect predictors that will already be positioned at the predicted intercept, so the margin I compute is the worst case. I also want to build out concrete defensive positioning logic, calculating arrival time and position when the ball travels in either direction and sampling possible return angles and speeds from there.
+
+Writing positioning logic...
+
+I should also handle edge cases like when the target isn't reachable in time (just move toward it anyway), and situations where the opponent simply misses the ball, which means I don't need to react at all.
+
+I'm also drafting short commentary lines to accompany the gameplay, like calling out when I spot a winning gap or when I'm playing defensively, keeping each under 48 characters. Now I'm starting to write the function that calculates the target y-position based on whether the ball is incoming or needs a strategic placement.
+
+I'm trying to dynamically learn the wall margin by watching how close the ball actually gets before bouncing, adjusting the estimate down if observed values come in tighter than assumed.
+
+I'm also figuring out how to detect when the opponent hits the ball by watching the x-velocity flip sign, then bucketing the bounce angle into a histogram of outcomes. Separately, I'm setting up paddle movement bounds and starting to branch logic for predicting the ball's trajectory when it's heading back toward me.
+
+reach) accounting for limited move budget. If nothing's fully reachable, I fall back to picking the offset that requires minimal movement from my current position, then I'll sample candidate offsets across the feasible range to find the best one.
+
+I'm simulating the ball's path for each sample offset, estimating where it would land relative to the opponent, and scoring each option by its safety margin — favoring shots that beat the opponent's reach, or if none do, maximizing the forced movement.
+
+For the report-back messaging, I'll phrase it as spotting an opening to fire through versus dragging the opponent to create one. Then for the defensive case, I'm running a similar simulation where I predict the incoming shot's landing point and weigh candidate return angles against how far they push the opponent out of position.
+
+I'm choosing the best-scoring target angle, generating a line of commentary depending on whether their returns skew low or high, and otherwise defaulting to centering myself when the ball isn't a threat. The final output bundles the movement, the dialogue line, and the target angle, and I've checked the loop counts stay small enough to run every frame without lag, with no randomness involved so the behavior stays deterministic.
+
+I still need to guard against dividing by zero when dx is near zero, falling back to centering in that case, and handle the edge where the ball is already behind my hit plane by just holding position since it's effectively lost. I want the commentary to only update when the underlying plan actually changes, so I'll track a planKey like "win-top" or "def-neutral" and only regenerate the line on a transition. I'm also considering how this would fare against a naive opponent that just tracks the ball's y-position directly.
+
+Since I replan every frame, the target paddle position can shift as the opponent moves, so I want to add a small hysteresis bonus favoring the previously chosen offset to avoid dithering between two near-equal candidates.
+
+For the commentary text, I'm drafting short celebratory lines under 48 characters, carefully counting character lengths to make sure phrases like "Gap up top! Firing high — they won't get there" fit within the limit, accounting for the em dash as a single UTF-16 unit.
+
+I'm drafting more reaction lines for different situations - shading direction, serve anticipation - counting characters to keep each under the limit, like settling on "Serve to me - reading bounce, picking my spot" at 45 characters. Now I'm moving to lines for fast-ball moments.
+
+Writing player function...
+
+Still writing the movement logic...
+
+Still writing prediction logic...
+
+Computing margin as the gap between predicted end position and opponent estimate, scoring each offset by favoring margin and continuity with the last chosen offset, then picking the best-scoring option; if nothing qualifies, it falls back to a minimal scramble move just to get a paddle on the ball.
+
+Now handling the defend branch when the ball is heading toward the opponent's side — projecting where it crosses the plane, then sweeping a range of angle offsets to simulate return trajectories and binning the resulting landing positions and timings for further evaluation.
+
+I'm scoring candidate paddle positions by counting weighted hits within tolerance across those simulated trajectories, penalizing positions far from center or from the paddle's current location, then picking the position with the highest score as the target.
+
+With the fallback branch, if there's no ball data I just reset to center and set the target there. I'm double-checking the sign convention so a positive offset consistently means the ball is heading downward relative to the paddle, matching how I learn offsets from the ball's trajectory.
+
+I also want to guard against a one-frame glitch right at impact: if the ball's x is still near my paddle but it's already moving away, I should hold position rather than snap toward center, since otherwise a stray 5px correction could slightly distort the learned offset for that frame.
+
+Now I'm also sketching out the commentary logic: pick a "win-top/bot" or "setup-up/down" message key based on the predicted landing point and margin, add a special case for high-speed winning shots, and detect serve moments when the ball is near center with modest speed heading left. I want this key to be set once rather than recalculated every frame, and I'm starting to think through a skew metric for defensive commentary based on low versus high histogram bins.
+
+I'm refining the defense flavor lines further - choosing between "low" and "high" variants or a generic covering-angles message depending on the skew, and adding special match-point callouts when either player is sitting at a score of 6. Then I'm checking the reach logic to see how far the paddle center is from the ball's predicted position.
+
+One wrinkle I'm catching: the hysteresis bonus keeps using the last offset even after the ball's gone out, which could bias the next return unfairly - so I'm considering resetting that value when switching back into defense mode.
+
+I'm also sanity-checking the scoring preference for larger margins, verifying the opponent's collision plane and the defensive scan's iteration count are reasonable, and confirming the position mapping stays within bounds. Lastly I want to make sure the final move value returned is always a finite, valid number.
+

@@ -1,0 +1,31 @@
+{
+ "model": "anthropic/claude-opus-5.5",
+ "attempt": 2,
+ "seconds": 39.034,
+ "usage": {
+  "prompt_tokens": 620,
+  "completion_tokens": 5117,
+  "total_tokens": 5737,
+  "cost": 0.10482,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.10482,
+   "upstream_inference_prompt_cost": 0.00248,
+   "upstream_inference_completions_cost": 0.10234
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 639,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "provider": "Claude Platform on AWS",
+ "id": "gen-1792530342-G7jJwKZ2LvgbpUhMrk0B",
+ "at": "2026-10-20T21:06:21.453Z"
+}

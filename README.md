@@ -7,7 +7,7 @@ Five AI models got the same prompt, word for word, and each wrote three Pong pla
 players then played everyone else home and away in a frozen, seeded arena. One of them never lost a
 match: 56 played, 56 won.
 
-**Play it now: https://fayaz1010.github.io/ai-pong-league/**
+**Play it now: https://aicited.ozsystems.com.au/pong/**
 
 > This is the free gift from the AI Cited episode **"I Let 5 AIs Fight in Pong… One Never
 > Lost"**: https://youtu.be/7GJfxWFiFDI
